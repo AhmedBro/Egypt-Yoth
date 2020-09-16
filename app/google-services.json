@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "73900436070",
+    "firebase_url": "https://egypt-youth.firebaseio.com",
+    "project_id": "egypt-youth",
+    "storage_bucket": "egypt-youth.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73900436070:android:d29ec88ec89d07bf4d5ba7",
+        "android_client_info": {
+          "package_name": "com.ahmedesam.egyptyouth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73900436070-pkv67a57hdsvau4i2lgjv1gt8pse1gft.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ahmedesam.egyptyouth",
+            "certificate_hash": "c431012da69bd9f2492f6b82b7984933264ec272"
+          }
+        },
+        {
+          "client_id": "73900436070-t88aoaj93oclmf8hfo6uasvq2bn60e8l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa33zPueQk5T6uzT4Q8O0wvLb8nQXexd8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73900436070-t88aoaj93oclmf8hfo6uasvq2bn60e8l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

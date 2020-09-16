@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Egypt Youth</string>
+    <string name="sign_in">Sign In</string>
+    <string name="facebook_app_id">1202817026741823</string>
+    <string name="fb_login_protocol_scheme">fb1202817026741823</string>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="players">Players</string>
+    <string name="exams_time">Exams Time</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">Search</string>
+    <string name="edit">Edit</string>
+    <string name="posts">Posts</string>
+    <string name="followers">Followers</string>
+    <string name="follow">Follow</string>
+    <string name="add_your_information">Add Your Information</string>
+    <string name="enter_your_name">enter your Name</string>
+    <string name="enter_your_skills_description">enter your Skills Description</string>
+    <string name="save">save</string>
+    <string name="enter_Your_Name">Please enter your age</string>
+    <string name="Enter_Your_Description">Enter Your Description</string>
+    <string name="enter_your_age">enter Your Age</string>
+    <string name="enter_your_address">enter Your Address</string>
+    <string name="years">Years</string>
+    <string name="upload_your_videos">Upload Your Videos</string>
+    <string name="upload_your_images">Upload your Images</string>
+
+</resources>
