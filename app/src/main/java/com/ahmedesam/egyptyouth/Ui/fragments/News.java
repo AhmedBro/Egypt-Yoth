@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ahmedesam.egyptyouth.Adapters.AllNews;
 import com.ahmedesam.egyptyouth.Adapters.InternationalAndNationalAdapter;
 import com.ahmedesam.egyptyouth.Models.NewModel;
+import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.bumptech.glide.Glide;
@@ -44,8 +46,8 @@ public class News extends Fragment {
     InternationalAndNationalAdapter mInternationalAndNationalAdapter;
     @BindView(R.id.UserImage)
     CircleImageView UserImage;
-    @BindView(R.id.search)
-    EditText search;
+    //    @BindView(R.id.search)
+//    EditText search;
     @BindView(R.id.UserName)
     TextView UserName;
     private DatabaseReference mDatabase;
@@ -53,6 +55,7 @@ public class News extends Fragment {
     ArrayList<NewModel> mNational;
     com.ahmedesam.egyptyouth.Adapters.AllNews mAllNews;
     ShardPrefrances mShardPrefrances;
+    userModel model;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,23 +65,45 @@ public class News extends Fragment {
         mUnbinder = ButterKnife.bind(this, view);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mShardPrefrances = new ShardPrefrances(getActivity());
-        Glide.with(getActivity()).load(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_IMAGE)).into(UserImage);
-        UserName.setText(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_FNAME));
+//        UserName.setText(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_FNAME));
 
 
-        search.requestFocus();
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                search.setFocusableInTouchMode(true);
-            }
-        });
+//        search.requestFocus();
+//        search.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                search.setFocusableInTouchMode(true);
+//            }
+//        });
+        SetData();
         InstRec();
-        GetNationalNews();
-        GetLocalNews();
+//        GetNationalNews();
+//        GetLocalNews();
         GetAllNews();
 
         return view;
+    }
+
+    private void SetData() {
+        model = new userModel();
+        mDatabase.child("Users").child(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                model = snapshot.getValue(userModel.class);
+                UserName.setText(model.getmName());
+
+                try {
+                    Glide.with(getActivity()).load(model.getmImage()).into(UserImage);
+                } catch (Exception e) {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void GetAllNews() {
@@ -88,8 +113,8 @@ public class News extends Fragment {
                 mNational = new ArrayList<>();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     mNewModel = postSnapshot.getValue(NewModel.class);
-                    Log.e("Photo", mNewModel.getmHeader());
-                    Log.e("Photo", mNewModel.getmImage());
+
+
                     mNational.add(mNewModel);
                 }
                 mAllNews = new AllNews(mNational, getActivity());
@@ -160,4 +185,6 @@ public class News extends Fragment {
         });
 
     }
+
+
 }

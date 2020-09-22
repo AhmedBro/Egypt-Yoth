@@ -3,71 +3,103 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:background="@color/white"
     android:orientation="vertical"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="15dp"
-    app:cardElevation="10dp">
+    app:cardElevation="7dp"
+    android:layout_margin="4dp"
+
+    >
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:orientation="vertical"
 
-
         >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+
+                android:src="@drawable/logo"
+                />
+
+            <TextView
+                android:id="@+id/mNewHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:gravity="center"
+                android:text="@string/profile"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/mNew"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:background="@null"
+            android:text="@string/profile"
+            android:textColor="#ddd"
+            android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/mNewImage"
             android:layout_width="match_parent"
             android:layout_height="170dp"
-            android:layout_weight="3"
             android:background="@null"
             android:scaleType="fitXY"
+            android:layout_margin="10dp"
             android:src="@drawable/com_facebook_button_background" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center"
+    >
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:padding="5dp"
+      >
+      <com.varunest.sparkbutton.SparkButton
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+          android:id="@+id/like_button"
+          android:layout_width="30dp"
+          android:layout_height="30dp"
+          android:layout_margin="5dp"
+          app:sparkbutton_activeImage="@drawable/red_heart"
+          app:sparkbutton_inActiveImage="@drawable/heart_border"
+          app:sparkbutton_iconSize="30dp"
+          app:sparkbutton_primaryColor="@color/colorPrimary"
+          app:sparkbutton_secondaryColor="@color/colorPrimaryDark"
+          android:layout_gravity="center"
+          />
+      <TextView
+          android:id="@+id/LikeNumber"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="@color/white"
+          android:text="0"
+          android:layout_gravity="center"
+          android:textSize="12sp"
+          />
 
-            android:gravity="center"
-            android:padding="5dp">
+  </LinearLayout>
+</LinearLayout>
 
-            <TextView
-                android:id="@+id/mNewHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:gravity="center"
-                android:text="@string/profile"
-                android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
-
-                />
-
-        </ScrollView>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:gravity="center"
-            android:padding="5dp">
-        <TextView
-            android:id="@+id/mNew"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:gravity="center"
-            android:text="@string/profile"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="15sp"
-
-            />
-        </ScrollView>
     </LinearLayout>
 
 

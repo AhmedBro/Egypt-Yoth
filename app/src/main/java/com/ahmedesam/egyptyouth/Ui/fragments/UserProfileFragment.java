@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmedesam.egyptyouth.Adapters.ImageAdapter;
+import com.ahmedesam.egyptyouth.Adapters.VideoUserAdapter;
 import com.ahmedesam.egyptyouth.Models.ImageModel;
 import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
@@ -67,8 +68,8 @@ public class UserProfileFragment extends Fragment {
     TextView mUserAddress;
     @BindView(R.id.mUserSkills)
     TextView mUserSkills;
-    @BindView(R.id.mPostsNumber)
-    TextView mPostsNumber;
+//    @BindView(R.id.mPostsNumber)
+//    TextView mPostsNumber;
     @BindView(R.id.mFollowersNumber)
     TextView mFollowersNumber;
     @BindView(R.id.mFollowNumber)
@@ -79,6 +80,8 @@ public class UserProfileFragment extends Fragment {
     RecyclerView Videos;
 
     ArrayList<ImageModel> mImages;
+    ArrayList<ImageModel> mVideos;
+    VideoUserAdapter mVideoUserAdapter;
     ImageAdapter mImageAdapter;
     ShardPrefrances mShardPrefrances;
     @BindView(R.id.mUserAge)
@@ -98,6 +101,7 @@ public class UserProfileFragment extends Fragment {
     ImageModel Image;
     // request code
     private final int PICK_IMAGE_REQUEST = 22;
+    private final int PICK_VIDEO_REQUEST = 222;
     private final int PICK_IMAGE_REQUEST2 = 2;
 
     userModel model;
@@ -127,6 +131,8 @@ public class UserProfileFragment extends Fragment {
         SetData();
 
         LoadUserImages();
+
+        LoadUserVideos();
         return view;
     }
 
@@ -142,7 +148,7 @@ public class UserProfileFragment extends Fragment {
 
                 }
                 Log.e("ImageArray", mImages + "");
-                RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity() , 2);
+                RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity(), 2);
                 Images.setLayoutManager(manager);
                 mImageAdapter = new ImageAdapter(mImages, getActivity());
                 Images.setAdapter(mImageAdapter);
@@ -155,6 +161,31 @@ public class UserProfileFragment extends Fragment {
         });
     }
 
+    //----------------------------------------------------------------------------------------------
+    private void LoadUserVideos() {
+        mDatabase.child("Users").child(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).child("Videos").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mVideos = new ArrayList<>();
+                Image = new ImageModel();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    Image = data.getValue(ImageModel.class);
+                    mVideos.add(Image);
+
+                }
+                Log.e("Videos", mVideos + "");
+                RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity() , RecyclerView.VERTICAL , false);
+                Videos.setLayoutManager(manager);
+                mVideoUserAdapter = new VideoUserAdapter(mVideos, getActivity());
+                Videos.setAdapter(mVideoUserAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     //----------------------------------------------------------------------------------------------
     private void InstItems() {
         mShardPrefrances = new ShardPrefrances(getActivity());
@@ -174,12 +205,11 @@ public class UserProfileFragment extends Fragment {
                 mUserAge.setText(model.getmDate());
                 mUserAddress.setText(model.getmAddress());
                 mUserSkills.setText(model.getmDescription());
-            try {
-                Glide.with(mActivity).load(model.getmImage()).into(UserImage);
-            }
-            catch (Exception e){
+                try {
+                    Glide.with(mActivity).load(model.getmImage()).into(UserImage);
+                } catch (Exception e) {
 
-            }
+                }
             }
 
             @Override
@@ -201,6 +231,20 @@ public class UserProfileFragment extends Fragment {
                         intent,
                         "Select Image from here..."),
                 PICK_IMAGE_REQUEST);
+    }
+
+    //----------------------------------------------------------------------------------------------
+    private void SelectVideo() {
+
+        // Defining Implicit Intent to mobile gallery
+        Intent intent = new Intent();
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(
+                Intent.createChooser(
+                        intent,
+                        "Select Image from here..."),
+                PICK_VIDEO_REQUEST);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -247,8 +291,13 @@ public class UserProfileFragment extends Fragment {
                 && data.getData() != null) {
             filePath = data.getData();
             uploadUserImage();
+        } else if (requestCode == PICK_VIDEO_REQUEST
+                && resultCode == RESULT_OK
+                && data != null
+                && data.getData() != null) {
+            filePath = data.getData();
+            UpLoadUserVideo();
         }
-
     }
 
     private void uploadImage() {
@@ -438,6 +487,15 @@ public class UserProfileFragment extends Fragment {
     }
 
     //----------------------------------------------------------------------------------------------
+    private void UploadVideo() {
+        HashMap<String, Object> Map = new HashMap<>();
+        String id = mDatabase.push().getKey();
+        Image = new ImageModel(UTI, id);
+        Map.put(id, Image);
+        mDatabase.child("Users").child(Objects.requireNonNull(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID))).child("Videos").updateChildren(Map);
+    }
+
+    //----------------------------------------------------------------------------------------------
 
     private void UpDateImage() {
         HashMap<String, Object> Map = new HashMap<>();
@@ -461,6 +519,7 @@ public class UserProfileFragment extends Fragment {
                 SelectUserImage();
                 break;
             case R.id.mUploadVideo:
+                SelectVideo();
                 break;
         }
     }
@@ -473,23 +532,109 @@ public class UserProfileFragment extends Fragment {
         LoadUserImages();
     }
 
-    //-----------------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------------
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         mActivity = getActivity();
     }
-
+    //----------------------------------------------------------------------------------------------
     @Override
     public void onDetach() {
         super.onDetach();
         mActivity = null;
     }
-
+    //----------------------------------------------------------------------------------------------
     private void doAction() {
         if (mActivity == null) {
             return;
+        }
+    }
+    //----------------------------------------------------------------------------------------------
+    void UpLoadUserVideo() {
+        if (filePath != null) {
+
+            // Code for showing progressDialog while uploading
+            final ProgressDialog progressDialog
+                    = new ProgressDialog(getActivity());
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            // Defining the child of storageReference
+            final StorageReference ref
+                    = storageReference.child(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_FNAME)).child("Video")
+                    .child(UUID.randomUUID().toString());
+
+            // adding listeners on upload
+            // or failure of image
+            ref.putFile(filePath)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                                @Override
+                                public void onSuccess(
+                                        UploadTask.TaskSnapshot taskSnapshot) {
+
+                                    // Image uploaded successfully
+                                    // Dismiss dialog
+                                    progressDialog.dismiss();
+                                    Toast
+                                            .makeText(getActivity(),
+                                                    "Image Uploaded!!",
+                                                    Toast.LENGTH_SHORT)
+                                            .show();
+
+                                    ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Uri> task) {
+                                            if (task.isSuccessful()) {
+                                                Uri downUri = task.getResult();
+                                                UTI = downUri.toString();
+
+                                                UploadVideo();
+                                            } else {
+                                                Toast.makeText(getActivity(), "" + task.getException(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                    Log.e("Uriiiiiiiiiiiii", UTI);
+
+
+                                }
+                            })
+
+                    .addOnFailureListener(new OnFailureListener() {
+                        @SuppressLint("LongLogTag")
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            // Error, Image not uploaded
+                            progressDialog.dismiss();
+                            Toast
+                                    .makeText(getActivity(),
+                                            "Failed " + e.getMessage(),
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    })
+                    .addOnProgressListener(
+                            new OnProgressListener<UploadTask.TaskSnapshot>() {
+
+                                // Progress Listener for loading
+                                // percentage on the dialog box
+                                @Override
+                                public void onProgress(
+                                        UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress
+                                            = (100.0
+                                            * taskSnapshot.getBytesTransferred()
+                                            / taskSnapshot.getTotalByteCount());
+                                    progressDialog.setMessage(
+                                            "Uploaded "
+                                                    + (int) progress + "%");
+                                }
+                            });
         }
     }
 }

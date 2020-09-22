@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Ui.fragments.News">
+    tools:context=".Ui.fragments.News"
+    android:background="@color/black"
+    >
 
     <LinearLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
-        android:layout_height="117dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/bar_home"
         android:orientation="vertical"
         android:padding="10dp"
@@ -44,22 +46,22 @@
         </RelativeLayout>
 
 
-        <EditText
-            android:id="@+id/search"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/search_shap"
-            android:drawableLeft="@drawable/search"
-            android:drawablePadding="10dp"
-            android:hint="@string/search"
-            android:inputType="none"
-            android:paddingLeft="20dp"
-            android:textColorHint="#8B8A8A"
-            android:textSize="15dp"
-            android:focusable="false"
-            />
+<!--        <EditText-->
+<!--            android:id="@+id/search"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:layout_marginTop="15dp"-->
+<!--            android:background="@drawable/search_shap"-->
+<!--            android:drawableLeft="@drawable/search"-->
+<!--            android:drawablePadding="10dp"-->
+<!--            android:hint="@string/search"-->
+<!--            android:inputType="none"-->
+<!--            android:paddingLeft="20dp"-->
+<!--            android:textColorHint="#8B8A8A"-->
+<!--            android:textSize="15dp"-->
+<!--            android:focusable="false"-->
+<!--            />-->
 
     </LinearLayout>
 
@@ -85,7 +87,6 @@
                 android:id="@+id/InternationalNews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -95,7 +96,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/InternationalNews"
-                android:layout_margin="5dp"
                 android:background="@null"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

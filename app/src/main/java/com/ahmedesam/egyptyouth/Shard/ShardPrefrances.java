@@ -90,7 +90,6 @@ public class ShardPrefrances {
 
         users.put(KEY_EMAIL, mSharedPreferences.getString(KEY_EMAIL, null));
         users.put(KEY_IMAGE, mSharedPreferences.getString(KEY_IMAGE, null));
-        users.put(KEY_IMAGEPATH, mSharedPreferences.getString(KEY_IMAGEPATH, null));
         users.put(KEY_DESCRIPTION, mSharedPreferences.getString(KEY_DESCRIPTION, null));
         users.put(KEY_BIRTH_DATE, mSharedPreferences.getString(KEY_BIRTH_DATE, null));
         users.put(KEY_Address, mSharedPreferences.getString(KEY_Address, null));

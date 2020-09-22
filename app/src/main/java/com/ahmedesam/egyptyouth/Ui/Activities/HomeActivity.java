@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Ui.fragments.News;
+import com.ahmedesam.egyptyouth.Ui.fragments.PlayersFragment;
 import com.ahmedesam.egyptyouth.Ui.fragments.UserProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -67,10 +68,10 @@ public class HomeActivity extends AppCompatActivity {
                         FragmentManager fragmentManager4 = getSupportFragmentManager();
                         fragmentManager4.beginTransaction().replace(R.id.replace, new UserProfileFragment()).commit();
                         return true;
-//                    case R.id.order:
-//                        FragmentManager fragmentManager5 = getSupportFragmentManager();
-//                        fragmentManager5.beginTransaction().replace(R.id.replace, new MakeOrderFragment()).commit();
-//                        return true;
+                    case R.id.players:
+                        FragmentManager fragmentManager5 = getSupportFragmentManager();
+                        fragmentManager5.beginTransaction().replace(R.id.replace, new PlayersFragment()).commit();
+                        return true;
 //                    case R.id.Map:
 //                        FragmentManager fragmentManager6 = getSupportFragmentManager();
 //                        fragmentManager6.beginTransaction().replace(R.id.replace, new MapFragment()).commit();

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Ui.fragments.UserProfileFragment"
-    >
+    android:background="@color/black">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,8 +13,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <LinearLayout
@@ -30,9 +29,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="2"
                 android:padding="10dp"
-                >
+                android:weightSum="2">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -70,7 +68,7 @@
                         android:layout_marginBottom="10dp"
                         android:text="Cairo , Egypt"
                         android:textAllCaps="false"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -85,7 +83,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="15"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="18sp" />
 
                         <TextView
@@ -94,7 +92,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="3dp"
                             android:text="@string/years"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="18sp" />
                     </LinearLayout>
 
@@ -105,7 +103,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:text="Cairo , Egypt"
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
                         android:textSize="18sp" />
 
                     <TextView
@@ -113,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="لاعب يتميز بالقوة والتصويب ويلعب بقدمه اليمني "
-                        android:textColor="@color/black"
+                        android:textColor="@color/white"
                         android:textSize="18dp" />
 
                 </LinearLayout>
@@ -137,46 +135,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
-                android:background="@color/white"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="10dp"
 
                 >
 
                 <LinearLayout
+                    android:padding="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
                     android:orientation="horizontal"
-                    android:weightSum="3">
+                    android:weightSum="2">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="vertical">
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:gravity="center"-->
+<!--                        android:orientation="vertical">-->
 
-                        <TextView
-                            android:id="@+id/mPostsNumber"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="0"
-                            android:textColor="@color/black"
-                            android:textSize="25sp"
-                            android:textStyle="bold" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/mPostsNumber"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:gravity="center"-->
+<!--                            android:text="0"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="25sp"-->
+<!--                            android:textStyle="bold" />-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="@string/posts"
-                            android:textColor="@color/browser_actions_text_color"
-                            android:textSize="15sp" />
-                    </LinearLayout>
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:gravity="center"-->
+<!--                            android:text="@string/posts"-->
+<!--                            android:textColor="@color/white"-->
+<!--                            android:textSize="15sp" />-->
+<!--                    </LinearLayout>-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -192,7 +189,7 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:text="0"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="25sp"
                             android:textStyle="bold" />
 
@@ -202,7 +199,7 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:text="@string/followers"
-                            android:textColor="@color/browser_actions_text_color"
+                            android:textColor="@color/white"
                             android:textSize="15sp"
 
                             />
@@ -222,7 +219,7 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:text="0"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="25sp"
                             android:textStyle="bold" />
 
@@ -232,7 +229,7 @@
                             android:layout_gravity="center"
                             android:gravity="center"
                             android:text="@string/follow"
-                            android:textColor="@color/browser_actions_text_color"
+                            android:textColor="@color/white"
                             android:textSize="15sp"
 
                             />
@@ -241,51 +238,72 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="@string/Images"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/Images"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:text="@string/videos"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/Videos"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                tools:listitem="@layout/video_shap" />
 
-                />
-
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:id="@+id/mPosts"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent" />-->
+            <!--            <androidx.recyclerview.widget.RecyclerView-->
+            <!--                android:id="@+id/mPosts"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent" />-->
 
             <LinearLayout
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2"
                 android:layout_margin="15dp"
-                >
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:weightSum="2">
+
                 <Button
-                    android:layout_weight="1"
                     android:id="@+id/mUploadImage"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_margin="5dp"
+                    android:layout_weight="1"
                     android:background="@drawable/edit_photo_button"
                     android:text="@string/upload_your_images"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:textStyle="normal" />
+
                 <Button
-                    android:layout_weight="1"
                     android:id="@+id/mUploadVideo"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_margin="5dp"
+                    android:layout_weight="1"
 
                     android:background="@drawable/edit_photo_button"
                     android:text="@string/upload_your_videos"
