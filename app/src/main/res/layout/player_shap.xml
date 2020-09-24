@@ -7,7 +7,7 @@
     android:background="#3C3F41"
     android:padding="10dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,18 +21,34 @@
             android:id="@+id/UserImage"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentLeft="true"
+            />
 
         <TextView
             android:id="@+id/UserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_alignLeft="@+id/UserImage"
+            android:layout_marginStart="83dp"
             android:text="Ahmed Essam"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold" />
-    </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100 Like"
+            android:textColor="@color/white"
+            android:id="@+id/cLikeNumber"
+            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
+            />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/mUserDescription"

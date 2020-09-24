@@ -26,11 +26,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserInfo extends AppCompatActivity {
@@ -45,8 +45,7 @@ public class UserInfo extends AppCompatActivity {
     TextView mUserAddress;
     @BindView(R.id.mUserSkills)
     TextView mUserSkills;
-    @BindView(R.id.mEditInformation)
-    Button mEditInformation;
+
     @BindView(R.id.Images)
     RecyclerView Images;
     @BindView(R.id.Videos)
@@ -56,11 +55,16 @@ public class UserInfo extends AppCompatActivity {
     ArrayList<ImageModel> mVideos;
     VideoUserAdapter mVideoUserAdapter;
     ImageAdapter mImageAdapter;
+    @BindView(R.id.mLike)
+    Button mLike;
+    @BindView(R.id.mDisLike)
+    Button mDisLike;
     private DatabaseReference mDatabase;
     userModel model;
     ImageModel Image;
 
     Intent mIntent;
+    static int LikeNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +81,6 @@ public class UserInfo extends AppCompatActivity {
         LoadUserVideos();
     }
 
-    @OnClick(R.id.mEditInformation)
-    public void onViewClicked() {
-    }
 
     //----------------------------------------------------------------------------------------------
     private void SetData() {
@@ -157,5 +158,53 @@ public class UserInfo extends AppCompatActivity {
             }
         });
     }
+
+    @OnClick({R.id.mLike, R.id.mDisLike})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.mLike:
+
+                HashMap<String, Object> map = new HashMap<>();
+                mDatabase.child("Users").child(ID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        model = snapshot.getValue(userModel.class);
+                        LikeNumber= Integer.parseInt(model.getmLikeNumber());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                map.put("mLikeNumber",String.valueOf(LikeNumber+1));
+                mDatabase.child("Users").child(ID).updateChildren(map);
+                mLike.setVisibility(View.GONE);
+                mDisLike.setVisibility(View.VISIBLE);
+                break;
+            case R.id.mDisLike:
+                HashMap<String, Object> map2 = new HashMap<>();
+                mDatabase.child("Users").child(ID).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        model = snapshot.getValue(userModel.class);
+                        LikeNumber= Integer.parseInt(model.getmLikeNumber());
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                map2.put("mLikeNumber",String.valueOf(LikeNumber=1));
+                mDatabase.child("Users").child(ID).updateChildren(map2);
+                mLike.setVisibility(View.VISIBLE);
+                mDisLike.setVisibility(View.GONE);
+                break;
+        }
+    }
+
 
 }

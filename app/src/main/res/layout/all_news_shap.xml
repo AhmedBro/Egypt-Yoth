@@ -3,18 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:cardElevation="7dp"
     android:layout_margin="4dp"
-
-    >
+    android:background="@color/background"
+    android:orientation="vertical"
+    app:cardElevation="7dp">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-
+android:background="@color/background"
         >
 
         <LinearLayout
@@ -27,8 +26,7 @@
                 android:layout_height="50dp"
                 android:layout_margin="10dp"
 
-                android:src="@drawable/logo"
-                />
+                android:src="@drawable/logo" />
 
             <TextView
                 android:id="@+id/mNewHeader"
@@ -40,8 +38,7 @@
                 android:text="@string/profile"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <TextView
@@ -58,47 +55,47 @@
             android:id="@+id/mNewImage"
             android:layout_width="match_parent"
             android:layout_height="170dp"
+            android:layout_margin="10dp"
             android:background="@null"
             android:scaleType="fitXY"
-            android:layout_margin="10dp"
             android:src="@drawable/com_facebook_button_background" />
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center"
-    >
-  <LinearLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:padding="5dp"
-      >
-      <com.varunest.sparkbutton.SparkButton
 
-          android:id="@+id/like_button"
-          android:layout_width="30dp"
-          android:layout_height="30dp"
-          android:layout_margin="5dp"
-          app:sparkbutton_activeImage="@drawable/red_heart"
-          app:sparkbutton_inActiveImage="@drawable/heart_border"
-          app:sparkbutton_iconSize="30dp"
-          app:sparkbutton_primaryColor="@color/colorPrimary"
-          app:sparkbutton_secondaryColor="@color/colorPrimaryDark"
-          android:layout_gravity="center"
-          />
-      <TextView
-          android:id="@+id/LikeNumber"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textColor="@color/white"
-          android:text="0"
-          android:layout_gravity="center"
-          android:textSize="12sp"
-          />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-  </LinearLayout>
-</LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <com.varunest.sparkbutton.SparkButton
+
+                    android:id="@+id/like_button"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    app:sparkbutton_activeImage="@drawable/red_heart"
+                    app:sparkbutton_iconSize="30dp"
+                    app:sparkbutton_inActiveImage="@drawable/heart_border"
+                    app:sparkbutton_primaryColor="@color/colorPrimary"
+                    app:sparkbutton_secondaryColor="@color/colorPrimaryDark" />
+
+                <TextView
+                    android:id="@+id/LikeNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

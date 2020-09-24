@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.Player> 
         Glide.with(mContext).load(mItems.get(position).getmImage()).into(holder.UserImage);
         holder.mUserDescription.setText(mItems.get(position).getmDescription());
         holder.UserName.setText(mItems.get(position).getmName());
+        holder.mLikeNumber.setText(mItems.get(position).getmLikeNumber()+" "+" Likes");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,10 +66,11 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.Player> 
         @BindView(R.id.UserName)
         TextView UserName;
         @BindView(R.id.linearLayout)
-        LinearLayout linearLayout;
+        RelativeLayout linearLayout;
         @BindView(R.id.mUserDescription)
         TextView mUserDescription;
-
+        @BindView(R.id.cLikeNumber)
+        TextView mLikeNumber;
         public Player(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

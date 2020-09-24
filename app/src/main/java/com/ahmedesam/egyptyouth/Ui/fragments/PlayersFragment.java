@@ -46,7 +46,7 @@ public class PlayersFragment extends Fragment {
         mUnbinder = ButterKnife.bind(this, view);
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mShardPrefrances = new ShardPrefrances(getActivity());
-        GetAllUsers();
+
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         Players.setLayoutManager(manager);
         return view;
@@ -78,5 +78,11 @@ public class PlayersFragment extends Fragment {
 
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        GetAllUsers();
     }
 }

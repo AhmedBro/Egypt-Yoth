@@ -27,6 +27,7 @@ import com.ahmedesam.egyptyouth.Models.ImageModel;
 import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
+import com.ahmedesam.egyptyouth.Ui.Activities.splash;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -68,7 +69,7 @@ public class UserProfileFragment extends Fragment {
     TextView mUserAddress;
     @BindView(R.id.mUserSkills)
     TextView mUserSkills;
-//    @BindView(R.id.mPostsNumber)
+    //    @BindView(R.id.mPostsNumber)
 //    TextView mPostsNumber;
     @BindView(R.id.mFollowersNumber)
     TextView mFollowersNumber;
@@ -96,6 +97,9 @@ public class UserProfileFragment extends Fragment {
     Button mUploadVideo;
 
     Activity mActivity;
+
+    @BindView(R.id.LogOut)
+    Button LogOut;
     private DatabaseReference mDatabase;
     private Uri filePath;
     ImageModel Image;
@@ -174,7 +178,7 @@ public class UserProfileFragment extends Fragment {
 
                 }
                 Log.e("Videos", mVideos + "");
-                RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity() , RecyclerView.VERTICAL , false);
+                RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
                 Videos.setLayoutManager(manager);
                 mVideoUserAdapter = new VideoUserAdapter(mVideos, getActivity());
                 Videos.setAdapter(mVideoUserAdapter);
@@ -186,6 +190,7 @@ public class UserProfileFragment extends Fragment {
             }
         });
     }
+
     //----------------------------------------------------------------------------------------------
     private void InstItems() {
         mShardPrefrances = new ShardPrefrances(getActivity());
@@ -539,18 +544,21 @@ public class UserProfileFragment extends Fragment {
 
         mActivity = getActivity();
     }
+
     //----------------------------------------------------------------------------------------------
     @Override
     public void onDetach() {
         super.onDetach();
         mActivity = null;
     }
+
     //----------------------------------------------------------------------------------------------
     private void doAction() {
         if (mActivity == null) {
             return;
         }
     }
+
     //----------------------------------------------------------------------------------------------
     void UpLoadUserVideo() {
         if (filePath != null) {
@@ -636,5 +644,12 @@ public class UserProfileFragment extends Fragment {
                                 }
                             });
         }
+    }
+
+    @OnClick(R.id.LogOut)
+    public void onViewClicked() {
+        mShardPrefrances.logoutUser();
+        Intent mIntent = new Intent(getActivity() , splash.class);
+        startActivity(mIntent);
     }
 }

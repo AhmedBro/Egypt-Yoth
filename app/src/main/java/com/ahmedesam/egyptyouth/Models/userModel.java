@@ -1,18 +1,23 @@
 package com.ahmedesam.egyptyouth.Models;
 
 public class userModel {
-    String mName , mId , mMail , mImage , mDate , mDescription , mAddress;
+    String mName , mId , mMail , mImage , mDate , mDescription , mAddress , mLikeNumber;
 
     public String getmDate() {
         return mDate;
     }
 
-    public userModel(String mName, String mId, String mMail , String mImage , String mDate) {
+    public userModel(String mName, String mId, String mMail , String mImage , String mDate ) {
         this.mName = mName;
         this.mId = mId;
         this.mMail = mMail;
         this.mImage = mImage;
         this.mDate = mDate;
+
+    }
+
+    public String getmLikeNumber() {
+        return mLikeNumber;
     }
 
     public userModel() {

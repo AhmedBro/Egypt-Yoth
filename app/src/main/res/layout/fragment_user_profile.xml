@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Ui.fragments.UserProfileFragment"
-    android:background="@color/black">
+    android:background="@color/black"
+    tools:context=".Ui.fragments.UserProfileFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -136,44 +136,44 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="30dp"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="10dp"
-
-                >
+                app:cardElevation="10dp">
 
                 <LinearLayout
-                    android:padding="10dp"
+                    android:background="@color/background"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:padding="10dp"
                     android:weightSum="2">
 
-<!--                    <LinearLayout-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="match_parent"-->
-<!--                        android:layout_weight="1"-->
-<!--                        android:gravity="center"-->
-<!--                        android:orientation="vertical">-->
+                    <!--                    <LinearLayout-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="match_parent"-->
+                    <!--                        android:layout_weight="1"-->
+                    <!--                        android:gravity="center"-->
+                    <!--                        android:orientation="vertical">-->
 
-<!--                        <TextView-->
-<!--                            android:id="@+id/mPostsNumber"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_gravity="center"-->
-<!--                            android:gravity="center"-->
-<!--                            android:text="0"-->
-<!--                            android:textColor="@color/white"-->
-<!--                            android:textSize="25sp"-->
-<!--                            android:textStyle="bold" />-->
+                    <!--                        <TextView-->
+                    <!--                            android:id="@+id/mPostsNumber"-->
+                    <!--                            android:layout_width="wrap_content"-->
+                    <!--                            android:layout_height="wrap_content"-->
+                    <!--                            android:layout_gravity="center"-->
+                    <!--                            android:gravity="center"-->
+                    <!--                            android:text="0"-->
+                    <!--                            android:textColor="@color/white"-->
+                    <!--                            android:textSize="25sp"-->
+                    <!--                            android:textStyle="bold" />-->
 
-<!--                        <TextView-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_gravity="center"-->
-<!--                            android:gravity="center"-->
-<!--                            android:text="@string/posts"-->
-<!--                            android:textColor="@color/white"-->
-<!--                            android:textSize="15sp" />-->
-<!--                    </LinearLayout>-->
+                    <!--                        <TextView-->
+                    <!--                            android:layout_width="wrap_content"-->
+                    <!--                            android:layout_height="wrap_content"-->
+                    <!--                            android:layout_gravity="center"-->
+                    <!--                            android:gravity="center"-->
+                    <!--                            android:text="@string/posts"-->
+                    <!--                            android:textColor="@color/white"-->
+                    <!--                            android:textSize="15sp" />-->
+                    <!--                    </LinearLayout>-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -257,13 +257,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_margin="10dp"
                 android:gravity="center"
                 android:text="@string/videos"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal"/>
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/Videos"
@@ -313,6 +313,21 @@
                     android:textStyle="normal" />
             </LinearLayout>
 
+            <Button
+                android:id="@+id/LogOut"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+
+                android:background="@drawable/edit_photo_button"
+                android:text="@string/log_out"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="normal"
+
+                />
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

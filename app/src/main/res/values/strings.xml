@@ -28,5 +28,7 @@
     <string name="Images">Images</string>
     <string name="follow">Follow</string>
     <string name="like">Like</string>
+    <string name="log_out">Log Out</string>
+    <string name="disLike">DisLike</string>
 
 </resources>

@@ -38,6 +38,7 @@ import org.json.JSONObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -188,8 +189,13 @@ public class LogIn extends AppCompatActivity {
 
     void creatNode(userModel muUserModel) {
         database = FirebaseDatabase.getInstance();
+        HashMap <String , Object> map = new HashMap<>();
+        map.put("mId" , muUserModel.getmId());
+        map.put("mName" , muUserModel.getmName());
+        map.put("mMail" , muUserModel.getmMail());
+        map.put("mLikeNumber" , "0");
         myRef = database.getReference("Users");
-        myRef.child(muUserModel.getmId()).setValue(muUserModel);
+        myRef.child(muUserModel.getmId()).updateChildren(map);
     }
 
     private void checkLogout() {

@@ -30,6 +30,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
@@ -37,12 +38,15 @@ public class HomeActivity extends AppCompatActivity {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         LoadFragment(new News());
+
+
     }
 
     public void LoadFragment(Fragment mFragment) {
         FragmentManager fragmentManager2 = getSupportFragmentManager();
         fragmentManager2.beginTransaction().replace(R.id.replace, mFragment).commit();
     }
+
     //-----------------------------------------------------bottomNavigation----------------------------------------------------------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -56,28 +60,34 @@ public class HomeActivity extends AppCompatActivity {
             mOnNavigationItemSelectedListener
             = item -> {
 
-                switch (item.getItemId()) {
-                    case R.id.homeFragment:
+        switch (item.getItemId()) {
+            case R.id.homeFragment:
 
-                        FragmentManager fragmentManager2 = getSupportFragmentManager();
-                        fragmentManager2.beginTransaction().replace(R.id.replace, new News()).commit();
-                        return true;
+                FragmentManager fragmentManager2 = getSupportFragmentManager();
+                fragmentManager2.beginTransaction().replace(R.id.replace, new News()).commit();
+                return true;
 
-                    case R.id.Profile:
+            case R.id.Profile:
 
-                        FragmentManager fragmentManager4 = getSupportFragmentManager();
-                        fragmentManager4.beginTransaction().replace(R.id.replace, new UserProfileFragment()).commit();
-                        return true;
-                    case R.id.players:
-                        FragmentManager fragmentManager5 = getSupportFragmentManager();
-                        fragmentManager5.beginTransaction().replace(R.id.replace, new PlayersFragment()).commit();
-                        return true;
+                FragmentManager fragmentManager4 = getSupportFragmentManager();
+                fragmentManager4.beginTransaction().replace(R.id.replace, new UserProfileFragment()).commit();
+                return true;
+            case R.id.players:
+                FragmentManager fragmentManager5 = getSupportFragmentManager();
+                fragmentManager5.beginTransaction().replace(R.id.replace, new PlayersFragment()).commit();
+                return true;
 //                    case R.id.Map:
 //                        FragmentManager fragmentManager6 = getSupportFragmentManager();
 //                        fragmentManager6.beginTransaction().replace(R.id.replace, new MapFragment()).commit();
 //                        return true;
-               }
+        }
 
-                return false;
-            };
+        return false;
+    };
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
 }
