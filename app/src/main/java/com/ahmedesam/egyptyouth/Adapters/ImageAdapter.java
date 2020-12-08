@@ -1,6 +1,7 @@
 package com.ahmedesam.egyptyouth.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ahmedesam.egyptyouth.Models.ImageModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
+import com.ahmedesam.egyptyouth.Ui.Activities.ShowFullImages;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 
 import java.util.ArrayList;
@@ -24,6 +27,9 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.holder> {
     ArrayList<ImageModel> mItems;
     Context mContext;
     ShardPrefrances mShardPrefrances;
+
+    public ImageAdapter() {
+    }
 
     public ImageAdapter(ArrayList<ImageModel> mItems, Context mContext) {
         this.mItems = mItems;
@@ -43,12 +49,15 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.holder> {
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                mShardPrefrances = new ShardPrefrances(mContext);
-                Log.e("ID", mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID));
-                Log.e("ID#", mItems.get(position).getId());
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users").child(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).child("Images").child(mItems.get(position).getId());
-                databaseReference.removeValue();
                 return false;
+            }
+        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShowFullImages mShowFullImages = new ShowFullImages(mItems.get(position).getUrl());
+                Intent mIntent = new Intent(mContext , ShowFullImages.class);
+                mContext.startActivity(mIntent);
             }
         });
     }
@@ -59,7 +68,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.holder> {
     }
 
     class holder extends RecyclerView.ViewHolder {
-        ImageView mImage;
+        RoundedImageView mImage;
 
         public holder(@NonNull View itemView) {
             super(itemView);

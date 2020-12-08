@@ -25,6 +25,7 @@ import com.ahmedesam.egyptyouth.Adapters.ImageAdapter;
 import com.ahmedesam.egyptyouth.Adapters.VideoUserAdapter;
 import com.ahmedesam.egyptyouth.Models.ImageModel;
 import com.ahmedesam.egyptyouth.Models.userModel;
+import com.ahmedesam.egyptyouth.Zoom.OnActivityStateChanged;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.ahmedesam.egyptyouth.Ui.Activities.splash;
@@ -33,11 +34,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -45,6 +47,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -71,15 +74,15 @@ public class UserProfileFragment extends Fragment {
     TextView mUserSkills;
     //    @BindView(R.id.mPostsNumber)
 //    TextView mPostsNumber;
-    @BindView(R.id.mFollowersNumber)
-    TextView mFollowersNumber;
+//    @BindView(R.id.mFollowersNumber)
+//    TextView mFollowersNumber;
     @BindView(R.id.mFollowNumber)
     TextView mFollowNumber;
     @BindView(R.id.Images)
     RecyclerView Images;
     @BindView(R.id.Videos)
     RecyclerView Videos;
-
+    DatabaseReference databaseReference;
     ArrayList<ImageModel> mImages;
     ArrayList<ImageModel> mVideos;
     VideoUserAdapter mVideoUserAdapter;
@@ -100,7 +103,7 @@ public class UserProfileFragment extends Fragment {
 
     @BindView(R.id.LogOut)
     Button LogOut;
-    private DatabaseReference mDatabase;
+    private FirebaseFirestore mDatabase;
     private Uri filePath;
     ImageModel Image;
     // request code
@@ -112,7 +115,7 @@ public class UserProfileFragment extends Fragment {
     // instance for firebase storage and StorageReference
     FirebaseStorage storage;
     StorageReference storageReference;
-
+    OnActivityStateChanged onActivityStateChanged = null;
 
     static String UTI = "";
 
@@ -128,8 +131,14 @@ public class UserProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_user_profile, container, false);
         mUnbinder = ButterKnife.bind(this, view);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        mDatabase = FirebaseFirestore.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        mImageAdapter = new ImageAdapter();
+        mVideoUserAdapter = new VideoUserAdapter();
+        onActivityStateChanged  = mVideoUserAdapter.onActivityStateChanged;
+        Image = new ImageModel();
+        mImages = new ArrayList<>();
+        mVideos = new ArrayList<>();
         InstItems();
 
         SetData();
@@ -141,54 +150,60 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void LoadUserImages() {
-        mDatabase.child("Users").child(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).child("Images").addValueEventListener(new ValueEventListener() {
+        mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).collection("Images").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mImages = new ArrayList<>();
-                Image = new ImageModel();
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    Image = data.getValue(ImageModel.class);
-                    mImages.add(Image);
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Map<String, String> map = new HashMap<>();
+                if (task.isSuccessful()) {
+                    mImages.clone();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        map = (Map<String, String>) document.getData().get("Image");
 
+                        Image = new ImageModel(map.get("url"), map.get("id"));
+
+
+                        mImages.add(Image);
+                    }
+                    RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity(), 2);
+                    Images.setLayoutManager(manager);
+                    mImageAdapter = new ImageAdapter(mImages, getActivity());
+                    Images.setAdapter(mImageAdapter);
+                } else {
+                    Log.e("Faild To Load Images", Objects.requireNonNull(task.getException().getMessage()));
                 }
-                Log.e("ImageArray", mImages + "");
-                RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity(), 2);
-                Images.setLayoutManager(manager);
-                mImageAdapter = new ImageAdapter(mImages, getActivity());
-                Images.setAdapter(mImageAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
+
+
     }
 
     //----------------------------------------------------------------------------------------------
     private void LoadUserVideos() {
-        mDatabase.child("Users").child(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).child("Videos").addValueEventListener(new ValueEventListener() {
+        mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).collection("Videos").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mVideos = new ArrayList<>();
-                Image = new ImageModel();
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    Image = data.getValue(ImageModel.class);
-                    mVideos.add(Image);
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Map<String, String> map = new HashMap<>();
+                if (task.isSuccessful()){
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        map = (Map<String, String>) document.getData().get("Video");
 
+                        Image = new ImageModel(map.get("url"), map.get("id"));
+
+
+                        mVideos.add(Image);
+                    }
+                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+                    Videos.setLayoutManager(manager);
+                    mVideoUserAdapter = new VideoUserAdapter(mVideos, getActivity());
+                    Videos.setAdapter(mVideoUserAdapter);
                 }
-                Log.e("Videos", mVideos + "");
-                RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-                Videos.setLayoutManager(manager);
-                mVideoUserAdapter = new VideoUserAdapter(mVideos, getActivity());
-                Videos.setAdapter(mVideoUserAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+                else {
+                    Log.e("Faild To Load Videos" , task.getException().getMessage());
+                }
             }
         });
+
+
     }
 
     //----------------------------------------------------------------------------------------------
@@ -202,26 +217,31 @@ public class UserProfileFragment extends Fragment {
     //----------------------------------------------------------------------------------------------
     private void SetData() {
         model = new userModel();
-        mDatabase.child("Users").child(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).addValueEventListener(new ValueEventListener() {
+        mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                model = snapshot.getValue(userModel.class);
-                mUserName.setText(model.getmName());
-                mUserAge.setText(model.getmDate());
-                mUserAddress.setText(model.getmAddress());
-                mUserSkills.setText(model.getmDescription());
+            public void onSuccess(DocumentSnapshot document) {
                 try {
-                    Glide.with(mActivity).load(model.getmImage()).into(UserImage);
+                    model = new userModel(document.getData().get("mName").toString(), document.getData().get("mId").toString(), document.getData().get("mMail").toString(), document.getData().get("mImage").toString(), document.getData().get("mAge").toString(), document.getData().get("mDescription").toString(), document.getData().get("mAddress").toString(), document.getData().get("mLikeNumber").toString());
+
                 } catch (Exception e) {
+                    model = new userModel(document.getData().get("mName").toString(), document.getData().get("mId").toString(), document.getData().get("mMail").toString(), document.getData().get("mImage").toString(), document.getData().get("mLikeNumber").toString());
 
                 }
+                mUserName.setText(model.getmName());
+                mUserAge.setText(model.getmAge());
+                mUserAddress.setText(model.getmAddress());
+                mUserSkills.setText(model.getmDescription());
+                Glide.with(getActivity()).load(model.getmImage()).into(UserImage);
+                mFollowNumber.setText(model.getmLikeNumber());
             }
-
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onFailure(@NonNull Exception e) {
 
             }
         });
+
+
     }
     //----------------------------------------------------------------------------------------------
 
@@ -313,6 +333,7 @@ public class UserProfileFragment extends Fragment {
                     = new ProgressDialog(getActivity());
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
+            progressDialog.setCancelable(false);
 
             // Defining the child of storageReference
             final StorageReference ref
@@ -403,6 +424,7 @@ public class UserProfileFragment extends Fragment {
                     = new ProgressDialog(getActivity());
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
+            progressDialog.setCancelable(false);
 
             // Defining the child of storageReference
             final StorageReference ref
@@ -485,19 +507,22 @@ public class UserProfileFragment extends Fragment {
 
     private void UploadImage() {
         HashMap<String, Object> Map = new HashMap<>();
-        String id = mDatabase.push().getKey();
+
+        String id = databaseReference.push().getKey();
         Image = new ImageModel(UTI, id);
-        Map.put(id, Image);
-        mDatabase.child("Users").child(Objects.requireNonNull(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID))).child("Images").updateChildren(Map);
+        Map.put("Image", Image);
+        mDatabase.collection("Users").document(Objects.requireNonNull(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID))).collection("Images").add(Map);
     }
 
     //----------------------------------------------------------------------------------------------
     private void UploadVideo() {
+
         HashMap<String, Object> Map = new HashMap<>();
-        String id = mDatabase.push().getKey();
+
+        String id = databaseReference.push().getKey();
         Image = new ImageModel(UTI, id);
-        Map.put(id, Image);
-        mDatabase.child("Users").child(Objects.requireNonNull(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID))).child("Videos").updateChildren(Map);
+        Map.put("Video", Image);
+        mDatabase.collection("Users").document(Objects.requireNonNull(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID))).collection("Videos").add(Map);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -505,7 +530,7 @@ public class UserProfileFragment extends Fragment {
     private void UpDateImage() {
         HashMap<String, Object> Map = new HashMap<>();
         Map.put("mImage", UTI);
-        mDatabase.child("Users").child(Objects.requireNonNull(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID))).updateChildren(Map);
+        mDatabase.collection("Users").document(Objects.requireNonNull(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID))).update(Map);
     }
     //----------------------------------------------------------------------------------------------
 
@@ -534,7 +559,8 @@ public class UserProfileFragment extends Fragment {
     public void onStart() {
         super.onStart();
         SetData();
-        LoadUserImages();
+        mVideoUserAdapter.notifyDataSetChanged();
+        mImageAdapter.notifyDataSetChanged();
     }
 
     //----------------------------------------------------------------------------------------------
@@ -568,6 +594,7 @@ public class UserProfileFragment extends Fragment {
                     = new ProgressDialog(getActivity());
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
+            progressDialog.setCancelable(false);
 
             // Defining the child of storageReference
             final StorageReference ref
@@ -649,7 +676,15 @@ public class UserProfileFragment extends Fragment {
     @OnClick(R.id.LogOut)
     public void onViewClicked() {
         mShardPrefrances.logoutUser();
-        Intent mIntent = new Intent(getActivity() , splash.class);
+        Intent mIntent = new Intent(getActivity(), splash.class);
         startActivity(mIntent);
+
+    }
+
+    @Override
+    public void onPause() {
+        if(onActivityStateChanged != null)
+            onActivityStateChanged.onPaused();
+        super.onPause();
     }
 }

@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
 
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        LoadFragment(new News());
+        LoadFragment(new PlayersFragment());
 
 
     }
@@ -61,17 +61,9 @@ public class HomeActivity extends AppCompatActivity {
             = item -> {
 
         switch (item.getItemId()) {
-            case R.id.homeFragment:
 
-                FragmentManager fragmentManager2 = getSupportFragmentManager();
-                fragmentManager2.beginTransaction().replace(R.id.replace, new News()).commit();
-                return true;
 
-            case R.id.Profile:
 
-                FragmentManager fragmentManager4 = getSupportFragmentManager();
-                fragmentManager4.beginTransaction().replace(R.id.replace, new UserProfileFragment()).commit();
-                return true;
             case R.id.players:
                 FragmentManager fragmentManager5 = getSupportFragmentManager();
                 fragmentManager5.beginTransaction().replace(R.id.replace, new PlayersFragment()).commit();
@@ -80,6 +72,11 @@ public class HomeActivity extends AppCompatActivity {
 //                        FragmentManager fragmentManager6 = getSupportFragmentManager();
 //                        fragmentManager6.beginTransaction().replace(R.id.replace, new MapFragment()).commit();
 //                        return true;
+            case R.id.Profile:
+
+                FragmentManager fragmentManager4 = getSupportFragmentManager();
+                fragmentManager4.beginTransaction().replace(R.id.replace, new UserProfileFragment()).commit();
+                return true;
         }
 
         return false;

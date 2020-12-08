@@ -77,8 +77,8 @@ public class News extends Fragment {
 //        });
         SetData();
         InstRec();
-//        GetNationalNews();
-//        GetLocalNews();
+        GetNationalNews();
+        GetLocalNews();
         GetAllNews();
 
         return view;

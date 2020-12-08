@@ -19,14 +19,24 @@ import com.ahmedesam.egyptyouth.Models.ImageModel;
 import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,7 +69,7 @@ public class UserInfo extends AppCompatActivity {
     Button mLike;
     @BindView(R.id.mDisLike)
     Button mDisLike;
-    private DatabaseReference mDatabase;
+    private FirebaseFirestore mDatabase;
     userModel model;
     ImageModel Image;
 
@@ -71,9 +81,11 @@ public class UserInfo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
         ButterKnife.bind(this);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseFirestore.getInstance();
         mIntent = getIntent();
         ID = mIntent.getStringExtra("ID");
+        mImages = new ArrayList<>();
+        mVideos = new ArrayList<>();
         SetData();
 
         LoadUserImages();
@@ -85,78 +97,86 @@ public class UserInfo extends AppCompatActivity {
     //----------------------------------------------------------------------------------------------
     private void SetData() {
         model = new userModel();
-        mDatabase.child("Users").child(ID).addValueEventListener(new ValueEventListener() {
+        mDatabase.collection("Users").document(ID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                model = snapshot.getValue(userModel.class);
-                mUserName.setText(model.getmName());
-                mUserAge.setText(model.getmDate());
-                mUserAddress.setText(model.getmAddress());
-                mUserSkills.setText(model.getmDescription());
+            public void onSuccess(DocumentSnapshot document) {
                 try {
-                    Glide.with(UserInfo.this).load(model.getmImage()).into(UserImage);
+                    model = new userModel(document.getData().get("mName").toString(), document.getData().get("mId").toString(), document.getData().get("mMail").toString(), document.getData().get("mImage").toString(), document.getData().get("mAge").toString(), document.getData().get("mDescription").toString(), document.getData().get("mAddress").toString(), document.getData().get("mLikeNumber").toString());
+
                 } catch (Exception e) {
+                    model = new userModel(document.getData().get("mName").toString(), document.getData().get("mId").toString(), document.getData().get("mMail").toString(), document.getData().get("mImage").toString(), document.getData().get("mLikeNumber").toString());
 
                 }
+                mUserName.setText(model.getmName());
+                mUserAge.setText(model.getmAge());
+                mUserAddress.setText(model.getmAddress());
+                mUserSkills.setText(model.getmDescription());
+                Glide.with(UserInfo.this).load(model.getmImage()).into(UserImage);
             }
-
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onFailure(@NonNull Exception e) {
 
             }
         });
+
+
     }
 
     //----------------------------------------------------------------------------------------------
     private void LoadUserImages() {
-        mDatabase.child("Users").child(ID).child("Images").addValueEventListener(new ValueEventListener() {
+        mDatabase.collection("Users").document(ID).collection("Images").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mImages = new ArrayList<>();
-                Image = new ImageModel();
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    Image = data.getValue(ImageModel.class);
-                    mImages.add(Image);
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Map<String, String> map = new HashMap<>();
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        map = (Map<String, String>) document.getData().get("Image");
 
+                        Image = new ImageModel(map.get("url"), map.get("id"));
+
+
+                        mImages.add(Image);
+                    }
+                    RecyclerView.LayoutManager manager = new GridLayoutManager(UserInfo.this, 2);
+                    Images.setLayoutManager(manager);
+                    mImageAdapter = new ImageAdapter(mImages, UserInfo.this);
+                    Images.setAdapter(mImageAdapter);
+                } else {
+                    Log.e("Faild To Load Images", Objects.requireNonNull(task.getException().getMessage()));
                 }
-                Log.e("ImageArray", mImages + "");
-                RecyclerView.LayoutManager manager = new GridLayoutManager(UserInfo.this, 2);
-                Images.setLayoutManager(manager);
-                mImageAdapter = new ImageAdapter(mImages, UserInfo.this);
-                Images.setAdapter(mImageAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
+
+
     }
 
     //----------------------------------------------------------------------------------------------
     private void LoadUserVideos() {
-        mDatabase.child("Users").child(ID).child("Videos").addValueEventListener(new ValueEventListener() {
+        mDatabase.collection("Users").document(ID).collection("Videos").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mVideos = new ArrayList<>();
-                Image = new ImageModel();
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    Image = data.getValue(ImageModel.class);
-                    mVideos.add(Image);
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                Map<String, String> map = new HashMap<>();
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        map = (Map<String, String>) document.getData().get("Video");
 
+                        Image = new ImageModel(map.get("url"), map.get("id"));
+
+
+                        mVideos.add(Image);
+                    }
+                    RecyclerView.LayoutManager manager = new LinearLayoutManager(UserInfo.this, RecyclerView.VERTICAL, false);
+                    Videos.setLayoutManager(manager);
+                    mVideoUserAdapter = new VideoUserAdapter(mVideos, UserInfo.this);
+                    Videos.setAdapter(mVideoUserAdapter);
+                } else {
+                    Log.e("Faild To Load Videos", task.getException().getMessage());
                 }
-                Log.e("Videos", mVideos + "");
-                RecyclerView.LayoutManager manager = new LinearLayoutManager(UserInfo.this, RecyclerView.VERTICAL, false);
-                Videos.setLayoutManager(manager);
-                mVideoUserAdapter = new VideoUserAdapter(mVideos, UserInfo.this);
-                Videos.setAdapter(mVideoUserAdapter);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
+
+
     }
 
     @OnClick({R.id.mLike, R.id.mDisLike})
@@ -165,41 +185,35 @@ public class UserInfo extends AppCompatActivity {
             case R.id.mLike:
 
                 HashMap<String, Object> map = new HashMap<>();
-                mDatabase.child("Users").child(ID).addValueEventListener(new ValueEventListener() {
+                mDatabase.collection("Users").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        model = snapshot.getValue(userModel.class);
-                        LikeNumber= Integer.parseInt(model.getmLikeNumber());
-                    }
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                   if (task.isSuccessful()){
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
+                       LikeNumber = Integer.parseInt((String) task.getResult().getData().get("mLikeNumber"));
+                   }
                     }
                 });
 
-                map.put("mLikeNumber",String.valueOf(LikeNumber+1));
-                mDatabase.child("Users").child(ID).updateChildren(map);
+                map.put("mLikeNumber", String.valueOf(LikeNumber + 1));
+                mDatabase.collection("Users").document(ID).update(map);
                 mLike.setVisibility(View.GONE);
                 mDisLike.setVisibility(View.VISIBLE);
                 break;
             case R.id.mDisLike:
-                HashMap<String, Object> map2 = new HashMap<>();
-                mDatabase.child("Users").child(ID).addValueEventListener(new ValueEventListener() {
+               HashMap<String, Object> map2 = new HashMap<>();
+                mDatabase.collection("Users").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        model = snapshot.getValue(userModel.class);
-                        LikeNumber= Integer.parseInt(model.getmLikeNumber());
-                    }
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                   if (task.isSuccessful()){
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
+                       LikeNumber = Integer.parseInt((String) task.getResult().getData().get("mLikeNumber"));
+                   }
                     }
                 });
 
-                map2.put("mLikeNumber",String.valueOf(LikeNumber=1));
-                mDatabase.child("Users").child(ID).updateChildren(map2);
+                map2.put("mLikeNumber", String.valueOf(LikeNumber = 1));
+                mDatabase.collection("Users").document(ID).update(map2);
                 mLike.setVisibility(View.VISIBLE);
                 mDisLike.setVisibility(View.GONE);
                 break;

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Football MD </string>
+    <string name="app_name">Go-Football</string>
     <string name="sign_in">Sign In</string>
     <string name="facebook_app_id">1202817026741823</string>
     <string name="fb_login_protocol_scheme">fb1202817026741823</string>
@@ -17,7 +17,6 @@
     <string name="enter_your_name">enter your Name</string>
     <string name="enter_your_skills_description">enter your Skills Description</string>
     <string name="save">save</string>
-    <string name="enter_Your_Name">Please enter your age</string>
     <string name="Enter_Your_Description">Enter Your Description</string>
     <string name="enter_your_age">enter Your Age</string>
     <string name="enter_your_address">enter Your Address</string>
@@ -26,9 +25,13 @@
     <string name="upload_your_images">Upload your Images</string>
     <string name="videos">Videos</string>
     <string name="Images">Images</string>
-    <string name="follow">Follow</string>
+    <string name="follow">Your Likes Number</string>
     <string name="like">Like</string>
     <string name="log_out">Log Out</string>
     <string name="disLike">DisLike</string>
+    <string name="international_news">International News</string>
+    <string name="all_news">All news</string>
+    <string name="national_news">National News</string>
+    <string name="insert_your_information">Insert Your Information</string>
 
 </resources>

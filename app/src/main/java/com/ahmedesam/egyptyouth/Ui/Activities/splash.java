@@ -8,24 +8,31 @@ import android.os.Handler;
 
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class splash extends AppCompatActivity {
-ShardPrefrances mShardPrefrances;
+    ShardPrefrances mShardPrefrances;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         mShardPrefrances = new ShardPrefrances(this);
-        new Handler().postDelayed(new Runnable(){
+
+
+
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (mShardPrefrances.isLoggedIn()) {
-                    Intent mainIntent = new Intent(splash.this,HomeActivity.class);
+                    Intent mainIntent = new Intent(splash.this, HomeActivity.class);
                     splash.this.startActivity(mainIntent);
                     splash.this.finish();
                 }
+
                 else {
-                    Intent mainIntent = new Intent(splash.this,LogIn.class);
+                    Intent mainIntent = new Intent(splash.this, LogIn.class);
                     splash.this.startActivity(mainIntent);
                     splash.this.finish();
                 }
@@ -34,5 +41,5 @@ ShardPrefrances mShardPrefrances;
             }
         }, 1000);
     }
-    }
+}
 

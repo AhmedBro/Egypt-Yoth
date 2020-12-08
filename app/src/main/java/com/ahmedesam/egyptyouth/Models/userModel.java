@@ -1,18 +1,29 @@
 package com.ahmedesam.egyptyouth.Models;
 
 public class userModel {
-    String mName , mId , mMail , mImage , mDate , mDescription , mAddress , mLikeNumber;
+    String mName , mId , mMail , mImage , mAge , mDescription , mAddress , mLikeNumber;
 
-    public String getmDate() {
-        return mDate;
-    }
 
-    public userModel(String mName, String mId, String mMail , String mImage , String mDate ) {
+
+    public userModel(String mName, String mId, String mMail, String mImage, String mDescription, String mLikeNumber) {
         this.mName = mName;
         this.mId = mId;
         this.mMail = mMail;
         this.mImage = mImage;
-        this.mDate = mDate;
+        this.mDescription = mDescription;
+        this.mLikeNumber = mLikeNumber;
+    }
+
+    public String getmAge() {
+        return mAge;
+    }
+
+    public userModel(String mName, String mId, String mMail , String mImage , String mLikeNumber ) {
+        this.mName = mName;
+        this.mId = mId;
+        this.mMail = mMail;
+        this.mImage = mImage;
+        this.mLikeNumber = mLikeNumber;
 
     }
 
@@ -21,6 +32,17 @@ public class userModel {
     }
 
     public userModel() {
+    }
+
+    public userModel(String mName, String mId, String mMail, String mImage, String mAge, String mDescription, String mAddress, String mLikeNumber) {
+        this.mName = mName;
+        this.mId = mId;
+        this.mMail = mMail;
+        this.mImage = mImage;
+        this.mAge = mAge;
+        this.mDescription = mDescription;
+        this.mAddress = mAddress;
+        this.mLikeNumber = mLikeNumber;
     }
 
     public String getmDescription() {

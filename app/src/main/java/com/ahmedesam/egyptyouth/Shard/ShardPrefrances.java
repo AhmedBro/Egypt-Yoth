@@ -27,6 +27,7 @@ public class ShardPrefrances {
     public static final String KEY_BIRTH_DATE = "BirthDate";
     public static final String KEY_DESCRIPTION = "Description";
     public static final String KEY_Address= "Address";
+    public static final String KEY_INSERT= "insert";
 
 
     /**
@@ -79,6 +80,14 @@ public class ShardPrefrances {
         mEditor.putString(KEY_FNAME, mBirthDate);
         mEditor.commit();
     }
+    public void SetIsLogin() {
+        mEditor.putBoolean(IS_LOGIN, true);
+        mEditor.commit();
+    }
+    public void SetInsert() {
+        mEditor.putBoolean(KEY_INSERT, true);
+        mEditor.commit();
+    }
     /**
      * Get stored session data
      */
@@ -127,5 +136,8 @@ public class ShardPrefrances {
      **/
     public boolean isLoggedIn() {
         return mSharedPreferences.getBoolean(IS_LOGIN, false);
+    }
+    public boolean isInsert() {
+        return mSharedPreferences.getBoolean(KEY_INSERT, false);
     }
 }

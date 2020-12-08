@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
@@ -28,9 +29,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,12 +65,14 @@ public class LogIn extends AppCompatActivity {
     AppCompatButton googleSignInButton;
     private CallbackManager callbackManager;
     userModel muUserModel;
-    FirebaseDatabase database;
+    FirebaseFirestore database;
     DatabaseReference myRef;
     ShardPrefrances mShardPrefrances;
     GoogleSignInOptions gso;
 
     GoogleSignInClient mGoogleSignInClient;
+    private FirebaseAuth mAuth;
+    FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +80,7 @@ public class LogIn extends AppCompatActivity {
         setContentView(R.layout.login);
         ButterKnife.bind(this);
         mShardPrefrances = new ShardPrefrances(this);
+        mAuth = FirebaseAuth.getInstance();
         callbackManager = CallbackManager.Factory.create();
         facebookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +93,7 @@ public class LogIn extends AppCompatActivity {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
                         // App code
+                        loadFacebookData(loginResult.getAccessToken());
 
                     }
 
@@ -139,20 +154,30 @@ public class LogIn extends AppCompatActivity {
     };
 
     private void loadFacebookData(AccessToken newAccessToken) {
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(newAccessToken.getToken());
+        mAuth.signInWithCredential(credential);
+
+
         GraphRequest graphRequest = GraphRequest.newMeRequest(newAccessToken, new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
                 try {
+
                     String firstName = object.getString("first_name");
                     String lastName = object.getString("last_name");
                     String email = object.getString("email");
                     String id = object.getString("id");
                     String birthday = object.optString("user_birthday");
                     Log.e("dd", "https://graph.facebook.com/" + id + "/picture?type=large");
-                    mShardPrefrances.createLoginSession(true, id, firstName + " " + lastName, email, "https://graph.facebook.com/" + id + "/picture?type=large" , birthday);
-                    muUserModel = new userModel(firstName + lastName, id, email, "https://graph.facebook.com/" + id + "/picture?type=large" , birthday);
+
+                    FirebaseUser user = mAuth.getCurrentUser();
+
+
+                    mShardPrefrances.createLoginSession(false, id, firstName + " " + lastName, email, "https://graph.facebook.com/" + id + "/picture?type=large", birthday);
+                    muUserModel = new userModel(firstName + lastName, id, email, "https://graph.facebook.com/" + id + "/picture?type=large", birthday);
                     creatNode(muUserModel);
-                    Intent mIntent = new Intent(LogIn.this, HomeActivity.class);
+                    Intent mIntent = new Intent(LogIn.this, InsertYourInfo.class);
                     startActivity(mIntent);
                     finish();
                 } catch (JSONException e) {
@@ -188,14 +213,25 @@ public class LogIn extends AppCompatActivity {
     }
 
     void creatNode(userModel muUserModel) {
-        database = FirebaseDatabase.getInstance();
-        HashMap <String , Object> map = new HashMap<>();
-        map.put("mId" , muUserModel.getmId());
-        map.put("mName" , muUserModel.getmName());
-        map.put("mMail" , muUserModel.getmMail());
-        map.put("mLikeNumber" , "0");
-        myRef = database.getReference("Users");
-        myRef.child(muUserModel.getmId()).updateChildren(map);
+        database = FirebaseFirestore.getInstance();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("mId", muUserModel.getmId());
+        map.put("mName", muUserModel.getmName());
+        map.put("mMail", muUserModel.getmMail());
+        map.put("mLikeNumber", "0");
+        map.put("mImage", muUserModel.getmImage());
+        database.collection("Users").document(muUserModel.getmId()).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.e("LogInSuccess", "Success");
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("LogInFailed", e.getMessage());
+            }
+        });
     }
 
     private void checkLogout() {
@@ -214,16 +250,16 @@ public class LogIn extends AppCompatActivity {
 
         try {
 
-            mShardPrefrances.createLoginSession(true, completedTask.getResult().getId(), completedTask.getResult().getDisplayName(), completedTask.getResult().getEmail(), String.valueOf(completedTask.getResult().getPhotoUrl()) , "");
-            muUserModel = new userModel(completedTask.getResult().getDisplayName(), completedTask.getResult().getId(), completedTask.getResult().getEmail(), String.valueOf(completedTask.getResult().getPhotoUrl()) , "");
+            mShardPrefrances.createLoginSession(false, completedTask.getResult().getId(), completedTask.getResult().getDisplayName(), completedTask.getResult().getEmail(), String.valueOf(completedTask.getResult().getPhotoUrl()), "");
+            muUserModel = new userModel(completedTask.getResult().getDisplayName(), completedTask.getResult().getId(), completedTask.getResult().getEmail(), String.valueOf(completedTask.getResult().getPhotoUrl()), "");
             creatNode(muUserModel);
-            Intent mIntent = new Intent(LogIn.this, HomeActivity.class);
+            Intent mIntent = new Intent(LogIn.this, InsertYourInfo.class);
             startActivity(mIntent);
             finish();
         } catch (Exception e) {
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.e("Google Handle",e.getMessage());
+            Log.e("Google Handle", e.getMessage());
 
         }
     }
@@ -243,5 +279,9 @@ public class LogIn extends AppCompatActivity {
 
         checkLogout();
 
+
+
     }
+
+
 }

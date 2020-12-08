@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Ui.fragments.News"
     android:background="@color/black"
-    >
+    tools:context=".Ui.fragments.News">
 
     <LinearLayout
         android:id="@+id/bar"
@@ -30,38 +29,37 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
+                android:layout_marginLeft="10dp"
                 android:text="@string/app_name"
                 android:textColor="@color/white"
-                android:textSize="18sp"
-                android:layout_marginLeft="10dp"
-                />
+                android:textSize="18sp" />
 
-           <de.hdodenhof.circleimageview.CircleImageView
-               android:layout_width="40dp"
-               android:layout_height="40dp"
-               android:layout_alignParentRight="true"
-               android:layout_marginRight="10dp"
-               android:id="@+id/UserImage"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/UserImage"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp" />
 
         </RelativeLayout>
 
 
-<!--        <EditText-->
-<!--            android:id="@+id/search"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:layout_marginTop="15dp"-->
-<!--            android:background="@drawable/search_shap"-->
-<!--            android:drawableLeft="@drawable/search"-->
-<!--            android:drawablePadding="10dp"-->
-<!--            android:hint="@string/search"-->
-<!--            android:inputType="none"-->
-<!--            android:paddingLeft="20dp"-->
-<!--            android:textColorHint="#8B8A8A"-->
-<!--            android:textSize="15dp"-->
-<!--            android:focusable="false"-->
-<!--            />-->
+        <!--        <EditText-->
+        <!--            android:id="@+id/search"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="40dp"-->
+        <!--            android:layout_gravity="center_horizontal"-->
+        <!--            android:layout_marginTop="15dp"-->
+        <!--            android:background="@drawable/search_shap"-->
+        <!--            android:drawableLeft="@drawable/search"-->
+        <!--            android:drawablePadding="10dp"-->
+        <!--            android:hint="@string/search"-->
+        <!--            android:inputType="none"-->
+        <!--            android:paddingLeft="20dp"-->
+        <!--            android:textColorHint="#8B8A8A"-->
+        <!--            android:textSize="15dp"-->
+        <!--            android:focusable="false"-->
+        <!--            />-->
 
     </LinearLayout>
 
@@ -82,24 +80,62 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <TextView
+                android:id="@+id/text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/international_news"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/InternationalNews"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/InternationalNews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+
+                app:layout_constraintTop_toBottomOf="@id/text1" />
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/national_news"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/InternationalNews" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/NationalNews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/InternationalNews"
+                android:layout_marginTop="10dp"
                 android:background="@null"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/InternationalNews" />
+
+                app:layout_constraintTop_toBottomOf="@+id/text2" />
+
+            <TextView
+                android:id="@+id/text3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/all_news"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/NationalNews" />
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/AllNews"
@@ -109,10 +145,11 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
+                android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/NationalNews" />
+                app:layout_constraintTop_toBottomOf="@+id/text3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

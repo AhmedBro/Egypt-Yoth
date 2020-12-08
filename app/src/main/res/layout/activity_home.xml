@@ -24,12 +24,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:theme="@style/AppTheme"
-        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu"
-        android:background="@color/background"
+        android:background="@color/colorPrimary"
+        app:itemTextColor="@color/white"
+
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

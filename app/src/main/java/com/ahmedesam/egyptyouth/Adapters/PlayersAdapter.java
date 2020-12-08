@@ -2,6 +2,7 @@ package com.ahmedesam.egyptyouth.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.Player> 
     public void onBindViewHolder(@NonNull Player holder, int position) {
         Glide.with(mContext).load(mItems.get(position).getmImage()).into(holder.UserImage);
         holder.mUserDescription.setText(mItems.get(position).getmDescription());
+        Log.e("Des" ,mItems.get(position).getmDescription() );
         holder.UserName.setText(mItems.get(position).getmName());
         holder.mLikeNumber.setText(mItems.get(position).getmLikeNumber()+" "+" Likes");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
