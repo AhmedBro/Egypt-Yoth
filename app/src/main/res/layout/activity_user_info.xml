@@ -45,27 +45,53 @@
                         android:layout_height="100dp"
                         android:layout_margin="10dp" />
 
-
+                    <TextView
+                        android:gravity="center"
+                        android:id="@+id/mUserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:gravity="center"
+                    android:layout_gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/mUserName"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="Cairo , Egypt"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal">
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:text="@string/id"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+                        <TextView
+
+                            android:id="@+id/mUserId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+
+
+                    </LinearLayout>
+
 
                     <LinearLayout
+                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
@@ -77,7 +103,7 @@
                             android:layout_height="wrap_content"
                             android:text="15"
                             android:textColor="@color/white"
-                            android:textSize="18sp" />
+                            android:textSize="15sp" />
 
                         <TextView
 
@@ -86,26 +112,26 @@
                             android:layout_marginStart="3dp"
                             android:text="@string/years"
                             android:textColor="@color/white"
-                            android:textSize="18sp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
 
 
                     <TextView
+                        android:gravity="center"
                         android:id="@+id/mUserAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="Cairo , Egypt"
                         android:textColor="@color/white"
-                        android:textSize="18sp" />
+                        android:textSize="15sp" />
 
                     <TextView
+                        android:gravity="center"
                         android:id="@+id/mUserSkills"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="لاعب يتميز بالقوة والتصويب ويلعب بقدمه اليمني "
                         android:textColor="@color/white"
-                        android:textSize="18dp" />
+                        android:textSize="15sp" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -116,7 +142,7 @@
                 <Button
                     android:id="@+id/mDisLike"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="30dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
@@ -125,12 +151,12 @@
                     android:text="@string/disLike"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="15sp"
+                    android:textSize="12sp"
                     android:textStyle="normal" />
                 <Button
                     android:id="@+id/mLike"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="30dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="15dp"
@@ -139,22 +165,19 @@
                     android:text="@string/like"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
-                    android:textSize="15sp"
+                    android:textSize="12sp"
                     android:textStyle="normal" />
 
             </RelativeLayout>
 
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.5dp"
+                android:background="@color/colorPrimaryDark"
                 android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="@string/Images"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/Images"
@@ -162,16 +185,12 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp" />
 
-            <TextView
+            <View
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="1.5dp"
+                android:background="@color/colorPrimaryDark"
                 android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="@string/videos"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal"/>
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/Videos"

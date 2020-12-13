@@ -25,7 +25,6 @@ import com.ahmedesam.egyptyouth.Adapters.ImageAdapter;
 import com.ahmedesam.egyptyouth.Adapters.VideoUserAdapter;
 import com.ahmedesam.egyptyouth.Models.ImageModel;
 import com.ahmedesam.egyptyouth.Models.userModel;
-import com.ahmedesam.egyptyouth.Zoom.OnActivityStateChanged;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.ahmedesam.egyptyouth.Ui.Activities.splash;
@@ -90,8 +89,7 @@ public class UserProfileFragment extends Fragment {
     ShardPrefrances mShardPrefrances;
     @BindView(R.id.mUserAge)
     TextView mUserAge;
-    @BindView(R.id.mEditPhoto)
-    Button mEditPhoto;
+
     @BindView(R.id.mEditInformation)
     Button mEditInformation;
     @BindView(R.id.mUploadImage)
@@ -103,6 +101,10 @@ public class UserProfileFragment extends Fragment {
 
     @BindView(R.id.LogOut)
     Button LogOut;
+    @BindView(R.id.mUserId)
+    TextView mUserId;
+//    @BindView(R.id.mFollowNumber)
+//    TextView mFollowNumber;
     private FirebaseFirestore mDatabase;
     private Uri filePath;
     ImageModel Image;
@@ -115,7 +117,7 @@ public class UserProfileFragment extends Fragment {
     // instance for firebase storage and StorageReference
     FirebaseStorage storage;
     StorageReference storageReference;
-    OnActivityStateChanged onActivityStateChanged = null;
+
 
     static String UTI = "";
 
@@ -135,7 +137,7 @@ public class UserProfileFragment extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         mImageAdapter = new ImageAdapter();
         mVideoUserAdapter = new VideoUserAdapter();
-        onActivityStateChanged  = mVideoUserAdapter.onActivityStateChanged;
+
         Image = new ImageModel();
         mImages = new ArrayList<>();
         mVideos = new ArrayList<>();
@@ -164,7 +166,7 @@ public class UserProfileFragment extends Fragment {
 
                         mImages.add(Image);
                     }
-                    RecyclerView.LayoutManager manager = new GridLayoutManager(getActivity(), 2);
+                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity() , RecyclerView.HORIZONTAL ,false);
                     Images.setLayoutManager(manager);
                     mImageAdapter = new ImageAdapter(mImages, getActivity());
                     Images.setAdapter(mImageAdapter);
@@ -183,7 +185,7 @@ public class UserProfileFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 Map<String, String> map = new HashMap<>();
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         map = (Map<String, String>) document.getData().get("Video");
 
@@ -192,13 +194,12 @@ public class UserProfileFragment extends Fragment {
 
                         mVideos.add(Image);
                     }
-                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
                     Videos.setLayoutManager(manager);
                     mVideoUserAdapter = new VideoUserAdapter(mVideos, getActivity());
                     Videos.setAdapter(mVideoUserAdapter);
-                }
-                else {
-                    Log.e("Faild To Load Videos" , task.getException().getMessage());
+                } else {
+                    Log.e("Faild To Load Videos", task.getException().getMessage());
                 }
             }
         });
@@ -233,6 +234,7 @@ public class UserProfileFragment extends Fragment {
                 mUserSkills.setText(model.getmDescription());
                 Glide.with(getActivity()).load(model.getmImage()).into(UserImage);
                 mFollowNumber.setText(model.getmLikeNumber());
+                mUserId.setText(model.getmId());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -534,10 +536,10 @@ public class UserProfileFragment extends Fragment {
     }
     //----------------------------------------------------------------------------------------------
 
-    @OnClick({R.id.mEditPhoto, R.id.mEditInformation, R.id.mUploadImage, R.id.mUploadVideo})
+    @OnClick({R.id.UserImage, R.id.mEditInformation, R.id.mUploadImage, R.id.mUploadVideo})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.mEditPhoto:
+            case R.id.UserImage:
 
                 SelectImage();
                 break;
@@ -683,8 +685,8 @@ public class UserProfileFragment extends Fragment {
 
     @Override
     public void onPause() {
-        if(onActivityStateChanged != null)
-            onActivityStateChanged.onPaused();
+
         super.onPause();
+        mVideoUserAdapter = new VideoUserAdapter(false);
     }
 }

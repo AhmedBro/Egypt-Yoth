@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,11 +22,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -69,6 +63,8 @@ public class UserInfo extends AppCompatActivity {
     Button mLike;
     @BindView(R.id.mDisLike)
     Button mDisLike;
+    @BindView(R.id.mUserId)
+    TextView mUserId;
     private FirebaseFirestore mDatabase;
     userModel model;
     ImageModel Image;
@@ -112,6 +108,7 @@ public class UserInfo extends AppCompatActivity {
                 mUserAddress.setText(model.getmAddress());
                 mUserSkills.setText(model.getmDescription());
                 Glide.with(UserInfo.this).load(model.getmImage()).into(UserImage);
+                mUserId.setText(model.getmId());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -138,7 +135,7 @@ public class UserInfo extends AppCompatActivity {
 
                         mImages.add(Image);
                     }
-                    RecyclerView.LayoutManager manager = new GridLayoutManager(UserInfo.this, 2);
+                    RecyclerView.LayoutManager manager = new LinearLayoutManager(UserInfo.this, RecyclerView.HORIZONTAL, false);
                     Images.setLayoutManager(manager);
                     mImageAdapter = new ImageAdapter(mImages, UserInfo.this);
                     Images.setAdapter(mImageAdapter);
@@ -166,7 +163,7 @@ public class UserInfo extends AppCompatActivity {
 
                         mVideos.add(Image);
                     }
-                    RecyclerView.LayoutManager manager = new LinearLayoutManager(UserInfo.this, RecyclerView.VERTICAL, false);
+                    RecyclerView.LayoutManager manager = new LinearLayoutManager(UserInfo.this, RecyclerView.HORIZONTAL, false);
                     Videos.setLayoutManager(manager);
                     mVideoUserAdapter = new VideoUserAdapter(mVideos, UserInfo.this);
                     Videos.setAdapter(mVideoUserAdapter);
@@ -188,10 +185,10 @@ public class UserInfo extends AppCompatActivity {
                 mDatabase.collection("Users").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                   if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
 
-                       LikeNumber = Integer.parseInt((String) task.getResult().getData().get("mLikeNumber"));
-                   }
+                            LikeNumber = Integer.parseInt((String) task.getResult().getData().get("mLikeNumber"));
+                        }
                     }
                 });
 
@@ -201,14 +198,14 @@ public class UserInfo extends AppCompatActivity {
                 mDisLike.setVisibility(View.VISIBLE);
                 break;
             case R.id.mDisLike:
-               HashMap<String, Object> map2 = new HashMap<>();
+                HashMap<String, Object> map2 = new HashMap<>();
                 mDatabase.collection("Users").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                   if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
 
-                       LikeNumber = Integer.parseInt((String) task.getResult().getData().get("mLikeNumber"));
-                   }
+                            LikeNumber = Integer.parseInt((String) task.getResult().getData().get("mLikeNumber"));
+                        }
                     }
                 });
 
@@ -220,5 +217,9 @@ public class UserInfo extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mVideoUserAdapter = new VideoUserAdapter(false);
+    }
 }

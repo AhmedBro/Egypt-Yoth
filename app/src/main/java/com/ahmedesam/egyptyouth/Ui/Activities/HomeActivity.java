@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.ahmedesam.egyptyouth.R;
-import com.ahmedesam.egyptyouth.Ui.fragments.News;
+import com.ahmedesam.egyptyouth.Ui.fragments.Home;
 import com.ahmedesam.egyptyouth.Ui.fragments.PlayersFragment;
 import com.ahmedesam.egyptyouth.Ui.fragments.UserProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
 
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        LoadFragment(new PlayersFragment());
+        LoadFragment(new Home());
 
 
     }
@@ -61,7 +61,10 @@ public class HomeActivity extends AppCompatActivity {
             = item -> {
 
         switch (item.getItemId()) {
-
+            case R.id.homeFragment:
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.replace, new Home()).commit();
+                return true;
 
 
             case R.id.players:

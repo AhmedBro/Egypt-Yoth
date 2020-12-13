@@ -84,8 +84,9 @@ public class InsertYourInfo extends AppCompatActivity {
 
     @OnClick(R.id.mSave)
     public void onViewClicked() {
-        if (Validate()){
-            InsertData(mUserName.getText().toString(),mUserAge.getText().toString(),mDescription,mUserAddress.getText().toString());
+        if (Validate()) {
+            InsertData(mUserName.getText().toString(), mUserAge.getText().toString(), mDescription, mUserAddress.getText().toString());
+            finish();
         }
 
     }

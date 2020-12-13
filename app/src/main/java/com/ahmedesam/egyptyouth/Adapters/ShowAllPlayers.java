@@ -1,42 +1,44 @@
 package com.ahmedesam.egyptyouth.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmedesam.egyptyouth.Models.NewModel;
+import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
-import com.ahmedesam.egyptyouth.Ui.fragments.ShowNewFragment;
+import com.ahmedesam.egyptyouth.Ui.Activities.UserInfo;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
-public class InternationalAndNationalAdapter extends RecyclerView.Adapter<InternationalAndNationalAdapter.holder> {
-    ArrayList<NewModel> mItems;
+public class ShowAllPlayers extends RecyclerView.Adapter<ShowAllPlayers.holder> {
+    ArrayList<userModel> mItems;
     Context mContext;
 
-    public InternationalAndNationalAdapter(ArrayList<NewModel> mItems, Context mContext) {
+
+    public ShowAllPlayers(ArrayList<userModel> mItems, Context mContext) {
         this.mItems = mItems;
         this.mContext = mContext;
+    }
+
+    public ShowAllPlayers() {
+
     }
 
     @NonNull
     @Override
     public holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.international_news_shap, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.show_player_bar, parent, false);
         holder mHolder = new holder(view);
         return mHolder;
     }
@@ -44,15 +46,14 @@ public class InternationalAndNationalAdapter extends RecyclerView.Adapter<Intern
     @Override
     public void onBindViewHolder(@NonNull holder holder, int position) {
 
-        holder.mNewHeader.setText(mItems.get(position).getmHeader());
-        Glide.with(mContext).load(mItems.get(position).getmImage()).into(holder.mNewImage);
+
+        Glide.with(mContext).load(mItems.get(position).getmImage()).into(holder.PlayerImage);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShowNewFragment mShowNewFragment = new ShowNewFragment(mItems.get(position).getmPostID());
-
-
-                mShowNewFragment.show(((AppCompatActivity) mContext).getSupportFragmentManager() , "");
+                Intent mIntent = new Intent(mContext, UserInfo.class);
+                mIntent.putExtra("ID", mItems.get(position).getmId());
+                mContext.startActivity(mIntent);
             }
         });
     }
@@ -64,14 +65,13 @@ public class InternationalAndNationalAdapter extends RecyclerView.Adapter<Intern
 
 
     class holder extends RecyclerView.ViewHolder {
-        ImageView mNewImage;
-        TextView mNewHeader;
+
+        @BindView(R.id.PlayerImage)
+        CircleImageView PlayerImage;
 
         public holder(@NonNull View itemView) {
             super(itemView);
-            mNewHeader = itemView.findViewById(R.id.mNewHeader);
-            mNewImage= itemView.findViewById(R.id.mNewImage);
-
+            ButterKnife.bind(this, itemView);
 
         }
     }

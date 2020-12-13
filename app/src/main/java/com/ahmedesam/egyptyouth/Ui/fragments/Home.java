@@ -1,21 +1,21 @@
 package com.ahmedesam.egyptyouth.Ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ahmedesam.egyptyouth.Adapters.PlayersAdapter;
 import com.ahmedesam.egyptyouth.Adapters.ShowAllPlayers;
 import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -26,42 +26,46 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class PlayersFragment extends Fragment {
+public class Home extends Fragment {
     View view;
-    FirebaseFirestore mDatabaseReference;
-    userModel model;
-    ArrayList<userModel> mPlayers;
-    @BindView(R.id.Players)
-    RecyclerView Players;
-    PlayersAdapter mPlayersAdapter;
     Unbinder mUnbinder;
-    ShardPrefrances mShardPrefrances;
+    ArrayList<userModel> mPlayers;
+    @BindView(R.id.UserImage)
+    CircleImageView UserImage;
     @BindView(R.id.AllPlayers)
     RecyclerView AllPlayers;
+    @BindView(R.id.Posts)
+    RecyclerView Posts;
     ShowAllPlayers mShowAllPlayers;
-
-
+    FirebaseFirestore mDatabaseReference;
+    userModel model;
+    ShardPrefrances mShardPrefrances;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_players, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         mDatabaseReference = FirebaseFirestore.getInstance();
         mShardPrefrances = new ShardPrefrances(getActivity());
-        mPlayersAdapter = new PlayersAdapter();
+        mShowAllPlayers = new ShowAllPlayers();
 
 
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-        Players.setLayoutManager(manager);
-
-        RecyclerView.LayoutManager manager1 = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-        AllPlayers.setLayoutManager(manager1);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
+        AllPlayers.setLayoutManager(manager);
         GetAllUsers();
         return view;
+    }
+
+
+    @OnClick(R.id.UserImage)
+    public void onViewClicked() {
+
     }
 
     private void GetAllUsers() {
@@ -83,20 +87,11 @@ public class PlayersFragment extends Fragment {
 
                     }
                 }
-                mPlayersAdapter = new PlayersAdapter(mPlayers, getActivity());
-                Players.setAdapter(mPlayersAdapter);
 
                 mShowAllPlayers = new ShowAllPlayers(mPlayers, getActivity());
                 AllPlayers.setAdapter(mShowAllPlayers);
             }
         });
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mPlayersAdapter.notifyDataSetChanged();
 
     }
 }

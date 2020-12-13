@@ -34,6 +34,10 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.Player> 
         this.mContext = mContext;
     }
 
+    public PlayersAdapter() {
+
+    }
+
     @NonNull
     @Override
     public Player onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

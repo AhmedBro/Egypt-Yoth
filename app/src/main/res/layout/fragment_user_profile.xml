@@ -30,7 +30,10 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="10dp"
-                android:weightSum="2">
+                android:weightSum="2"
+                android:gravity="center"
+                android:layout_gravity="center"
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -45,16 +48,17 @@
                         android:layout_margin="10dp"
                         android:layout_gravity="center"
                         />
-
-                    <Button
-                        android:id="@+id/mEditPhoto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/edit_photo_button"
-                        android:text="@string/edit"
-                        android:textColor="@color/white" />
-
+                    <TextView
+                        android:id="@+id/mUserName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:gravity="center"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -63,19 +67,35 @@
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:layout_gravity="center"
+                    android:gravity="center"
                     >
 
-                    <TextView
-                        android:id="@+id/mUserName"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal">
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:text="@string/id"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+                        <TextView
+
+                            android:id="@+id/mUserId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
+
+
+                    </LinearLayout>
 
                     <LinearLayout
+                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
@@ -87,7 +107,7 @@
                             android:layout_height="wrap_content"
                             android:text="15"
                             android:textColor="@color/white"
-                            android:textSize="18sp" />
+                            android:textSize="15sp" />
 
                         <TextView
 
@@ -96,24 +116,25 @@
                             android:layout_marginStart="3dp"
                             android:text="@string/years"
                             android:textColor="@color/white"
-                            android:textSize="18sp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
 
 
                     <TextView
+                        android:gravity="center"
                         android:id="@+id/mUserAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:textColor="@color/white"
-                        android:textSize="18sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/mUserSkills"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        android:textSize="18dp"
+                        android:textSize="15sp"
                         android:gravity="center"
                         />
 
@@ -123,15 +144,15 @@
             <Button
                 android:id="@+id/mEditInformation"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="30dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="15dp"
                 android:background="@drawable/edit_photo_button"
-                android:text="@string/add_your_information"
+                android:text="@string/Edit_your_information"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:textStyle="normal" />
 
             <androidx.cardview.widget.CardView
@@ -223,7 +244,7 @@
                             android:gravity="center"
                             android:text="0"
                             android:textColor="@color/white"
-                            android:textSize="25sp"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -233,7 +254,7 @@
                             android:gravity="center"
                             android:text="@string/follow"
                             android:textColor="@color/white"
-                            android:textSize="15sp"
+                            android:textSize="12sp"
 
                             />
                     </LinearLayout>
@@ -241,15 +262,12 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1.5dp"
+                android:background="@color/colorPrimaryDark"
                 android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="@string/Images"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/Images"
@@ -257,16 +275,12 @@
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp" />
 
-            <TextView
+            <View
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_height="1.5dp"
+                android:background="@color/colorPrimaryDark"
                 android:layout_margin="10dp"
-                android:gravity="center"
-                android:text="@string/videos"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                 />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/Videos"

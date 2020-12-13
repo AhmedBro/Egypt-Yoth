@@ -16,6 +16,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/UserImage"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            />
 
         <EditText
             android:textColor="@color/white"

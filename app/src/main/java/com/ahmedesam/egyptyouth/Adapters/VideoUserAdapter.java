@@ -2,33 +2,41 @@ package com.ahmedesam.egyptyouth.Adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-
-import android.util.Log;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.widget.ProgressBar;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.ahmedesam.egyptyouth.Models.ImageModel;
-import com.ahmedesam.egyptyouth.Zoom.OnActivityStateChanged;
 import com.ahmedesam.egyptyouth.R;
+import com.ahmedesam.egyptyouth.Ui.Activities.ShowFullVideo;
+import com.devbrackets.android.exomedia.ui.widget.VideoView;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.analytics.AnalyticsListener;
 
 
 import java.util.ArrayList;
 
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
-public class VideoUserAdapter extends RecyclerView.Adapter<VideoUserAdapter.Video> {
-    public OnActivityStateChanged onActivityStateChanged;
+public class VideoUserAdapter extends RecyclerView.Adapter<VideoUserAdapter.Video> implements AnalyticsListener {
+
     ArrayList<ImageModel> mItems;
     Context mContext;
+    boolean Status = true;
+
+    public VideoUserAdapter(boolean status) {
+        Status = status;
+    }
 
     public VideoUserAdapter() {
     }
@@ -36,6 +44,8 @@ public class VideoUserAdapter extends RecyclerView.Adapter<VideoUserAdapter.Vide
     public VideoUserAdapter(ArrayList<ImageModel> mItems, Context mContext) {
         this.mItems = mItems;
         this.mContext = mContext;
+
+
     }
 
     @NonNull
@@ -46,71 +56,24 @@ public class VideoUserAdapter extends RecyclerView.Adapter<VideoUserAdapter.Vide
 
     @Override
     public void onBindViewHolder(@NonNull Video holder, int position) {
-        Log.e("Video", mItems.get(position).getUrl());
-        holder.videoWeb.setUp(mItems.get(position).getUrl(), JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL);
 
-// Sets a callback to receive normal player events.
+        if (!Status) {
+            holder.videoWeb.pause();
+        }
+        holder.videoWeb.setVideoURI(Uri.parse(mItems.get(position).getUrl()));
 
-// Sets a callback that can be used to retrieve updates of the current playback position.
 
-
-//        MediaController mediaController = new MediaController(mContext);
-//        mediaController.setAnchorView(holder.videoWeb);
-//        holder.videoWeb.setMediaController(mediaController);
-//        holder.videoWeb.setVideoURI(Uri.parse(mItems.get(position).getUrl()));
-//
-//
-//        holder.videoWeb.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//            @Override
-//            public void onPrepared(MediaPlayer mp) {
-//                mp.start();
-//            }
-//        });
-//
-//        holder.videoWeb.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-//            @Override
-//            public boolean onInfo(MediaPlayer mp, int what, int extra) {
-//                switch (what) {
-//                    case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
-//                    case MediaPlayer.MEDIA_INFO_BUFFERING_END: {
-//                        holder.mImageView.setVisibility(View.GONE);
-//                        return true;
-//                    }
-//                    case MediaPlayer.MEDIA_INFO_BUFFERING_START: {
-//                        holder.mImageView.setVisibility(View.VISIBLE);
-//                        return true;
-//                    }
-//
-//                }
-//                return false;
-//            }
-//        });
-//        holder.videoWeb.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//            @Override
-//            public void onCompletion(MediaPlayer mp) {
-//                mp.start();
-//            }
-//        });
-
-//        holder.videoWeb.setVideoURI(Uri.parse(mItems.get(position).getUrl()));
-//        holder.videoWeb.setOnPreparedListener(new OnPreparedListener() {
-//            @Override
-//            public void onPrepared() {
-//
-//
-//            }
-//        });
-        onActivityStateChanged = new OnActivityStateChanged() {
+        holder.FullScreen.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResumed() {
-               holder.videoWeb.releaseAllVideos();
-            }
+            public void onClick(View v) {
+                ShowFullVideo mShowFullVideo = new ShowFullVideo(mItems.get(position).getUrl());
+                Intent intent = new Intent(mContext, ShowFullVideo.class);
+                mContext.startActivity(intent);
 
-            @Override
-            public void onPaused() {
-                holder.videoWeb.releaseAllVideos();
             }
-        };
+        });
+
+
     }
 
     @Override
@@ -119,16 +82,20 @@ public class VideoUserAdapter extends RecyclerView.Adapter<VideoUserAdapter.Vide
     }
 
 
-    class Video extends RecyclerView.ViewHolder {
-        JCVideoPlayerStandard videoWeb;
-        ProgressBar mImageView;
+    public static class Video extends RecyclerView.ViewHolder {
+        
+        public VideoView videoWeb;
+
+
+        @BindView(R.id.FullScreen)
+        ImageView FullScreen;
+
 
         @SuppressLint("SetJavaScriptEnabled")
         public Video(@NonNull View itemView) {
             super(itemView);
+            ButterKnife.bind(this, itemView);
             videoWeb = itemView.findViewById(R.id.videoWebView);
-//            mImageView = itemView.findViewById(R.id.imagePlay);
-
         }
 
 
