@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Ui.fragments.CommentsFragment"
+    android:orientation="vertical"
+    >
+
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textSize="20sp"
+    android:background="@color/colorPrimary"
+    android:text="@string/comments"
+    android:gravity="center"
+    android:padding="5dp"
+    android:textColor="@color/white"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/Comments"/>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:weightSum="3"
+    >
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.3"
+        android:layout_margin="5dp"
+        android:id="@+id/mUserImage"/>
+    <EditText
+        android:layout_weight="0.4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="@string/type_your_comment"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        android:id="@+id/mUserComment"/>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/send"
+        android:layout_weight="1.3"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:id="@+id/mSend"
+        />
+
+</LinearLayout>
+
+
+</LinearLayout>

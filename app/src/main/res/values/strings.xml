@@ -36,5 +36,9 @@
     <string name="comment">Comment</string>
     <string name="id">ID: </string>
     <string name="players">Players</string>
+    <string name="new_post">New Post</string>
+    <string name="type_your_caption">Type Your Caption</string>
+    <string name="comments">Comments</string>
+    <string name="type_your_comment">Type Your Comment</string>
 
 </resources>

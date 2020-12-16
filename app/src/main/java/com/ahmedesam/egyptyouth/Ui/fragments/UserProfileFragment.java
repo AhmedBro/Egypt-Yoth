@@ -71,10 +71,7 @@ public class UserProfileFragment extends Fragment {
     TextView mUserAddress;
     @BindView(R.id.mUserSkills)
     TextView mUserSkills;
-    //    @BindView(R.id.mPostsNumber)
-//    TextView mPostsNumber;
-//    @BindView(R.id.mFollowersNumber)
-//    TextView mFollowersNumber;
+
     @BindView(R.id.mFollowNumber)
     TextView mFollowNumber;
     @BindView(R.id.Images)

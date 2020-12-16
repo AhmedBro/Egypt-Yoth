@@ -1,5 +1,6 @@
 package com.ahmedesam.egyptyouth.Ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +12,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ahmedesam.egyptyouth.Adapters.PostsAdapter;
 import com.ahmedesam.egyptyouth.Adapters.ShowAllPlayers;
+import com.ahmedesam.egyptyouth.Models.PostModel;
 import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 
+import com.ahmedesam.egyptyouth.Ui.Activities.AddPost;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -23,6 +27,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +52,10 @@ public class Home extends Fragment {
     FirebaseFirestore mDatabaseReference;
     userModel model;
     ShardPrefrances mShardPrefrances;
+    PostsAdapter mPostsAdapter;
+    ArrayList<PostModel> mPosts;
+    PostModel mPostModel;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,17 +65,54 @@ public class Home extends Fragment {
         mDatabaseReference = FirebaseFirestore.getInstance();
         mShardPrefrances = new ShardPrefrances(getActivity());
         mShowAllPlayers = new ShowAllPlayers();
+        mPostsAdapter = new PostsAdapter();
 
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
         AllPlayers.setLayoutManager(manager);
+        RecyclerView.LayoutManager manager1 = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        Posts.setLayoutManager(manager1);
         GetAllUsers();
+        GetPosts();
         return view;
+    }
+
+    private void GetPosts() {
+        mPosts = new ArrayList<>();
+        mDatabaseReference.collection("Posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        mPostModel = new PostModel((String.valueOf(document.getData().get("mPost"))),
+                                String.valueOf(document.getData().get("mImage")),
+                                String.valueOf(document.getData().get("mLikeNumber")),
+                                String.valueOf(document.getData().get("mPostID")),
+                                String.valueOf(document.getData().get("mUserId")),
+                                String.valueOf(document.getData().get("mVideo")),
+                                String.valueOf(document.getData().get("mUserName")),
+                                String.valueOf(document.getData().get("mUserImage")));
+                        mPosts.add(mPostModel);
+                    }
+                    Collections.sort(mPosts, new Comparator<PostModel>() {
+                        @Override
+                        public int compare(PostModel o1, PostModel o2) {
+                            return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());                        }
+                    });
+                    mPostsAdapter = new PostsAdapter(mPosts , getActivity());
+                    Posts.setAdapter(mPostsAdapter);
+
+                }
+            }
+        });
     }
 
 
     @OnClick(R.id.UserImage)
     public void onViewClicked() {
+        Intent mIntent = new Intent(getActivity(), AddPost.class);
+
+        startActivity(mIntent);
 
     }
 
@@ -93,5 +141,18 @@ public class Home extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mPostsAdapter.notifyDataSetChanged();
+        mShowAllPlayers.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPostsAdapter = new PostsAdapter(false);
     }
 }

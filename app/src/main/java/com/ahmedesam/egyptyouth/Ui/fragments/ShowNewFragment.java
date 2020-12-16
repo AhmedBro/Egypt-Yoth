@@ -1,7 +1,6 @@
 package com.ahmedesam.egyptyouth.Ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import com.ahmedesam.egyptyouth.Models.NewModel;
+import com.ahmedesam.egyptyouth.Models.PostModel;
 import com.ahmedesam.egyptyouth.R;
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
@@ -19,15 +18,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.varunest.sparkbutton.SparkButton;
-import com.varunest.sparkbutton.SparkEventListener;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
@@ -44,7 +40,7 @@ public class ShowNewFragment extends DialogFragment {
     @BindView(R.id.LikeNumber)
     TextView LikeNumber;
     static String Id;
-    NewModel model;
+    PostModel model;
     Unbinder mUnbinder;
     static boolean check = false;
 
@@ -72,12 +68,12 @@ public class ShowNewFragment extends DialogFragment {
         mDatabaseReference.child("News").child("AllNews").child(Id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                model = snapshot.getValue(NewModel.class);
+                model = snapshot.getValue(PostModel.class);
 
                 Glide.with(Objects.requireNonNull(getActivity())).load(model.getmImage()).into(mNewImage);
-                mNew.setText(model.getmNew());
-                mNewHeader.setText(model.getmHeader());
-                LikeNumber.setText(model.getmLikeNumber());
+//                mNew.setText(model.getmNew());
+//                mNewHeader.setText(model.getmHeader());
+//                LikeNumber.setText(model.getmLikeNumber());
             }
 
             @Override

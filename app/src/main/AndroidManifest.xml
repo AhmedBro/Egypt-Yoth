@@ -18,9 +18,12 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Ui.Activities.ShowFullVideo"
+        <activity android:name=".Ui.Activities.AddPost"
             android:theme="@style/AppTheme.NoActionBar"
             />
+        <activity
+            android:name=".Ui.Activities.ShowFullVideo"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Ui.Activities.InsertYourInfo"
             android:theme="@style/AppTheme.NoActionBar" />
