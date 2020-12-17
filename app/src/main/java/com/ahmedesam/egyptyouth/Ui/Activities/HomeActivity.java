@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.ahmedesam.egyptyouth.R;
+import com.ahmedesam.egyptyouth.Ui.fragments.ChatsFragment;
 import com.ahmedesam.egyptyouth.Ui.fragments.Home;
 import com.ahmedesam.egyptyouth.Ui.fragments.PlayersFragment;
 import com.ahmedesam.egyptyouth.Ui.fragments.UserProfileFragment;
@@ -71,15 +72,16 @@ public class HomeActivity extends AppCompatActivity {
                 FragmentManager fragmentManager5 = getSupportFragmentManager();
                 fragmentManager5.beginTransaction().replace(R.id.replace, new PlayersFragment()).commit();
                 return true;
-//                    case R.id.Map:
-//                        FragmentManager fragmentManager6 = getSupportFragmentManager();
-//                        fragmentManager6.beginTransaction().replace(R.id.replace, new MapFragment()).commit();
-//                        return true;
+//
             case R.id.Profile:
 
                 FragmentManager fragmentManager4 = getSupportFragmentManager();
                 fragmentManager4.beginTransaction().replace(R.id.replace, new UserProfileFragment()).commit();
                 return true;
+            case R.id.Chats:
+                        FragmentManager fragmentManager6 = getSupportFragmentManager();
+                        fragmentManager6.beginTransaction().replace(R.id.replace, new ChatsFragment()).commit();
+                        return true;
         }
 
         return false;

@@ -5,21 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bar_home"
+        android:gravity="center"
         android:orientation="vertical"
         android:padding="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:gravity="center"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -32,81 +30,71 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerInParent="true"
-                android:text="@string/app_name"
+                android:text="@string/home"
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="italic"
+                android:layout_marginStart="10dp"
                 />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/UserImage"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_margin="5dp"
-                android:src="@drawable/add_post"
-                />
+                android:src="@drawable/add_post" />
 
         </RelativeLayout>
 
 
-        <!--        <EditText-->
-        <!--            android:id="@+id/search"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="40dp"-->
-        <!--            android:layout_gravity="center_horizontal"-->
-        <!--            android:layout_marginTop="15dp"-->
-        <!--            android:background="@drawable/search_shap"-->
-        <!--            android:drawableLeft="@drawable/search"-->
-        <!--            android:drawablePadding="10dp"-->
-        <!--            android:hint="@string/search"-->
-        <!--            android:inputType="none"-->
-        <!--            android:paddingLeft="20dp"-->
-        <!--            android:textColorHint="#8B8A8A"-->
-        <!--            android:textSize="15dp"-->
-        <!--            android:focusable="false"-->
-        <!--            />-->
 
     </LinearLayout>
 
-<androidx.core.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bar"
+        android:layout_height="match_parent">
 
-        >
-
-
-        <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/AllPlayers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
-        />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/Posts"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bar"
 
             >
-        </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
 
-</androidx.core.widget.NestedScrollView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/AllPlayers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:layout_margin="10dp"
+                android:background="@color/white" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/Posts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+
+               />
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 
 
 </LinearLayout>

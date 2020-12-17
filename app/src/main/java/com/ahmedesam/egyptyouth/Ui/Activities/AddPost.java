@@ -115,7 +115,7 @@ public class AddPost extends AppCompatActivity {
     private void BublishPost() {
 
         if (mCaption.getText().toString().isEmpty() && String.valueOf(filePath).isEmpty()) {
-            Snackbar.make(findViewById(android.R.id.content), "Please Type Caption Or Choose Image", Snackbar.LENGTH_LONG).show();
+            Toast.makeText(this, "Please Type Caption Or Choose Image", Toast.LENGTH_SHORT).show();
         } else {
             if (Type.equals("Image")) {
                 uploadUserImage();
@@ -355,7 +355,7 @@ public class AddPost extends AppCompatActivity {
         mDatabase.collection("Posts").document(id).set(mPostModel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Snackbar.make(findViewById(android.R.id.content), "You area Shared a Post ", Snackbar.LENGTH_LONG).show();
+                Toast.makeText(AddPost.this, "ou area Shared a Post ", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }).addOnFailureListener(new OnFailureListener() {

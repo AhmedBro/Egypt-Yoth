@@ -16,10 +16,10 @@
         android:title="@string/profile" />
 
 
-    <!--    <item-->
-    <!--        android:id="@+id/Exams"-->
-    <!--        android:icon="@drawable/exam"-->
-    <!--        android:title="@string/exams_time" />-->
+        <item
+            android:id="@+id/Chats"
+            android:icon="@drawable/exam"
+            android:title="@string/exams_time" />
 
 
 </menu>

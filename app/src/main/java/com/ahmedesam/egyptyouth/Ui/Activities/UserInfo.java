@@ -17,6 +17,7 @@ import com.ahmedesam.egyptyouth.Adapters.VideoUserAdapter;
 import com.ahmedesam.egyptyouth.Models.ImageModel;
 import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
+import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -65,12 +66,18 @@ public class UserInfo extends AppCompatActivity {
     Button mDisLike;
     @BindView(R.id.mUserId)
     TextView mUserId;
+    @BindView(R.id.mChat)
+    Button mChat;
     private FirebaseFirestore mDatabase;
     userModel model;
     ImageModel Image;
 
     Intent mIntent;
     static int LikeNumber;
+    ShardPrefrances mShardPrefrances;
+
+    static String mName;
+    static String mImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,11 +89,32 @@ public class UserInfo extends AppCompatActivity {
         ID = mIntent.getStringExtra("ID");
         mImages = new ArrayList<>();
         mVideos = new ArrayList<>();
+        mShardPrefrances = new ShardPrefrances(this);
         SetData();
 
         LoadUserImages();
 
         LoadUserVideos();
+
+        CheckIfLiked();
+
+    }
+
+    private void CheckIfLiked() {
+        mDatabase.collection("Users").document(ID).collection("User Liked").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        if (document.getData().get("Id").toString().equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
+                            mLike.setVisibility(View.GONE);
+                            mDisLike.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+        });
     }
 
 
@@ -104,6 +132,8 @@ public class UserInfo extends AppCompatActivity {
 
                 }
                 mUserName.setText(model.getmName());
+                mName = model.getmName();
+                mImage = model.getmImage();
                 mUserAge.setText(model.getmAge());
                 mUserAddress.setText(model.getmAddress());
                 mUserSkills.setText(model.getmDescription());
@@ -182,6 +212,9 @@ public class UserInfo extends AppCompatActivity {
             case R.id.mLike:
 
                 HashMap<String, Object> map = new HashMap<>();
+                HashMap<String, Object> map3 = new HashMap<>();
+                map3.put("Id", mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID));
+                mDatabase.collection("Users").document(ID).collection("User Liked").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).set(map3);
                 mDatabase.collection("Users").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -199,6 +232,8 @@ public class UserInfo extends AppCompatActivity {
                 break;
             case R.id.mDisLike:
                 HashMap<String, Object> map2 = new HashMap<>();
+                mDatabase.collection("Users").document(ID).collection("User Liked").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).delete();
+
                 mDatabase.collection("Users").document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -221,5 +256,17 @@ public class UserInfo extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mVideoUserAdapter = new VideoUserAdapter(false);
+    }
+
+    @OnClick(R.id.mChat)
+    public void onViewClicked() {
+
+        Intent mIntent = new Intent(this, ChatActivity.class);
+        mIntent.putExtra("Id", ID);
+        mIntent.putExtra("Name", mName);
+        mIntent.putExtra("Image", mImage);
+
+
+        startActivity(mIntent);
     }
 }
