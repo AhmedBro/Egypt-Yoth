@@ -56,12 +56,17 @@ public class InsertYourInfo extends AppCompatActivity {
         mShardPrefrances = new ShardPrefrances(this);
         mDatabase = FirebaseFirestore.getInstance();
         mPositions = new ArrayList<>();
-        mPositions.add("قلب الدفاع (Center Back)");
-        mPositions.add("الارتكاز الدفاعي (Defensive Midfielder)");
-        mPositions.add("لاعب الدائرة (Central Midfielder)");
-        mPositions.add("حارس المرمى (GK):");
-        mPositions.add("قلب الدفاع (CB):");
-        mPositions.add("ظهير دفاعي يمين وظهير دفاعي شمال (RB/LB):");
+        mPositions.add(getString(R.string.Gk));
+        mPositions.add(getString(R.string.CB));
+        mPositions.add(getString(R.string.RB));
+        mPositions.add(getString(R.string.LB));
+        mPositions.add(getString(R.string.DMF));
+        mPositions.add(getString(R.string.CMF));
+        mPositions.add(getString(R.string.SS));
+        mPositions.add(getString(R.string.AMF));
+        mPositions.add(getString(R.string.RMF));
+        mPositions.add(getString(R.string.LWF));
+        mPositions.add(getString(R.string.CF));
         ArrayAdapter arrayAdapter;
 
         arrayAdapter = new ArrayAdapter(InsertYourInfo.this, R.layout.spinner_shap, mPositions);
@@ -110,10 +115,10 @@ public class InsertYourInfo extends AppCompatActivity {
 
     void InsertData(String aName, String aAge, String aDescription, String aAddress) {
         HashMap<String, Object> Map = new HashMap<>();
-        Map.put("mName", aName);
-        Map.put("mAge", aAge);
-        Map.put("mDescription", aDescription);
-        Map.put("mAddress", aAddress);
+        Map.put("mName", aName.toUpperCase());
+        Map.put("mAge", aAge.toUpperCase());
+        Map.put("mDescription", aDescription.toUpperCase());
+        Map.put("mAddress", aAddress.toUpperCase());
         mShardPrefrances.EditAge(aAge);
         mShardPrefrances.EditAddress(aAddress);
         mShardPrefrances.EditDescription(aDescription);

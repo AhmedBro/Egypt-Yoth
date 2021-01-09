@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -116,6 +117,7 @@ public class CommentsFragment extends BottomSheetDialogFragment {
             model = new CommentModel(mUserComment.getText().toString(), mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_FNAME), mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_IMAGE), id, mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID));
             mDatabaseReference.collection("Posts").document(Id).collection("Comments").document(id).set(model);
             mUserComment.setText("");
+            Toast.makeText(getContext(), R.string.add_Comment, Toast.LENGTH_SHORT).show();
             dismiss();
         }
     }

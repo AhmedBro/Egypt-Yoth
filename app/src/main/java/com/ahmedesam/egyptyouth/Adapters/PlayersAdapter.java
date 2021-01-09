@@ -63,7 +63,7 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.Player> 
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return (mItems == null) ? 0 : mItems.size();
     }
 
     class Player extends RecyclerView.ViewHolder {

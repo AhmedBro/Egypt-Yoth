@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmedesam.egyptyouth.Adapters.ImageAdapter;
+import com.ahmedesam.egyptyouth.Adapters.PostsAdapter;
 import com.ahmedesam.egyptyouth.Adapters.VideoUserAdapter;
 import com.ahmedesam.egyptyouth.Models.ImageModel;
+import com.ahmedesam.egyptyouth.Models.PostModel;
 import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
@@ -29,6 +31,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -71,14 +75,18 @@ public class UserInfo extends AppCompatActivity {
     private FirebaseFirestore mDatabase;
     userModel model;
     ImageModel Image;
-
+    @BindView(R.id.mPosts)
+    RecyclerView mUserPosts;
     Intent mIntent;
     static int LikeNumber;
     ShardPrefrances mShardPrefrances;
 
     static String mName;
     static String mImage;
-
+    PostModel mPostModel;
+    FirebaseFirestore mDatabaseReference;
+    PostsAdapter mPostsAdapter;
+    ArrayList<PostModel> mPosts;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,16 +97,52 @@ public class UserInfo extends AppCompatActivity {
         ID = mIntent.getStringExtra("ID");
         mImages = new ArrayList<>();
         mVideos = new ArrayList<>();
+        LinearLayoutManager manager = new LinearLayoutManager(this , RecyclerView.VERTICAL ,false);
+        mUserPosts.setLayoutManager(manager);
         mShardPrefrances = new ShardPrefrances(this);
         SetData();
-
+        mDatabaseReference = FirebaseFirestore.getInstance();
         LoadUserImages();
 
         LoadUserVideos();
 
+        LoadPosts();
+
         CheckIfLiked();
 
     }
+
+    private void LoadPosts() {
+        mPosts = new ArrayList<>();
+        mDatabaseReference.collection("Users").document(ID).collection("Posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        mPostModel = new PostModel((String.valueOf(document.getData().get("mPost"))),
+                                String.valueOf(document.getData().get("mImage")),
+                                String.valueOf(document.getData().get("mLikeNumber")),
+                                String.valueOf(document.getData().get("mPostID")),
+                                String.valueOf(document.getData().get("mUserId")),
+                                String.valueOf(document.getData().get("mVideo")),
+                                String.valueOf(document.getData().get("mUserName")),
+                                String.valueOf(document.getData().get("mUserImage")));
+                        mPosts.add(mPostModel);
+                    }
+                    Collections.sort(mPosts, new Comparator<PostModel>() {
+                        @Override
+                        public int compare(PostModel o1, PostModel o2) {
+                            return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());
+                        }
+                    });
+                    mPostsAdapter = new PostsAdapter(mPosts, UserInfo.this);
+                    mUserPosts.setAdapter(mPostsAdapter);
+
+                }
+            }
+        });
+    }
+
 
     private void CheckIfLiked() {
         mDatabase.collection("Users").document(ID).collection("User Liked").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

@@ -11,16 +11,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.FragmentManager;
 
 import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
+import com.ahmedesam.egyptyouth.Ui.Activities.InsertYourInfo;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,6 +39,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
@@ -52,8 +57,7 @@ public class EditInformationFragment extends BottomSheetDialogFragment {
     View view;
     @BindView(R.id.mUserName)
     EditText mUserName;
-    @BindView(R.id.mUserDescription)
-    EditText mUserDescription;
+
     @BindView(R.id.mUserAge)
     EditText mUserAge;
     @BindView(R.id.mSave)
@@ -62,6 +66,9 @@ public class EditInformationFragment extends BottomSheetDialogFragment {
     EditText mUserAddress;
     @BindView(R.id.UserImage)
     CircleImageView UserImage;
+    @BindView(R.id.mSpinner)
+    AppCompatSpinner mSpinner;
+    static ArrayList<String> mPositions;
     private Uri filePath;
     private FirebaseFirestore mDatabase;
     ShardPrefrances mShardPrefrances;
@@ -73,6 +80,7 @@ public class EditInformationFragment extends BottomSheetDialogFragment {
     userModel model;
     static String UTI = "";
     private final int PICK_IMAGE_REQUEST = 22;
+    static String mDescription;
     public EditInformationFragment(String id) {
         Id = id;
     }
@@ -102,6 +110,37 @@ public class EditInformationFragment extends BottomSheetDialogFragment {
                 SelectImage();
             }
         });
+
+        mPositions = new ArrayList<>();
+        mPositions.add(getString(R.string.Gk));
+        mPositions.add(getString(R.string.CB));
+        mPositions.add(getString(R.string.RB));
+        mPositions.add(getString(R.string.LB));
+        mPositions.add(getString(R.string.DMF));
+        mPositions.add(getString(R.string.CMF));
+        mPositions.add(getString(R.string.SS));
+        mPositions.add(getString(R.string.AMF));
+        mPositions.add(getString(R.string.RMF));
+        mPositions.add(getString(R.string.LWF));
+        mPositions.add(getString(R.string.CF));
+        ArrayAdapter arrayAdapter;
+
+        arrayAdapter = new ArrayAdapter(getActivity(), R.layout.spinner_shap, mPositions);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(arrayAdapter);
+        mSpinner.setSelection(arrayAdapter.getCount() - 1); //display hint
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mDescription = mPositions.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         return view;
     }
 
@@ -109,11 +148,7 @@ public class EditInformationFragment extends BottomSheetDialogFragment {
         if (mUserAge.getText().toString().isEmpty()) {
             Snackbar.make(mActivity.findViewById(android.R.id.content), R.string.enter_your_age, Snackbar.LENGTH_LONG).show();
             return false;
-        } else if (mUserDescription.getText().toString().isEmpty()) {
-            Snackbar.make(mActivity.findViewById(android.R.id.content), R.string.Enter_Your_Description, Snackbar.LENGTH_LONG).show();
-
-            return false;
-        } else if (mUserName.getText().toString().isEmpty()) {
+        }  else if (mUserName.getText().toString().isEmpty()) {
             Snackbar.make(mActivity.findViewById(android.R.id.content), R.string.enter_your_name, Snackbar.LENGTH_LONG).show();
 
             return false;
@@ -128,11 +163,11 @@ public class EditInformationFragment extends BottomSheetDialogFragment {
             HashMap<String, Object> Map = new HashMap<>();
             Map.put("mName", mUserName.getText().toString());
             Map.put("mAge", mUserAge.getText().toString());
-            Map.put("mDescription", mUserDescription.getText().toString());
+            Map.put("mDescription", mDescription);
             Map.put("mAddress", mUserAddress.getText().toString());
             mShardPrefrances.EditAge(mUserAge.getText().toString());
             mShardPrefrances.EditAddress(mUserAddress.getText().toString());
-            mShardPrefrances.EditDescription(mUserDescription.getText().toString());
+            mShardPrefrances.EditDescription(mDescription);
             mShardPrefrances.EditName(mUserName.getText().toString());
             mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).update(Map).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -175,7 +210,7 @@ public class EditInformationFragment extends BottomSheetDialogFragment {
                 mUserName.setText(model.getmName());
                 mUserAge.setText(model.getmAge());
                 mUserAddress.setText(model.getmAddress());
-                mUserDescription.setText(model.getmDescription());
+
                 Glide.with(getActivity()).load(model.getmImage()).into(UserImage);
 
             }

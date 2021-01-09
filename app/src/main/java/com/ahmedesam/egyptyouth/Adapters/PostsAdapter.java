@@ -97,7 +97,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.holder> {
         Log.e("Immage", mItems.get(position).getmUserImage());
         holder.mUserName.setText(mItems.get(position).getmUserName());
 
-        holder.mLikeNumber.setText(mItems.get(position).getmLikeNumber() + " " + "Likes");
+       if (Integer.parseInt(mItems.get(position).getmLikeNumber())<0){
+           holder.mLikeNumber.setText("0" + " " + "Likes");
+       }
+       else {
+           holder.mLikeNumber.setText(mItems.get(position).getmLikeNumber() + " " + "Likes");
+       }
         Glide.with(mContext).load(mItems.get(position).getmUserImage()).into(holder.mUserImage);
         readMoreOption.addReadMoreTo(holder.mPostText, mItems.get(position).getmPost());
         if (mItems.get(position).getmImage().isEmpty()) {

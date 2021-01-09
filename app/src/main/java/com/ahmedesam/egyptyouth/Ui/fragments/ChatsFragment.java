@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmedesam.egyptyouth.Adapters.Chats;
 import com.ahmedesam.egyptyouth.Models.Contact;
+import com.ahmedesam.egyptyouth.Models.ModelChat;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,7 +76,13 @@ public class ChatsFragment extends Fragment {
 
 
                 }
+           Collections.sort(mUsers, new Comparator<Contact>() {
+               @Override
+               public int compare(Contact o1, Contact o2) {
+                   return o2.getmTime().compareTo(o1.getmTime());
 
+               }
+           });
                 mUserAdapter = new Chats(getActivity(), mUsers);
 
                 mRecyclerView.setAdapter(mUserAdapter);

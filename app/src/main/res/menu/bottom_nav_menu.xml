@@ -15,11 +15,14 @@
         android:icon="@drawable/profile"
         android:title="@string/profile" />
 
-
+    <item
+        android:id="@+id/mSearch"
+        android:icon="@drawable/search"
+        android:title="@string/Search" />
         <item
             android:id="@+id/Chats"
-            android:icon="@drawable/exam"
-            android:title="@string/exams_time" />
+            android:icon="@drawable/chats"
+            android:title="@string/chats" />
 
 
 </menu>

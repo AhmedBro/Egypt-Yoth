@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ahmedesam.egyptyouth.Models.ImageModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Ui.Activities.ShowFullVideo;
+import com.devbrackets.android.exomedia.listener.OnCompletionListener;
 import com.devbrackets.android.exomedia.ui.widget.VideoView;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
@@ -61,7 +62,12 @@ public class VideoUserAdapter extends RecyclerView.Adapter<VideoUserAdapter.Vide
             holder.videoWeb.pause();
         }
         holder.videoWeb.setVideoURI(Uri.parse(mItems.get(position).getUrl()));
-
+        holder.videoWeb.setOnCompletionListener(new OnCompletionListener() {
+            @Override
+            public void onCompletion() {
+                holder.videoWeb.restart();
+            }
+        });
 
         holder.FullScreen.setOnClickListener(new View.OnClickListener() {
             @Override

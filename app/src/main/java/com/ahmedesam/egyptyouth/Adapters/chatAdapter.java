@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.os.Build;
 import android.text.format.DateFormat;
@@ -27,6 +28,7 @@ import com.ahmedesam.egyptyouth.Models.ModelChat;
 import com.ahmedesam.egyptyouth.R;
 
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
+import com.ahmedesam.egyptyouth.Ui.Activities.ChatActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,13 +54,17 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.adapter> {
     DatabaseReference mDatabaseReference;
     ShardPrefrances mShardPrefrances;
     RecyclerView.LayoutManager manager;
+    String mImage;
+    MediaPlayer mediaPlayer;
 
-    public chatAdapter(Context mContext, ArrayList<ModelChat> mChat) {
+    public chatAdapter(Context mContext, ArrayList<ModelChat> mChat, String mImage) {
         this.mContext = mContext;
         this.mChat = mChat;
+        this.mImage = mImage;
         mShardPrefrances = new ShardPrefrances(mContext);
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         manager = new LinearLayoutManager(mContext, RecyclerView.VERTICAL, false);
+        mediaPlayer = MediaPlayer.create(mContext, R.raw.receive);
     }
 
     @NonNull
@@ -80,13 +86,13 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.adapter> {
     @Override
     public void onBindViewHolder(@NonNull final chatAdapter.adapter holder, final int position) {
         // Time
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Calendar cal = Calendar.getInstance(Locale.ENGLISH);
         cal.setTimeInMillis(Long.parseLong(mChat.get(position).getmTime()));
         String Date = DateFormat.format("dd/mm/yyyy hh:mm aa", cal).toString();
 
         // set data
-        Glide.with(mContext).load(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_IMAGE)).into(holder.mUserImage);
+        Glide.with(mContext).load(mImage).into(holder.mUserImage);
         holder.mMessage.setText(mChat.get(position).getmMessage());
         holder.mTime.setText(Date);
 
@@ -95,6 +101,11 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.adapter> {
             Log.e("Seen", mChat.get(position).getmIsSeen() + "");
             if (mChat.get(position).getmIsSeen()) {
                 holder.mIsSeen.setText("Seen");
+                if (mChat.get(position).getmSender().equals(ChatActivity.mMyId)) {
+
+                }
+                else
+                    mediaPlayer.start();
             } else {
                 holder.mIsSeen.setText("Delivered");
             }
@@ -131,8 +142,6 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.adapter> {
                 return false;
             }
         });
-
-
 
 
     }
@@ -176,9 +185,9 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.adapter> {
     public int getItemViewType(int position) {
         mFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (mChat.get(position).getmSender().equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
-            return MSG_TYPE_RIGHT;
-        } else {
             return MSG_TYPE_LEFT;
+        } else {
+            return MSG_TYPE_RIGHT;
         }
 
 

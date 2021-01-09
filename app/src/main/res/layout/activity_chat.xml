@@ -10,7 +10,7 @@
         android:id="@+id/mToolBar"
         android:layout_width="match_parent"
         android:layout_height="?android:actionBarSize"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorAccent"
         android:theme="@style/AppTheme.NoActionBar">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -37,13 +37,13 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:visibility="gone"
                 android:id="@+id/mStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/offline"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
         </LinearLayout>
 
 
@@ -72,25 +72,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/black"
+        android:background="@drawable/edit_photo_button"
         android:gravity="center"
         android:orientation="horizontal"
-
-        >
+        android:layout_margin="10dp">
 
         <EditText
             android:id="@+id/mEditForMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
             android:layout_weight="1"
             android:background="@null"
             android:hint="Start Typing"
             android:inputType="textCapSentences|textMultiLine"
-            android:padding="15dp"
+            android:padding="10dp"
             android:textColor="@color/white"
-            android:textColorHint="#686868"
-
+            android:textColorHint="@color/white"
+            android:textSize="15sp"
+            android:layout_margin="5dp"
             />
 
         <ImageButton
@@ -99,13 +98,15 @@
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:background="@null"
-            android:src="@drawable/arrow_icon" />
+            android:src="@drawable/arrow_icon"
+            android:visibility="gone" />
 
         <ImageButton
+
             android:id="@+id/mSend"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="10dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="5dp"
             android:background="@null"
             android:src="@drawable/ic_send" />
 

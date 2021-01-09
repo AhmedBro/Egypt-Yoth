@@ -3,6 +3,7 @@ package com.ahmedesam.egyptyouth.Ui.Activities;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -49,6 +50,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
@@ -68,7 +71,7 @@ public class ChatActivity extends AppCompatActivity {
     ImageView mImageView;
     Intent mIntent;
     FirebaseAuth mFirebaseAuth;
-    String mMyId, mHisId;
+    public static String mMyId, mHisId;
     EditText mMassage;
     FirebaseDatabase mFirebaseDatabase;
     DatabaseReference mDatabaseReference;
@@ -84,7 +87,8 @@ public class ChatActivity extends AppCompatActivity {
 
     ArrayList<ModelChat> mChat;
     chatAdapter mChatAdapter;
-
+    MediaPlayer mediaPlayer;
+    static boolean send = false;
 
     public ChatActivity() {
 
@@ -109,6 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
         ButterKnife.bind(this);
         mIntent = getIntent();
+        mChat = new ArrayList<>();
         mMediaPath = new ArrayList<>();
         mMediaDownload = new ArrayList<>();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -317,7 +322,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void ReadMessage() {
-        mChat = new ArrayList<>();
+
         DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users").child(mMyId).child("Chats").child(mHisId).child("Messages");
         db.addValueEventListener(new ValueEventListener() {
             @Override
@@ -329,14 +334,25 @@ public class ChatActivity extends AppCompatActivity {
                     if (modelChat.getmSender().equals(mMyId) && modelChat.getmReceiver().equals(mHisId) ||
                             modelChat.getmSender().equals(mHisId) && modelChat.getmReceiver().equals(mMyId)) {
                         mChat.add(modelChat);
+
                     }
-                    mChatAdapter = new chatAdapter(ChatActivity.this, mChat);
+
+                    Collections.sort(mChat, new Comparator<ModelChat>() {
+                        @Override
+                        public int compare(ModelChat o1, ModelChat o2) {
+                            return o1.getmTime().compareTo(o2.getmTime());
+                        }
+                    });
+
+                    mChatAdapter = new chatAdapter(ChatActivity.this, mChat, mIntent.getStringExtra("Image"));
                     mChatAdapter.notifyDataSetChanged();
                     mRecyclerView.setAdapter(mChatAdapter);
                     RecyclerView.LayoutManager manager = new LinearLayoutManager(ChatActivity.this, RecyclerView.VERTICAL, false);
                     manager.scrollToPosition(mChat.size() - 1);
                     mRecyclerView.setLayoutManager(manager);
                     mChatAdapter.notifyDataSetChanged();
+
+
                 }
             }
 
@@ -371,6 +387,9 @@ public class ChatActivity extends AppCompatActivity {
         mDatabaseReference.child("Users").child(mMyId).child("Chats").child(mHisId).updateChildren(map2);
         mediaUriList.clear();
         mMediaAdapter.notifyDataSetChanged();
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.send);
+        mediaPlayer.start();
     }
 
 //    private void Checkstatus(String mStatus) {

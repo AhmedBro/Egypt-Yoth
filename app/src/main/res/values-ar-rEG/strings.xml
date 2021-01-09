@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Go-Football</string>
+    <string name="sign_in">تسجيل الدخول</string>
+    <string name="facebook_app_id">1202817026741823</string>
+    <string name="fb_login_protocol_scheme">fb1202817026741823</string>
+    <string name="home">الرئيسيه</string>
+    <string name="profile">بروفايل</string>
+
+    <string name="exams_time">Exams Time</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">بحث</string>
+    <string name="edit">تعديل</string>
+    <string name="posts">البوستات</string>
+    <string name="followers">المتابعين</string>
+    <string name="Edit_your_information">عدل معلوماتك</string>
+    <string name="enter_your_name">ادخل اسمك</string>
+    <string name="enter_your_skills_description">enter your Skills Description</string>
+    <string name="save">حفظ</string>
+    <string name="Enter_Your_Description">Enter Your Description</string>
+    <string name="enter_your_age">ادخل عمرك</string>
+    <string name="enter_your_address">ادخل عنوانك</string>
+    <string name="years">سنه</string>
+    <string name="upload_your_videos">ارفع فديوهاتك</string>
+    <string name="upload_your_images">ارفع صورك</string>
+    <string name="videos">الفديوهات</string>
+    <string name="Images">الصور</string>
+    <string name="follow">عدد اللايكات</string>
+    <string name="like">اعجاب</string>
+    <string name="log_out">خؤوج</string>
+    <string name="disLike">عدم الاعجاب</string>
+    <string name="international_news">International News</string>
+    <string name="all_news">All news</string>
+    <string name="national_news">National News</string>
+    <string name="insert_your_information">Insert Your Information</string>
+    <string name="comment">تعليق</string>
+    <string name="id">ID: </string>
+    <string name="players">اللاعبيين</string>
+    <string name="new_post">منشور جديد</string>
+    <string name="type_your_caption">Type Your Caption</string>
+    <string name="comments">تعليق</string>
+    <string name="type_your_comment">اكتب تعليقك</string>
+    <string name="Message">رساله</string>
+    <string name="offline">Offline</string>
+    <string name="chats">المحادثات</string>
+    <string name="type">اكتب</string>
+    <string name="Gk">حارس مرمي</string>
+    <string name="CB">قلب دفاع</string>
+    <string name="RB">الظهير الايمن</string>
+    <string name="LB">الظهير الايسر</string>
+    <string name="DMF">الارتكاز الدفاعي</string>
+    <string name="CMF">لاعب الدائره</string>
+    <string name="SS">صانع العاب</string>
+    <string name="AMF">مهاجم الاوسط</string>
+    <string name="RMF">RWF</string>
+    <string name="LWF">LWF</string>
+    <string name="CF">CF</string>
+    <string name="add_Comment">تم اضافه التغليق</string>
+    <string name="Search">Search</string>
+</resources>

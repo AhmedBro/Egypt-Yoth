@@ -1,10 +1,13 @@
 package com.ahmedesam.egyptyouth.Ui.fragments;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,14 +25,20 @@ import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.ahmedesam.egyptyouth.Ui.Activities.AddPost;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.onesignal.OneSignal;
 
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Scanner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,17 +64,21 @@ public class Home extends Fragment {
     PostsAdapter mPostsAdapter;
     ArrayList<PostModel> mPosts;
     PostModel mPostModel;
-
+    private FirebaseAuth mAuth;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_home, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+
         mDatabaseReference = FirebaseFirestore.getInstance();
         mShardPrefrances = new ShardPrefrances(getActivity());
         mShowAllPlayers = new ShowAllPlayers();
         mPostsAdapter = new PostsAdapter();
+        mAuth = FirebaseAuth.getInstance();
+
+
 
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
@@ -101,7 +114,7 @@ public class Home extends Fragment {
                     });
                     mPostsAdapter = new PostsAdapter(mPosts , getActivity());
                     Posts.setAdapter(mPostsAdapter);
-
+                    mPostsAdapter.notifyDataSetChanged();
                 }
             }
         });
@@ -138,6 +151,7 @@ public class Home extends Fragment {
 
                 mShowAllPlayers = new ShowAllPlayers(mPlayers, getActivity());
                 AllPlayers.setAdapter(mShowAllPlayers);
+                mShowAllPlayers.notifyDataSetChanged();
             }
         });
 
@@ -148,6 +162,7 @@ public class Home extends Fragment {
         super.onStart();
         mPostsAdapter.notifyDataSetChanged();
         mShowAllPlayers.notifyDataSetChanged();
+
     }
 
     @Override
@@ -155,4 +170,6 @@ public class Home extends Fragment {
         super.onPause();
         mPostsAdapter = new PostsAdapter(false);
     }
+
+
 }

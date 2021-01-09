@@ -17,13 +17,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmedesam.egyptyouth.Adapters.ImageAdapter;
+import com.ahmedesam.egyptyouth.Adapters.PostsAdapter;
 import com.ahmedesam.egyptyouth.Adapters.VideoUserAdapter;
 import com.ahmedesam.egyptyouth.Models.ImageModel;
+import com.ahmedesam.egyptyouth.Models.PostModel;
 import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
@@ -45,6 +46,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -95,12 +98,14 @@ public class UserProfileFragment extends Fragment {
     Button mUploadVideo;
 
     Activity mActivity;
-
+    ArrayList<PostModel> mPosts;
     @BindView(R.id.LogOut)
     Button LogOut;
     @BindView(R.id.mUserId)
     TextView mUserId;
-//    @BindView(R.id.mFollowNumber)
+    @BindView(R.id.mPosts)
+    RecyclerView mUserPosts;
+    //    @BindView(R.id.mFollowNumber)
 //    TextView mFollowNumber;
     private FirebaseFirestore mDatabase;
     private Uri filePath;
@@ -109,12 +114,13 @@ public class UserProfileFragment extends Fragment {
     private final int PICK_IMAGE_REQUEST = 22;
     private final int PICK_VIDEO_REQUEST = 222;
     private final int PICK_IMAGE_REQUEST2 = 2;
-
+    FirebaseFirestore mDatabaseReference;
+    PostsAdapter mPostsAdapter;
     userModel model;
     // instance for firebase storage and StorageReference
     FirebaseStorage storage;
     StorageReference storageReference;
-
+    PostModel mPostModel;
 
     static String UTI = "";
 
@@ -134,10 +140,13 @@ public class UserProfileFragment extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         mImageAdapter = new ImageAdapter();
         mVideoUserAdapter = new VideoUserAdapter();
+        mDatabaseReference = FirebaseFirestore.getInstance();
 
         Image = new ImageModel();
         mImages = new ArrayList<>();
         mVideos = new ArrayList<>();
+        LinearLayoutManager manager = new LinearLayoutManager(getContext() , RecyclerView.VERTICAL ,false);
+        mUserPosts.setLayoutManager(manager);
         InstItems();
 
         SetData();
@@ -145,7 +154,39 @@ public class UserProfileFragment extends Fragment {
         LoadUserImages();
 
         LoadUserVideos();
+
+        LoadPosts();
         return view;
+    }
+
+    private void LoadPosts() {
+        mPosts = new ArrayList<>();
+        mDatabaseReference.collection("Users").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).collection("Posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        mPostModel = new PostModel((String.valueOf(document.getData().get("mPost"))),
+                                String.valueOf(document.getData().get("mImage")),
+                                String.valueOf(document.getData().get("mLikeNumber")),
+                                String.valueOf(document.getData().get("mPostID")),
+                                String.valueOf(document.getData().get("mUserId")),
+                                String.valueOf(document.getData().get("mVideo")),
+                                String.valueOf(document.getData().get("mUserName")),
+                                String.valueOf(document.getData().get("mUserImage")));
+                        mPosts.add(mPostModel);
+                    }
+                    Collections.sort(mPosts, new Comparator<PostModel>() {
+                        @Override
+                        public int compare(PostModel o1, PostModel o2) {
+                            return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());                        }
+                    });
+                    mPostsAdapter = new PostsAdapter(mPosts , getActivity());
+                    mUserPosts.setAdapter(mPostsAdapter);
+
+                }
+            }
+        });
     }
 
     private void LoadUserImages() {
@@ -163,7 +204,7 @@ public class UserProfileFragment extends Fragment {
 
                         mImages.add(Image);
                     }
-                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity() , RecyclerView.HORIZONTAL ,false);
+                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
                     Images.setLayoutManager(manager);
                     mImageAdapter = new ImageAdapter(mImages, getActivity());
                     Images.setAdapter(mImageAdapter);
@@ -229,7 +270,7 @@ public class UserProfileFragment extends Fragment {
                 mUserAge.setText(model.getmAge());
                 mUserAddress.setText(model.getmAddress());
                 mUserSkills.setText(model.getmDescription());
-                Glide.with(getActivity()).load(model.getmImage()).into(UserImage);
+                Glide.with(Objects.requireNonNull(getContext())).load(model.getmImage()).into(UserImage);
                 mFollowNumber.setText(model.getmLikeNumber());
                 mUserId.setText(model.getmId());
             }

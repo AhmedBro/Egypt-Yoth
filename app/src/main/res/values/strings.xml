@@ -44,5 +44,26 @@
     <string name="offline">Offline</string>
     <string name="chats">Chats</string>
     <string name="type">Type</string>
+    <string name="Gk">GK</string>
+    <string name="CB">CB</string>
+    <string name="RB">RB</string>
+    <string name="LB">LB</string>
+    <string name="DMF">DMF</string>
+    <string name="CMF">CMF</string>
+    <string name="SS">SS</string>
+    <string name="AMF">AMF</string>
+    <string name="RMF">RWF</string>
+    <string name="LWF">LWF</string>
+    <string name="CF">CF</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <!--
+        This is the name that users will see when interacting with this channel.
+        It should describe the category of notifications that will be sent through this channel
+     -->
+    <!-- [START fcm_default_icon_string] -->
+    <string name="default_notification_channel_name" translatable="false">Weather</string>
+    <string name="add_Comment">you added comment</string>
+    <string name="type_keyword">Type Here</string>
+    <string name="Search">Search</string>
 
 </resources>

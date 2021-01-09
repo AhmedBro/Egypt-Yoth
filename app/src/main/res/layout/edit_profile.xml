@@ -33,15 +33,15 @@
             android:padding="10dp"
             android:layout_margin="10dp"
             android:id="@+id/mUserName"/>
-        <EditText
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/mSpinner"
+            style="@style/Widget.AppCompat.Spinner.DropDown"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/enter_your_skills_description"
-            android:padding="10dp"
+            android:layout_height="50dp"
             android:layout_margin="10dp"
-            android:id="@+id/mUserDescription"/>
+            android:autofillHints="@string/enter_your_skills_description"
+            android:gravity="center"
+            />
         <EditText
             android:textColor="@color/white"
             android:textColorHint="@color/white"

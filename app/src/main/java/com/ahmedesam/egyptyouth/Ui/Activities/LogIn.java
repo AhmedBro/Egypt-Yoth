@@ -3,7 +3,9 @@ package com.ahmedesam.egyptyouth.Ui.Activities;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -29,27 +31,35 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.onesignal.OneSignal;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Scanner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,6 +84,7 @@ public class LogIn extends AppCompatActivity {
     private FirebaseAuth mAuth;
     FirebaseUser currentUser;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +92,7 @@ public class LogIn extends AppCompatActivity {
         ButterKnife.bind(this);
         mShardPrefrances = new ShardPrefrances(this);
         mAuth = FirebaseAuth.getInstance();
+
         callbackManager = CallbackManager.Factory.create();
         facebookBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +124,8 @@ public class LogIn extends AppCompatActivity {
                 });
             }
         });
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
@@ -133,10 +146,19 @@ public class LogIn extends AppCompatActivity {
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                Log.d("TAG", "firebaseAuthWithGoogle:" + account.getId());
+                handleSignInResult(task , account.getIdToken());
+
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w("TAG", "Google sign in failed", e);
+                // ...
+            }
+
         }
 
     }
@@ -177,6 +199,7 @@ public class LogIn extends AppCompatActivity {
                     mShardPrefrances.createLoginSession(false, id, firstName + " " + lastName, email, "https://graph.facebook.com/" + id + "/picture?type=large", birthday);
                     muUserModel = new userModel(firstName + lastName, id, email, "https://graph.facebook.com/" + id + "/picture?type=large", birthday);
                     creatNode(muUserModel);
+                    OneSignal.sendTag("User_Id" , mAuth.getCurrentUser().getEmail());
                     Intent mIntent = new Intent(LogIn.this, InsertYourInfo.class);
                     startActivity(mIntent);
                     finish();
@@ -215,9 +238,9 @@ public class LogIn extends AppCompatActivity {
     void creatNode(userModel muUserModel) {
         database = FirebaseFirestore.getInstance();
         HashMap<String, Object> map = new HashMap<>();
-        map.put("mId", muUserModel.getmId());
-        map.put("mName", muUserModel.getmName());
-        map.put("mMail", muUserModel.getmMail());
+        map.put("mId", muUserModel.getmId().toUpperCase());
+        map.put("mName", muUserModel.getmName().toUpperCase());
+        map.put("mMail", muUserModel.getmMail().toUpperCase());
         map.put("mLikeNumber", "0");
         map.put("mImage", muUserModel.getmImage());
         database.collection("Users").document(muUserModel.getmId()).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -245,14 +268,17 @@ public class LogIn extends AppCompatActivity {
     }
 
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask , String Token) {
 
 
         try {
+            AuthCredential credential = GoogleAuthProvider.getCredential(Token, null);
+            mAuth.signInWithCredential(credential);
 
             mShardPrefrances.createLoginSession(false, completedTask.getResult().getId(), completedTask.getResult().getDisplayName(), completedTask.getResult().getEmail(), String.valueOf(completedTask.getResult().getPhotoUrl()), "");
             muUserModel = new userModel(completedTask.getResult().getDisplayName(), completedTask.getResult().getId(), completedTask.getResult().getEmail(), String.valueOf(completedTask.getResult().getPhotoUrl()), "");
             creatNode(muUserModel);
+            OneSignal.sendTag("User_Id" , mAuth.getCurrentUser().getEmail());
             Intent mIntent = new Intent(LogIn.this, InsertYourInfo.class);
             startActivity(mIntent);
             finish();
@@ -276,9 +302,8 @@ public class LogIn extends AppCompatActivity {
         super.onStart();
 //        FirebaseUser user = auth.getCurrentUser();
         //      updateUI(user);
-
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         checkLogout();
-
 
 
     }

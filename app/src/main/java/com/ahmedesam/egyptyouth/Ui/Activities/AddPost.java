@@ -352,6 +352,15 @@ public class AddPost extends AppCompatActivity {
     void PostWithImage(String Uri) {
         String id = databaseReference.push().getKey();
         mPostModel = new PostModel(mCaption.getText().toString(), Uri, "0", id, mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID), "", mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_FNAME), mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_IMAGE));
+
+        mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID)).collection("Posts").document(id).set(mPostModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+
+        });
+
         mDatabase.collection("Posts").document(id).set(mPostModel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -365,11 +374,20 @@ public class AddPost extends AppCompatActivity {
 
             }
         });
+
     }
 
     void PostWithVideo(String Uri) {
         String id = databaseReference.push().getKey();
         mPostModel = new PostModel(mCaption.getText().toString(), "", "0", id, mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID), Uri, mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_FNAME), mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_IMAGE));
+
+        mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID)).collection("Posts").document(id).set(mPostModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+            }
+        });
+
         mDatabase.collection("Posts").document(id).set(mPostModel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

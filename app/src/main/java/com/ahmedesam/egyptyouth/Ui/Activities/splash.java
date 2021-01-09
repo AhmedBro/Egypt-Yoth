@@ -14,24 +14,25 @@ import com.google.firebase.auth.FirebaseUser;
 public class splash extends AppCompatActivity {
     ShardPrefrances mShardPrefrances;
 
+
+    FirebaseUser currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         mShardPrefrances = new ShardPrefrances(this);
 
-
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mShardPrefrances.isLoggedIn()) {
+                if (mShardPrefrances.isLoggedIn() && currentUser != null) {
                     Intent mainIntent = new Intent(splash.this, HomeActivity.class);
                     splash.this.startActivity(mainIntent);
                     splash.this.finish();
-                }
-
-                else {
+                } else {
                     Intent mainIntent = new Intent(splash.this, LogIn.class);
                     splash.this.startActivity(mainIntent);
                     splash.this.finish();

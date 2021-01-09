@@ -28,7 +28,7 @@
                     android:layout_height="50dp"
                     android:layout_margin="10dp"
 
-                    android:src="@drawable/logo" />
+              />
 
                 <TextView
                     android:id="@+id/mNewHeader"
