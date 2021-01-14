@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,6 +47,8 @@ public class InsertYourInfo extends AppCompatActivity {
     static ArrayList<String> mPositions;
     static String mName, mAge, mDescription, mAddress;
     ShardPrefrances mShardPrefrances;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
     private FirebaseFirestore mDatabase;
 
     @Override
@@ -67,12 +70,13 @@ public class InsertYourInfo extends AppCompatActivity {
         mPositions.add(getString(R.string.RMF));
         mPositions.add(getString(R.string.LWF));
         mPositions.add(getString(R.string.CF));
+        mPositions.add(getString(R.string.enter_your_skills_description));
         ArrayAdapter arrayAdapter;
 
         arrayAdapter = new ArrayAdapter(InsertYourInfo.this, R.layout.spinner_shap, mPositions);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(arrayAdapter);
-        mSpinner.setSelection(arrayAdapter.getCount() - 1); //display hint
+        mSpinner.setSelection(mPositions.size()-1); //display hint
         mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -91,7 +95,7 @@ public class InsertYourInfo extends AppCompatActivity {
     public void onViewClicked() {
         if (Validate()) {
             InsertData(mUserName.getText().toString(), mUserAge.getText().toString(), mDescription, mUserAddress.getText().toString());
-            finish();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
     }
@@ -130,6 +134,7 @@ public class InsertYourInfo extends AppCompatActivity {
                 Toast.makeText(InsertYourInfo.this, "Your Profile Is Updated", Toast.LENGTH_SHORT).show();
                 Intent mIntent = new Intent(InsertYourInfo.this, HomeActivity.class);
                 startActivity(mIntent);
+                progressBar.setVisibility(View.GONE);
                 finish();
             }
         })

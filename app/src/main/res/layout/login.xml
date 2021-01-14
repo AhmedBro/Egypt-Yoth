@@ -19,7 +19,7 @@
         android:layout_margin="20sp"
         />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:background="@color/white"
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
@@ -121,12 +121,24 @@
                             android:textColor="@android:color/white" />
 
                     </LinearLayout>
-
-
                 </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    />
             </androidx.cardview.widget.CardView>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

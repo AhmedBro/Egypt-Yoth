@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmedesam.egyptyouth.Adapters.Chats;
 import com.ahmedesam.egyptyouth.Models.Contact;
-import com.ahmedesam.egyptyouth.Models.ModelChat;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +40,8 @@ public class ChatsFragment extends Fragment {
     ArrayList<Contact> mUsers;
     FirebaseAuth mFirebaseAuth;
     ShardPrefrances mShardPrefrances;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -57,7 +59,7 @@ public class ChatsFragment extends Fragment {
         mUsers = new ArrayList<>();
         mUserAdapter = new Chats();
         mFirebaseAuth = FirebaseAuth.getInstance();
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity() , RecyclerView.VERTICAL , false);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         mRecyclerView.setLayoutManager(manager);
         LoadUsers();
         return view;
@@ -76,18 +78,18 @@ public class ChatsFragment extends Fragment {
 
 
                 }
-           Collections.sort(mUsers, new Comparator<Contact>() {
-               @Override
-               public int compare(Contact o1, Contact o2) {
-                   return o2.getmTime().compareTo(o1.getmTime());
+                Collections.sort(mUsers, new Comparator<Contact>() {
+                    @Override
+                    public int compare(Contact o1, Contact o2) {
+                        return o2.getmTime().compareTo(o1.getmTime());
 
-               }
-           });
+                    }
+                });
                 mUserAdapter = new Chats(getActivity(), mUsers);
 
                 mRecyclerView.setAdapter(mUserAdapter);
 
-
+                progressBar.setVisibility(View.GONE);
                 // Hiding the progress dialog.
             }
 

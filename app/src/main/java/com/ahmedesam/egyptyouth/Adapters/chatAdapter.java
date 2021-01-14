@@ -89,7 +89,7 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.adapter> {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Calendar cal = Calendar.getInstance(Locale.ENGLISH);
         cal.setTimeInMillis(Long.parseLong(mChat.get(position).getmTime()));
-        String Date = DateFormat.format("dd/mm/yyyy hh:mm aa", cal).toString();
+        String Date = DateFormat.format("hh:mm aa \n EEE, MMM d ", cal).toString();
 
         // set data
         Glide.with(mContext).load(mImage).into(holder.mUserImage);
@@ -116,32 +116,32 @@ public class chatAdapter extends RecyclerView.Adapter<chatAdapter.adapter> {
 
 
         //Delete Dialog
-        holder.mLinearLayout.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(mContext);
-                mBuilder.setTitle("Delete");
-                mBuilder.setMessage("Are you sure to delete this message ???");
-                mBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        DeleteMessage(position);
-                        Toast.makeText(mContext, "Deleted", Toast.LENGTH_SHORT).show();
-
-
-                    }
-                });
-
-                mBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                mBuilder.create().show();
-                return false;
-            }
-        });
+//        holder.mLinearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(mContext);
+//                mBuilder.setTitle("Delete");
+//                mBuilder.setMessage("Are you sure to delete this message ???");
+//                mBuilder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        DeleteMessage(position);
+//                        Toast.makeText(mContext, "Deleted", Toast.LENGTH_SHORT).show();
+//
+//
+//                    }
+//                });
+//
+//                mBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//                mBuilder.create().show();
+//                return false;
+//            }
+//        });
 
 
     }

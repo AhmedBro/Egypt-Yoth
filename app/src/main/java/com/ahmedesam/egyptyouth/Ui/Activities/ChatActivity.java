@@ -31,6 +31,10 @@ import com.ahmedesam.egyptyouth.Models.Contact;
 import com.ahmedesam.egyptyouth.Models.ModelChat;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,13 +51,22 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.onesignal.OneSignal;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -89,6 +102,14 @@ public class ChatActivity extends AppCompatActivity {
     chatAdapter mChatAdapter;
     MediaPlayer mediaPlayer;
     static boolean send = false;
+    final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
+    final private String serverKey ="AIzaSyAa33zPueQk5T6uzT4Q8O0wvLb8nQXexd8";
+    final private String contentType = "application/json";
+    final String TAG = "NOTIFICATION TAG";
+
+    String NOTIFICATION_TITLE;
+    String NOTIFICATION_MESSAGE;
+    String TOPIC;
 
     public ChatActivity() {
 
@@ -147,44 +168,45 @@ public class ChatActivity extends AppCompatActivity {
         //---------------------------------------------------------------------------------------------
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference("Users").child(mMyId).child("Chats");
+        mDatabaseReference = mFirebaseDatabase.getReference("Users").child(mHisId);
         FirebaseDatabase.getInstance().getReference().child("Users").child(mMyId).child("Chats").child(mHisId).child("mName").setValue(mIntent.getStringExtra("Name"));
 
 
-        Query UserQuery = mDatabaseReference.orderByChild("mId").equalTo(mHisId);
         //----------------------------------------------------------------------------------------------
 
-        UserQuery.addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String Name = "" + ds.child("mName").getValue();
 
-                    String mStatus1 = "" + ds.child("mStatus").getValue();
+                String Name = "" + dataSnapshot.child("mName").getValue();
 
-                    String mTyping = "" + ds.child("mTyping").getValue();
+                String mStatus1 = "" + dataSnapshot.child("mStatus").getValue();
 
-                    Log.e("mStatus", dataSnapshot.getRef() + "");
-//                    if (mTyping.equalsIgnoreCase(mMyId)) {
-//                        mStatus.setText("Typing....");
-//                    } else {
-//
-//
-//                        if (mStatus1.equalsIgnoreCase("Online")) {
-//                            mStatus.setText(mStatus1);
-//                        } else {
-//
-//                            Calendar cal = Calendar.getInstance(Locale.ENGLISH);
-//                            cal.setTimeInMillis(Long.parseLong(mStatus1));
-//                            String Date = DateFormat.format("dd/mm/yyyy hh:mm aa", cal).toString();
-//                            mStatus.setText("Last Seen at: " + Date);
-//                        }
-//
-//                    }
+                String mTyping = "" + dataSnapshot.child("mTyping").getValue();
 
+                Log.e("mStatus", dataSnapshot.child("mTyping").getValue() + "");
+                if (mTyping.equalsIgnoreCase(mMyId)) {
+                    mStatus.setText("Typing....");
+                } else {
+                    if (mStatus1.equalsIgnoreCase("Online")) {
+                        mStatus.setText(mStatus1);
+                    } else {
+
+                        Calendar cal = Calendar.getInstance(Locale.ENGLISH);
+                        try {
+                            cal.setTimeInMillis(Long.parseLong(mStatus1));
+                            String Date = DateFormat.format("hh:mm aa", cal).toString();
+                            mStatus.setText("Last Seen at: " + Date);
+                        }
+                        catch (Exception e){
+
+                        }
+
+                    }
 
                 }
+
 
             }
 
@@ -213,7 +235,9 @@ public class ChatActivity extends AppCompatActivity {
                     }
                     sendMessage(aMessage);
                     MakeChat();
+
                     mMassage.setText("");
+                    sendNoti();
 
                 }
             }
@@ -236,9 +260,9 @@ public class ChatActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if (s.toString().trim().length() == 0) {
-
+                    CheckTyping("");
                 } else {
-                    mStatus.setText("Type...");
+                    CheckTyping(mHisId);
                 }
             }
 
@@ -392,45 +416,58 @@ public class ChatActivity extends AppCompatActivity {
         mediaPlayer.start();
     }
 
-//    private void Checkstatus(String mStatus) {
-//
-//        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mMyId);
-//        HashMap<String, Object> map = new HashMap<>();
-//        map.put("mStatus", mStatus);
-//        mDatabaseReference.updateChildren(map);
-//    }
+    private void Checkstatus(String mStatus) {
 
-//    private void CheckTyping(String mTyping) {
-//
-//        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mMyId);
-//        HashMap<String, Object> map = new HashMap<>();
-//        map.put("mTyping", mTyping);
-//        mDatabaseReference.updateChildren(map);
-//    }
+        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mMyId);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("mStatus", mStatus);
+        mDatabaseReference.updateChildren(map);
+
+
+    }
+
+    private void CheckTyping(String mTyping) {
+
+        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mMyId);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("mTyping", mTyping);
+        mDatabaseReference.updateChildren(map);
+
+    }
 
 
     @Override
     protected void onStart() {
         super.onStart();
+        Checkstatus("Online");
 
-        mStatus.setText("Online");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         String mTime = String.valueOf(System.currentTimeMillis());
-        mStatus.setText(mTime);
 
+        Checkstatus(mTime);
         mUserRefForSeen.removeEventListener(SeenListener);
 
     }
 
     @Override
     protected void onResume() {
-        mStatus.setText("onLine");
+
         super.onResume();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        String mTime = String.valueOf(System.currentTimeMillis());
+
+        Checkstatus(mTime);
     }
 
     void MakeChat() {
@@ -457,16 +494,14 @@ public class ChatActivity extends AppCompatActivity {
             map.put("mImage", mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_IMAGE));
             map.put("mName", mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_FNAME));
             map.put("mId", mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID));
-
-
+            map.put("mTyping", "");
+            map.put("mStatus", "Offline");
             HashMap<String, Object> map2 = new HashMap();
             map2.put("mImage", getIntent().getStringExtra("Image"));
             map2.put("mId", mHisId);
             map2.put("mName", getIntent().getStringExtra("Name"));
             FirebaseDatabase.getInstance().getReference().child("Users").child(mMyId).child("Chats").child(mHisId).updateChildren(map2);
             FirebaseDatabase.getInstance().getReference().child("Users").child(mHisId).child("Chats").child(mMyId).updateChildren(map);
-
-
         }
     }
 
@@ -622,4 +657,55 @@ public class ChatActivity extends AppCompatActivity {
         FirebaseDatabase.getInstance().getReference().child("Users").child(mHisId).child("Chats").child(mMyId).child("Messages").child(mMessageId).child("mMedia").push().setValue(Url);
     }
 
+
+void sendNoti(){
+    try {
+        String jsonResponse;
+
+        URL url = new URL("https://onesignal.com/api/v1/notifications");
+        HttpURLConnection con = (HttpURLConnection)url.openConnection();
+        con.setUseCaches(false);
+        con.setDoOutput(true);
+        con.setDoInput(true);
+
+        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+        con.setRequestProperty("Authorization", "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj");
+        con.setRequestMethod("POST");
+
+        String strJsonBody = "{"
+                +   "\"app_id\": \"66b4a76c-6fff-433d-b831-e29c9fc8b0ea\","
+                +   "\"filters\": [{\"field\": \"tag\", \"key\": \"Id\", \"relation\": \">\", \"value\": \""+"ahmed.esamffff@gmail.com"+"\"},{\"operator\": \"OR\"},{\"field\": \"amount_spent\", \"relation\": \">\",\"value\": \"0\"}],"
+                +   "\"data\": {\"foo\": \"bar\"},"
+                +   "\"contents\": {\"en\": \"English Message\"}"
+                + "}";
+
+
+        System.out.println("strJsonBody:\n" + strJsonBody);
+
+        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+        con.setFixedLengthStreamingMode(sendBytes.length);
+
+        OutputStream outputStream = con.getOutputStream();
+        outputStream.write(sendBytes);
+
+        int httpResponse = con.getResponseCode();
+        System.out.println("httpResponse: " + httpResponse);
+
+        if (  httpResponse >= HttpURLConnection.HTTP_OK
+                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+            scanner.close();
+        }
+        else {
+            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+            scanner.close();
+        }
+        System.out.println("jsonResponse:\n" + jsonResponse);
+
+    } catch(Throwable t) {
+        t.printStackTrace();
+    }
+}
 }

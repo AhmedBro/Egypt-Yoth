@@ -44,7 +44,7 @@ public class HomeActivity extends AppCompatActivity {
     LinearLayout replace;
     @BindView(R.id.nav_view)
     BottomNavigationView navView;
-    private static final String ONESIGNAL_APP_ID = "66b4a76c-6fff-433d-b831-e29c9fc8b0ea";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,58 +55,12 @@ public class HomeActivity extends AppCompatActivity {
 
 
 
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            return;
-                        }
 
-                        // Get new FCM registration token
-                        String token = task.getResult();
-                        Log.e("Tokenn", token);
-
-
-                    }
-                });
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create channel to show notifications.
-            String channelId = getString(R.string.default_notification_channel_id);
-            String channelName = getString(R.string.default_notification_channel_name);
-            NotificationManager notificationManager =
-                    getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(new NotificationChannel(channelId,
-                    channelName, NotificationManager.IMPORTANCE_LOW));
-        }
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
 
         LoadFragment(new Home());
-        //---------------notification------------------------
 
-
-        // Enable verbose OneSignal logging to debug issues if needed.
-        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
-
-        // OneSignal Initialization
-        OneSignal.initWithContext(this);
-        OneSignal.setAppId(ONESIGNAL_APP_ID);
-        //---------------notification------------------------
-
-//        FirebaseMessaging.getInstance().subscribeToTopic("weather")
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        String msg = getString(R.string.msg_subscribed);
-//                        if (!task.isSuccessful()) {
-//                            msg = getString(R.string.msg_subscribe_failed);
-//                        }
-//                        Log.d(TAG, msg);
-//                        Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
     }
 
     public void LoadFragment(Fragment mFragment) {

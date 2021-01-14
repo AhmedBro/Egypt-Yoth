@@ -3,12 +3,12 @@ package com.ahmedesam.egyptyouth.Ui.Activities;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
+import android.content.pm.Signature;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,48 +27,40 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.onesignal.OneSignal;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class LogIn extends AppCompatActivity {
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
     private int RC_SIGN_IN = 1000;
 
     @BindView(R.id.fb_login_button)
-    com.facebook.login.widget.LoginButton fbLoginButton;
+    LoginButton fbLoginButton;
     @BindView(R.id.facebook_btn)
     AppCompatButton facebookBtn;
     @BindView(R.id.google_sign_in_button)
@@ -76,13 +68,12 @@ public class LogIn extends AppCompatActivity {
     private CallbackManager callbackManager;
     userModel muUserModel;
     FirebaseFirestore database;
-    DatabaseReference myRef;
+
     ShardPrefrances mShardPrefrances;
-    GoogleSignInOptions gso;
+
 
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
 
 
     @Override
@@ -122,7 +113,9 @@ public class LogIn extends AppCompatActivity {
                         Log.e("hereeeeeeee", exception.getMessage());
                     }
                 });
+                progressBar.setVisibility(View.VISIBLE);
             }
+
         });
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -134,6 +127,7 @@ public class LogIn extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 signIn();
+                progressBar.setVisibility(View.VISIBLE);
             }
         });
         showHashKey();
@@ -151,7 +145,7 @@ public class LogIn extends AppCompatActivity {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d("TAG", "firebaseAuthWithGoogle:" + account.getId());
-                handleSignInResult(task , account.getIdToken());
+                handleSignInResult(task, account.getIdToken());
 
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
@@ -193,15 +187,13 @@ public class LogIn extends AppCompatActivity {
                     String birthday = object.optString("user_birthday");
                     Log.e("dd", "https://graph.facebook.com/" + id + "/picture?type=large");
 
-                    FirebaseUser user = mAuth.getCurrentUser();
-
-
                     mShardPrefrances.createLoginSession(false, id, firstName + " " + lastName, email, "https://graph.facebook.com/" + id + "/picture?type=large", birthday);
                     muUserModel = new userModel(firstName + lastName, id, email, "https://graph.facebook.com/" + id + "/picture?type=large", birthday);
                     creatNode(muUserModel);
-                    OneSignal.sendTag("User_Id" , mAuth.getCurrentUser().getEmail());
+
                     Intent mIntent = new Intent(LogIn.this, InsertYourInfo.class);
                     startActivity(mIntent);
+                    progressBar.setVisibility(View.GONE);
                     finish();
                 } catch (JSONException e) {
                     Log.e("Ereor Face", e.getMessage());
@@ -219,7 +211,7 @@ public class LogIn extends AppCompatActivity {
         try {
             PackageInfo info = getPackageManager().getPackageInfo("com.ahmedesam.egyptyouth",
                     PackageManager.GET_SIGNATURES);
-            for (android.content.pm.Signature signature : info.signatures) {
+            for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
 
@@ -243,6 +235,7 @@ public class LogIn extends AppCompatActivity {
         map.put("mMail", muUserModel.getmMail().toUpperCase());
         map.put("mLikeNumber", "0");
         map.put("mImage", muUserModel.getmImage());
+        OneSignal.sendTag("Id", muUserModel.getmMail());
         database.collection("Users").document(muUserModel.getmId()).set(map).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
@@ -268,7 +261,7 @@ public class LogIn extends AppCompatActivity {
     }
 
 
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask , String Token) {
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask, String Token) {
 
 
         try {
@@ -278,9 +271,9 @@ public class LogIn extends AppCompatActivity {
             mShardPrefrances.createLoginSession(false, completedTask.getResult().getId(), completedTask.getResult().getDisplayName(), completedTask.getResult().getEmail(), String.valueOf(completedTask.getResult().getPhotoUrl()), "");
             muUserModel = new userModel(completedTask.getResult().getDisplayName(), completedTask.getResult().getId(), completedTask.getResult().getEmail(), String.valueOf(completedTask.getResult().getPhotoUrl()), "");
             creatNode(muUserModel);
-            OneSignal.sendTag("User_Id" , mAuth.getCurrentUser().getEmail());
             Intent mIntent = new Intent(LogIn.this, InsertYourInfo.class);
             startActivity(mIntent);
+            progressBar.setVisibility(View.GONE);
             finish();
         } catch (Exception e) {
             // The ApiException status code indicates the detailed failure reason.
@@ -302,7 +295,6 @@ public class LogIn extends AppCompatActivity {
         super.onStart();
 //        FirebaseUser user = auth.getCurrentUser();
         //      updateUI(user);
-        FirebaseUser currentUser = mAuth.getCurrentUser();
         checkLogout();
 
 

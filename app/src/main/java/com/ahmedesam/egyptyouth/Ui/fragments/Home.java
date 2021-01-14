@@ -1,17 +1,14 @@
 package com.ahmedesam.egyptyouth.Ui.fragments;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +18,6 @@ import com.ahmedesam.egyptyouth.Models.PostModel;
 import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
-
 import com.ahmedesam.egyptyouth.Ui.Activities.AddPost;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -29,16 +25,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.onesignal.OneSignal;
 
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Scanner;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,7 +54,10 @@ public class Home extends Fragment {
     PostsAdapter mPostsAdapter;
     ArrayList<PostModel> mPosts;
     PostModel mPostModel;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
     private FirebaseAuth mAuth;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -77,8 +70,6 @@ public class Home extends Fragment {
         mShowAllPlayers = new ShowAllPlayers();
         mPostsAdapter = new PostsAdapter();
         mAuth = FirebaseAuth.getInstance();
-
-
 
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
@@ -110,11 +101,13 @@ public class Home extends Fragment {
                     Collections.sort(mPosts, new Comparator<PostModel>() {
                         @Override
                         public int compare(PostModel o1, PostModel o2) {
-                            return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());                        }
+                            return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());
+                        }
                     });
-                    mPostsAdapter = new PostsAdapter(mPosts , getActivity());
+                    mPostsAdapter = new PostsAdapter(mPosts, getActivity());
                     Posts.setAdapter(mPostsAdapter);
                     mPostsAdapter.notifyDataSetChanged();
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });
