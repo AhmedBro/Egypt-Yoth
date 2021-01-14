@@ -78,13 +78,17 @@ public class ChatsFragment extends Fragment {
 
 
                 }
-                Collections.sort(mUsers, new Comparator<Contact>() {
-                    @Override
-                    public int compare(Contact o1, Contact o2) {
-                        return o2.getmTime().compareTo(o1.getmTime());
+           try {
+               Collections.sort(mUsers, new Comparator<Contact>() {
+                   @Override
+                   public int compare(Contact o1, Contact o2) {
+                       return o2.getmTime().compareTo(o1.getmTime());
 
-                    }
-                });
+                   }
+               });
+           }
+           catch (Exception ignored){
+           }
                 mUserAdapter = new Chats(getActivity(), mUsers);
 
                 mRecyclerView.setAdapter(mUserAdapter);

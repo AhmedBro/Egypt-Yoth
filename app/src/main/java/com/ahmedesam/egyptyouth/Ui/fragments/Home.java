@@ -106,7 +106,7 @@ public class Home extends Fragment {
                     });
                     mPostsAdapter = new PostsAdapter(mPosts, getActivity());
                     Posts.setAdapter(mPostsAdapter);
-                    mPostsAdapter.notifyDataSetChanged();
+
                     progressBar.setVisibility(View.GONE);
                 }
             }
@@ -155,6 +155,7 @@ public class Home extends Fragment {
         super.onStart();
         mPostsAdapter.notifyDataSetChanged();
         mShowAllPlayers.notifyDataSetChanged();
+
 
     }
 

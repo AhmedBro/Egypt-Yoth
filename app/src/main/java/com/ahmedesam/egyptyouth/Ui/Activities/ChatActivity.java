@@ -103,7 +103,7 @@ public class ChatActivity extends AppCompatActivity {
     MediaPlayer mediaPlayer;
     static boolean send = false;
     final private String FCM_API = "https://fcm.googleapis.com/fcm/send";
-    final private String serverKey ="AIzaSyAa33zPueQk5T6uzT4Q8O0wvLb8nQXexd8";
+    final private String serverKey = "AIzaSyAa33zPueQk5T6uzT4Q8O0wvLb8nQXexd8";
     final private String contentType = "application/json";
     final String TAG = "NOTIFICATION TAG";
 
@@ -169,7 +169,6 @@ public class ChatActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference("Users").child(mHisId);
-        FirebaseDatabase.getInstance().getReference().child("Users").child(mMyId).child("Chats").child(mHisId).child("mName").setValue(mIntent.getStringExtra("Name"));
 
 
         //----------------------------------------------------------------------------------------------
@@ -198,8 +197,7 @@ public class ChatActivity extends AppCompatActivity {
                             cal.setTimeInMillis(Long.parseLong(mStatus1));
                             String Date = DateFormat.format("hh:mm aa", cal).toString();
                             mStatus.setText("Last Seen at: " + Date);
-                        }
-                        catch (Exception e){
+                        } catch (Exception e) {
 
                         }
 
@@ -369,14 +367,11 @@ public class ChatActivity extends AppCompatActivity {
                     });
 
                     mChatAdapter = new chatAdapter(ChatActivity.this, mChat, mIntent.getStringExtra("Image"));
-                    mChatAdapter.notifyDataSetChanged();
                     mRecyclerView.setAdapter(mChatAdapter);
                     RecyclerView.LayoutManager manager = new LinearLayoutManager(ChatActivity.this, RecyclerView.VERTICAL, false);
                     manager.scrollToPosition(mChat.size() - 1);
                     mRecyclerView.setLayoutManager(manager);
                     mChatAdapter.notifyDataSetChanged();
-
-
                 }
             }
 
@@ -496,6 +491,7 @@ public class ChatActivity extends AppCompatActivity {
             map.put("mId", mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID));
             map.put("mTyping", "");
             map.put("mStatus", "Offline");
+            FirebaseDatabase.getInstance().getReference().child("Users").child(mMyId).child("Chats").child(mHisId).child("mName").setValue(mIntent.getStringExtra("Name"));
             HashMap<String, Object> map2 = new HashMap();
             map2.put("mImage", getIntent().getStringExtra("Image"));
             map2.put("mId", mHisId);
@@ -658,54 +654,53 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-void sendNoti(){
-    try {
-        String jsonResponse;
+    void sendNoti() {
+        try {
+            String jsonResponse;
 
-        URL url = new URL("https://onesignal.com/api/v1/notifications");
-        HttpURLConnection con = (HttpURLConnection)url.openConnection();
-        con.setUseCaches(false);
-        con.setDoOutput(true);
-        con.setDoInput(true);
+            URL url = new URL("https://onesignal.com/api/v1/notifications");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setUseCaches(false);
+            con.setDoOutput(true);
+            con.setDoInput(true);
 
-        con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-        con.setRequestProperty("Authorization", "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj");
-        con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            con.setRequestProperty("Authorization", "Basic NGEwMGZmMjItY2NkNy0xMWUzLTk5ZDUtMDAwYzI5NDBlNjJj");
+            con.setRequestMethod("POST");
 
-        String strJsonBody = "{"
-                +   "\"app_id\": \"66b4a76c-6fff-433d-b831-e29c9fc8b0ea\","
-                +   "\"filters\": [{\"field\": \"tag\", \"key\": \"Id\", \"relation\": \">\", \"value\": \""+"ahmed.esamffff@gmail.com"+"\"},{\"operator\": \"OR\"},{\"field\": \"amount_spent\", \"relation\": \">\",\"value\": \"0\"}],"
-                +   "\"data\": {\"foo\": \"bar\"},"
-                +   "\"contents\": {\"en\": \"English Message\"}"
-                + "}";
+            String strJsonBody = "{"
+                    + "\"app_id\": \"66b4a76c-6fff-433d-b831-e29c9fc8b0ea\","
+                    + "\"filters\": [{\"field\": \"tag\", \"key\": \"Id\", \"relation\": \">\", \"value\": \"" + "ahmed.esamffff@gmail.com" + "\"},{\"operator\": \"OR\"},{\"field\": \"amount_spent\", \"relation\": \">\",\"value\": \"0\"}],"
+                    + "\"data\": {\"foo\": \"bar\"},"
+                    + "\"contents\": {\"en\": \"English Message\"}"
+                    + "}";
 
 
-        System.out.println("strJsonBody:\n" + strJsonBody);
+            System.out.println("strJsonBody:\n" + strJsonBody);
 
-        byte[] sendBytes = strJsonBody.getBytes("UTF-8");
-        con.setFixedLengthStreamingMode(sendBytes.length);
+            byte[] sendBytes = strJsonBody.getBytes("UTF-8");
+            con.setFixedLengthStreamingMode(sendBytes.length);
 
-        OutputStream outputStream = con.getOutputStream();
-        outputStream.write(sendBytes);
+            OutputStream outputStream = con.getOutputStream();
+            outputStream.write(sendBytes);
 
-        int httpResponse = con.getResponseCode();
-        System.out.println("httpResponse: " + httpResponse);
+            int httpResponse = con.getResponseCode();
+            System.out.println("httpResponse: " + httpResponse);
 
-        if (  httpResponse >= HttpURLConnection.HTTP_OK
-                && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
-            Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
-            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-            scanner.close();
+            if (httpResponse >= HttpURLConnection.HTTP_OK
+                    && httpResponse < HttpURLConnection.HTTP_BAD_REQUEST) {
+                Scanner scanner = new Scanner(con.getInputStream(), "UTF-8");
+                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                scanner.close();
+            } else {
+                Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
+                jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
+                scanner.close();
+            }
+            System.out.println("jsonResponse:\n" + jsonResponse);
+
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
-        else {
-            Scanner scanner = new Scanner(con.getErrorStream(), "UTF-8");
-            jsonResponse = scanner.useDelimiter("\\A").hasNext() ? scanner.next() : "";
-            scanner.close();
-        }
-        System.out.println("jsonResponse:\n" + jsonResponse);
-
-    } catch(Throwable t) {
-        t.printStackTrace();
     }
-}
 }

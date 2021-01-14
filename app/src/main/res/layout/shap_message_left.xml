@@ -38,6 +38,7 @@
                 android:textSize="16sp"
                 android:layout_centerInParent="true"
                 android:layout_alignParentEnd="true"
+                android:maxWidth="250dp"
 
                 />
 
