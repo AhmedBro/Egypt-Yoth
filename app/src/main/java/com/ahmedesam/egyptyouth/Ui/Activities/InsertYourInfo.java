@@ -57,6 +57,12 @@ public class InsertYourInfo extends AppCompatActivity {
         setContentView(R.layout.activity_insert_your_info);
         ButterKnife.bind(this);
         mShardPrefrances = new ShardPrefrances(this);
+
+        if (mShardPrefrances.IsDark()){
+            setTheme(R.style.AppTheme);
+        }else {
+            setTheme(R.style.AppThemeLight);
+        }
         mDatabase = FirebaseFirestore.getInstance();
         mPositions = new ArrayList<>();
         mPositions.add(getString(R.string.Gk));

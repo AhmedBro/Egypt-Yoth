@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
+import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.ahmedesam.egyptyouth.Ui.Activities.UserInfo;
 import com.bumptech.glide.Glide;
 
@@ -22,16 +23,17 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.Player> {
     ArrayList<userModel> mItems;
     Context mContext;
+    ShardPrefrances mShardPrefrances;
 
     public PlayersAdapter(ArrayList<userModel> mItems, Context mContext) {
         this.mItems = mItems;
         this.mContext = mContext;
+        mShardPrefrances = new ShardPrefrances(mContext);
     }
 
     public PlayersAdapter() {
@@ -48,9 +50,9 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.Player> 
     public void onBindViewHolder(@NonNull Player holder, int position) {
         Glide.with(mContext).load(mItems.get(position).getmImage()).into(holder.UserImage);
         holder.mUserDescription.setText(mItems.get(position).getmDescription());
-        Log.e("Des" ,mItems.get(position).getmDescription() );
+        Log.e("Des", mItems.get(position).getmDescription());
         holder.UserName.setText(mItems.get(position).getmName());
-        holder.mLikeNumber.setText(mItems.get(position).getmLikeNumber()+" "+" Likes");
+        holder.mLikeNumber.setText(mItems.get(position).getmLikeNumber() + " " + " Likes");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,9 +79,24 @@ public class PlayersAdapter extends RecyclerView.Adapter<PlayersAdapter.Player> 
         TextView mUserDescription;
         @BindView(R.id.cLikeNumber)
         TextView mLikeNumber;
+        @BindView(R.id.mParent)
+        LinearLayout mParent;
+
         public Player(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            if (mShardPrefrances.IsDark()) {
+                mParent.setBackground(mContext.getResources().getDrawable(R.color.white));
+                mLikeNumber.setTextColor(mContext.getResources().getColor(R.color.black));
+                UserName.setTextColor(mContext.getResources().getColor(R.color.black));
+                mUserDescription.setTextColor(mContext.getResources().getColor(R.color.black));
+            }
+            else {
+                mParent.setBackground(mContext.getResources().getDrawable(R.color.black));
+                mLikeNumber.setTextColor(mContext.getResources().getColor(R.color.white));
+                UserName.setTextColor(mContext.getResources().getColor(R.color.white));
+                mUserDescription.setTextColor(mContext.getResources().getColor(R.color.white));
+            }
         }
 
     }

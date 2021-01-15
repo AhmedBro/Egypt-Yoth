@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.ahmedesam.egyptyouth.R;
+import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.ahmedesam.egyptyouth.Ui.fragments.ChatsFragment;
 import com.ahmedesam.egyptyouth.Ui.fragments.Home;
 import com.ahmedesam.egyptyouth.Ui.fragments.PlayersFragment;
@@ -44,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
     LinearLayout replace;
     @BindView(R.id.nav_view)
     BottomNavigationView navView;
-
+    ShardPrefrances mShardPrefrances;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +54,19 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
+        mShardPrefrances = new ShardPrefrances(this);
 
+   try {
+       if (mShardPrefrances.IsDark()) {
+           navView.setBackground(getResources().getDrawable(R.color.colorPrimaryLight));
 
+       } else {
+           navView.setBackground(getResources().getDrawable(R.color.colorPrimary));
+       }
+   }
+   catch (Exception e){
+
+   }
 
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 

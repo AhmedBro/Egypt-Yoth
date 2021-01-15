@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,11 +18,6 @@ import com.ahmedesam.egyptyouth.Models.Contact;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -49,6 +46,10 @@ public class ChatsFragment extends Fragment {
     ShardPrefrances mShardPrefrances;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.mToolBar)
+    Toolbar mToolBar;
+    @BindView(R.id.mParent)
+    ConstraintLayout mParent;
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -69,6 +70,34 @@ public class ChatsFragment extends Fragment {
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         mRecyclerView.setLayoutManager(manager);
         LoadUsers();
+
+
+        if (mShardPrefrances.IsDark()) {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.white));
+
+
+            mToolBar.setBackground(getResources().getDrawable(R.drawable.bar_home_light));
+
+
+
+
+
+        } else {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.black));
+
+
+            mToolBar.setBackground(getResources().getDrawable(R.drawable.bar_home));
+
+
+
+
+
+        }
+
         return view;
     }
 
@@ -78,25 +107,29 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 mUsers.clear();
-                for (QueryDocumentSnapshot postSnapshot :value){
-                    Contact imageUploadInfo = new Contact(String.valueOf(postSnapshot.getData().get("mName")),String.valueOf(postSnapshot.getData().get("mImage")),String.valueOf(postSnapshot.getData().get("mId")),String.valueOf(postSnapshot.getData().get("mLastMessage")),String.valueOf(postSnapshot.getData().get("mTime")));
+                for (QueryDocumentSnapshot postSnapshot : value) {
+                    Contact imageUploadInfo = new Contact(String.valueOf(postSnapshot.getData().get("mName")), String.valueOf(postSnapshot.getData().get("mImage")), String.valueOf(postSnapshot.getData().get("mId")), String.valueOf(postSnapshot.getData().get("mLastMessage")), String.valueOf(postSnapshot.getData().get("mTime")));
 
                     mUsers.add(imageUploadInfo);
                 }
                 try {
-               Collections.sort(mUsers, new Comparator<Contact>() {
-                   @Override
-                   public int compare(Contact o1, Contact o2) {
-                       return o2.getmTime().compareTo(o1.getmTime());
+                    Collections.sort(mUsers, new Comparator<Contact>() {
+                        @Override
+                        public int compare(Contact o1, Contact o2) {
+                            return o2.getmTime().compareTo(o1.getmTime());
 
-                   }
-               });
-           }
-           catch (Exception ignored){
-           }
-                mUserAdapter = new Chats(getActivity(), mUsers);
+                        }
+                    });
+                } catch (Exception ignored) {
+                }
+             try {
+                 mUserAdapter = new Chats(getActivity(), mUsers);
 
-                mRecyclerView.setAdapter(mUserAdapter);
+                 mRecyclerView.setAdapter(mUserAdapter);
+             }
+             catch (Exception e){
+
+             }
 
                 progressBar.setVisibility(View.GONE);
             }

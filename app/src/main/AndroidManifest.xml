@@ -24,25 +24,31 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Ui.Activities.AddPost"
             android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="uiMode"
             />
         <activity android:name=".Ui.Activities.ChatActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            tools:ignore="Instantiatable" />
+            tools:ignore="Instantiatable"
+            android:configChanges="uiMode"/>
         <activity
             android:name=".Ui.Activities.ShowFullVideo"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="uiMode"/>
         <activity
             android:name=".Ui.Activities.InsertYourInfo"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="uiMode"/>
         <activity
             android:name=".Ui.Activities.ShowFullImages"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="uiMode"/>
         <activity
             android:name=".Ui.Activities.UserInfo"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" android:configChanges="uiMode"/>
         <activity
             android:name=".Ui.Activities.splash"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -51,10 +57,12 @@
         </activity>
         <activity
             android:name=".Ui.Activities.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="uiMode"/>
         <activity
             android:name=".Ui.Activities.LogIn"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="uiMode"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -63,10 +71,13 @@
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+
+            />
         <activity
             android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

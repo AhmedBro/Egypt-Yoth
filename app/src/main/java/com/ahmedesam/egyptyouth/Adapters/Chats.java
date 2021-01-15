@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmedesam.egyptyouth.Models.Contact;
 import com.ahmedesam.egyptyouth.R;
+import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.ahmedesam.egyptyouth.Ui.Activities.ChatActivity;
 import com.bumptech.glide.Glide;
 
@@ -26,6 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class Chats extends RecyclerView.Adapter<Chats.adapter> {
     Context mContext;
     ArrayList<Contact> mUsersModels;
+    ShardPrefrances mShardPrefrances;
 
     public Chats() {
     }
@@ -33,6 +35,7 @@ public class Chats extends RecyclerView.Adapter<Chats.adapter> {
     public Chats(Context mContext, ArrayList<Contact> mUsersModels) {
         this.mContext = mContext;
         this.mUsersModels = mUsersModels;
+        mShardPrefrances = new ShardPrefrances(mContext);
     }
 
     @NonNull
@@ -87,6 +90,26 @@ public class Chats extends RecyclerView.Adapter<Chats.adapter> {
             mMail = itemView.findViewById(R.id.mLasMessage);
             mTime = itemView.findViewById(R.id.mTime);
             mUserImage = itemView.findViewById(R.id.mUserImage);
+
+
+            if (mShardPrefrances.IsDark()) {
+
+
+                mName.setTextColor(mContext.getResources().getColor(R.color.black));
+                mMail.setTextColor(mContext.getResources().getColor(R.color.black));
+                mTime.setTextColor(mContext.getResources().getColor(R.color.black));
+                mName.setTextColor(mContext.getResources().getColor(R.color.black));
+
+
+            } else {
+
+                mName.setTextColor(mContext.getResources().getColor(R.color.white));
+                mMail.setTextColor(mContext.getResources().getColor(R.color.white));
+                mTime.setTextColor(mContext.getResources().getColor(R.color.white));
+                mName.setTextColor(mContext.getResources().getColor(R.color.white));
+
+
+            }
 
         }
     }

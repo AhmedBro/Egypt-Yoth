@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,7 +39,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -105,6 +109,10 @@ public class UserProfileFragment extends Fragment {
     TextView mUserId;
     @BindView(R.id.mPosts)
     RecyclerView mUserPosts;
+    @BindView(R.id.mYear)
+    TextView mYear;
+    @BindView(R.id.mParent)
+    ConstraintLayout mParent;
     //    @BindView(R.id.mFollowNumber)
 //    TextView mFollowNumber;
     private FirebaseFirestore mDatabase;
@@ -145,7 +153,7 @@ public class UserProfileFragment extends Fragment {
         Image = new ImageModel();
         mImages = new ArrayList<>();
         mVideos = new ArrayList<>();
-        LinearLayoutManager manager = new LinearLayoutManager(getContext() , RecyclerView.VERTICAL ,false);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         mUserPosts.setLayoutManager(manager);
         InstItems();
 
@@ -155,37 +163,88 @@ public class UserProfileFragment extends Fragment {
 
         LoadUserVideos();
 
-        LoadPosts();
+        GetPosts();
+
+        if (mShardPrefrances.IsDark()) {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.white));
+            mUploadImage.setBackground(getResources().getDrawable(R.drawable.edit_photo_button_light));
+            mUploadImage.setTextColor(getResources().getColor(R.color.white));
+            mEditInformation.setBackground(getResources().getDrawable(R.drawable.edit_photo_button_light));
+            mEditInformation.setTextColor(getResources().getColor(R.color.white));
+            mUploadVideo.setBackground(getResources().getDrawable(R.drawable.edit_photo_button_light));
+            mUploadVideo.setTextColor(getResources().getColor(R.color.white));
+            LogOut.setBackground(getResources().getDrawable(R.drawable.edit_photo_button_light));
+            LogOut.setTextColor(getResources().getColor(R.color.white));
+            mUserAddress.setTextColor(getResources().getColor(R.color.black));
+            mUserAge.setTextColor(getResources().getColor(R.color.black));
+            mUserName.setTextColor(getResources().getColor(R.color.black));
+            mUserSkills.setTextColor(getResources().getColor(R.color.black));
+            mYear.setTextColor(getResources().getColor(R.color.black));
+
+        } else {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.black));
+            mUploadImage.setBackground(getResources().getDrawable(R.drawable.edit_photo_button));
+            mUploadImage.setTextColor(getResources().getColor(R.color.white));
+            mEditInformation.setBackground(getResources().getDrawable(R.drawable.edit_photo_button));
+            mEditInformation.setTextColor(getResources().getColor(R.color.white));
+            mUploadVideo.setBackground(getResources().getDrawable(R.drawable.edit_photo_button));
+            mUploadVideo.setTextColor(getResources().getColor(R.color.white));
+            LogOut.setBackground(getResources().getDrawable(R.drawable.edit_photo_button));
+            LogOut.setTextColor(getResources().getColor(R.color.white));
+            mUserAddress.setTextColor(getResources().getColor(R.color.white));
+            mUserAge.setTextColor(getResources().getColor(R.color.white));
+            mUserName.setTextColor(getResources().getColor(R.color.white));
+            mUserSkills.setTextColor(getResources().getColor(R.color.white));
+            mYear.setTextColor(getResources().getColor(R.color.white));
+
+        }
+
+
         return view;
     }
 
-    private void LoadPosts() {
+    private void GetPosts() {
         mPosts = new ArrayList<>();
-        mDatabaseReference.collection("Users").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).collection("Posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        mDatabaseReference.collection("Posts").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        mPostModel = new PostModel((String.valueOf(document.getData().get("mPost"))),
-                                String.valueOf(document.getData().get("mImage")),
-                                String.valueOf(document.getData().get("mLikeNumber")),
-                                String.valueOf(document.getData().get("mPostID")),
-                                String.valueOf(document.getData().get("mUserId")),
-                                String.valueOf(document.getData().get("mVideo")),
-                                String.valueOf(document.getData().get("mUserName")),
-                                String.valueOf(document.getData().get("mUserImage")));
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                mPosts.clear();
+                for (QueryDocumentSnapshot document : value) {
+                    mPostModel = new PostModel((String.valueOf(document.getData().get("mPost"))),
+                            String.valueOf(document.getData().get("mImage")),
+                            String.valueOf(document.getData().get("mLikeNumber")),
+                            String.valueOf(document.getData().get("mPostID")),
+                            String.valueOf(document.getData().get("mUserId")),
+                            String.valueOf(document.getData().get("mVideo")),
+                            String.valueOf(document.getData().get("mUserName")),
+                            String.valueOf(document.getData().get("mUserImage")));
+
+                    if (String.valueOf(document.getData().get("mUserId")).equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
                         mPosts.add(mPostModel);
                     }
-                    Collections.sort(mPosts, new Comparator<PostModel>() {
-                        @Override
-                        public int compare(PostModel o1, PostModel o2) {
-                            return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());                        }
-                    });
-                    mPostsAdapter = new PostsAdapter(mPosts , getActivity());
-                    mUserPosts.setAdapter(mPostsAdapter);
 
                 }
+                Collections.sort(mPosts, new Comparator<PostModel>() {
+                    @Override
+                    public int compare(PostModel o1, PostModel o2) {
+                        return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());
+                    }
+                });
+             try {
+                 mPostsAdapter = new PostsAdapter(mPosts, getContext());
+                 mUserPosts.setAdapter(mPostsAdapter);
+             }
+             catch (Exception e){
+
+             }
+
+
             }
+
         });
     }
 

@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +22,8 @@ import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.ahmedesam.egyptyouth.Ui.Activities.AddPost;
+import com.bitvale.switcher.SwitcherC;
+import com.bitvale.switcher.SwitcherX;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +42,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 
 public class Home extends Fragment {
@@ -59,6 +65,16 @@ public class Home extends Fragment {
     PostModel mPostModel;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.switcher)
+    SwitcherX switcher;
+    @BindView(R.id.UserName)
+    TextView UserName;
+    @BindView(R.id.bar)
+    LinearLayout bar;
+    @BindView(R.id.mParent)
+    LinearLayout mParent;
+    @BindView(R.id.mSeprator)
+    View mSeprator;
     private FirebaseAuth mAuth;
 
     @Override
@@ -67,6 +83,7 @@ public class Home extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_home, container, false);
         mUnbinder = ButterKnife.bind(this, view);
+
 
         mDatabaseReference = FirebaseFirestore.getInstance();
         mShardPrefrances = new ShardPrefrances(getActivity());
@@ -81,6 +98,37 @@ public class Home extends Fragment {
         Posts.setLayoutManager(manager1);
         GetAllUsers();
         GetPosts();
+
+        if (mShardPrefrances.IsDark()) {
+            switcher.setChecked(false, true);
+
+            mParent.setBackground(getResources().getDrawable(R.color.white));
+            mSeprator.setBackground(getResources().getDrawable(R.color.black));
+            bar.setBackground(getResources().getDrawable(R.drawable.bar_home_light));
+        } else {
+            switcher.setChecked(true, true);
+
+            mParent.setBackground(getResources().getDrawable(R.color.black));
+            mSeprator.setBackground(getResources().getDrawable(R.color.white));
+            bar.setBackground(getResources().getDrawable(R.drawable.bar_home));
+
+        }
+
+        switcher.setOnCheckedChangeListener(new Function1<Boolean, Unit>() {
+            @Override
+            public Unit invoke(Boolean aBoolean) {
+                if (!aBoolean) {
+                    mShardPrefrances.EditTheme(true);
+                    getActivity().finish();
+                    startActivity(getActivity().getIntent());
+                } else {
+                    mShardPrefrances.EditTheme(false);
+                    getActivity().finish();
+                    startActivity(getActivity().getIntent());
+                }
+                return null;
+            }
+        });
         return view;
     }
 
@@ -107,8 +155,12 @@ public class Home extends Fragment {
                         return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());
                     }
                 });
-                mPostsAdapter = new PostsAdapter(mPosts, getActivity());
-                Posts.setAdapter(mPostsAdapter);
+               try {
+                   mPostsAdapter = new PostsAdapter(mPosts, getContext());
+                   Posts.setAdapter(mPostsAdapter);
+               }catch (Exception E){
+
+               }
 
                 progressBar.setVisibility(View.GONE);
             }

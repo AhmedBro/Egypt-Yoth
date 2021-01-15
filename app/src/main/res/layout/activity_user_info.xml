@@ -2,10 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mParent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Ui.fragments.UserProfileFragment"
-    android:background="@color/black">
+    android:background="@color/black"
+    tools:context=".Ui.fragments.UserProfileFragment">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -41,16 +42,16 @@
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/UserImage"
                         android:layout_width="100dp"
-                        android:layout_gravity="center"
                         android:layout_height="100dp"
+                        android:layout_gravity="center"
                         android:layout_margin="10dp" />
 
                     <TextView
-                        android:gravity="center"
                         android:id="@+id/mUserName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
+                        android:gravity="center"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="18sp"
@@ -58,11 +59,11 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:gravity="center"
-                    android:layout_gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -70,8 +71,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:orientation="horizontal"
-                        android:visibility="gone"
-                        >
+                        android:visibility="gone">
+
                         <TextView
 
                             android:layout_width="wrap_content"
@@ -80,6 +81,7 @@
                             android:text="@string/id"
                             android:textColor="@color/white"
                             android:textSize="15sp" />
+
                         <TextView
 
                             android:id="@+id/mUserId"
@@ -93,10 +95,10 @@
 
 
                     <LinearLayout
-                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
+                        android:gravity="center"
                         android:orientation="horizontal">
 
                         <TextView
@@ -108,7 +110,7 @@
                             android:textSize="15sp" />
 
                         <TextView
-
+                            android:id="@+id/mYear"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="3dp"
@@ -119,117 +121,119 @@
 
 
                     <TextView
-                        android:gravity="center"
                         android:id="@+id/mUserAddress"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
+                        android:gravity="center"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
                     <TextView
-                        android:gravity="center"
                         android:id="@+id/mUserSkills"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:textColor="@color/white"
                         android:textSize="15sp" />
 
                 </LinearLayout>
             </LinearLayout>
 
-<LinearLayout
-    android:weightSum="2"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <RelativeLayout
-        android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/mDisLike"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/dis_like_shap"
-            android:text="@string/disLike"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="normal" />
-        <Button
-            android:id="@+id/mLike"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/edit_photo_button"
-            android:text="@string/like"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="12sp"
-            android:textStyle="normal" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-    </RelativeLayout>
-<Button
-    android:layout_weight="1"
-    android:id="@+id/mChat"
-    android:layout_width="match_parent"
-    android:layout_height="30dp"
-    android:layout_marginLeft="15dp"
-    android:layout_marginTop="10dp"
-    android:layout_marginRight="15dp"
-    android:layout_marginBottom="15dp"
-    android:background="@drawable/edit_photo_button"
-    android:text="@string/Message"
-    android:textAllCaps="false"
-    android:textColor="@color/white"
-    android:textSize="12sp"
-    android:textStyle="normal"/>
-</LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:id="@+id/mDisLike"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/dis_like_shap"
+                        android:text="@string/disLike"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="normal" />
+
+                    <Button
+                        android:id="@+id/mLike"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_marginBottom="15dp"
+                        android:background="@drawable/edit_photo_button"
+                        android:text="@string/like"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="normal" />
+
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/mChat"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/edit_photo_button"
+                    android:text="@string/Message"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:textStyle="normal" />
+            </LinearLayout>
 
 
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.5dp"
-                android:background="@color/colorPrimaryDark"
                 android:layout_margin="10dp"
-                />
+                android:background="@color/colorPrimaryDark" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/Images"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
                 android:layout_marginStart="5dp"
-                />
+                android:layout_marginBottom="10dp" />
 
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1.5dp"
-                android:background="@color/colorPrimaryDark"
                 android:layout_margin="10dp"
-                />
+                android:background="@color/colorPrimaryDark" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/Videos"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_marginBottom="10dp"
                 android:focusable="false"
-                android:layout_marginStart="5dp"
 
                 />
+
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mPosts"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/mPosts"/>
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

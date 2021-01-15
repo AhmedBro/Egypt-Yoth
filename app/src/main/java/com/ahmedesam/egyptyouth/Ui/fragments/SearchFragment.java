@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,7 @@ import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -44,6 +46,10 @@ public class SearchFragment extends Fragment {
     ArrayList<userModel> mPlayers;
     PlayersAdapter mPlayersAdapter;
     ShardPrefrances mShardPrefrances;
+    @BindView(R.id.appBarLayout)
+    AppBarLayout appBarLayout;
+    @BindView(R.id.mParent)
+    ConstraintLayout mParent;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -82,6 +88,24 @@ public class SearchFragment extends Fragment {
 
             }
         });
+
+
+        if (mShardPrefrances.IsDark()) {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.background));
+
+
+
+        } else {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.black));
+
+
+
+        }
+
         return view;
 
     }

@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,14 +29,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmedesam.egyptyouth.Adapters.MediaAdapter;
 import com.ahmedesam.egyptyouth.Adapters.chatAdapter;
-import com.ahmedesam.egyptyouth.Models.Contact;
 import com.ahmedesam.egyptyouth.Models.ModelChat;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
-import com.android.volley.AuthFailureError;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -60,10 +56,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.onesignal.OneSignal;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -74,7 +66,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -99,6 +90,19 @@ public class ChatActivity extends AppCompatActivity {
     FirebaseFirestore mDatabaseReference;
     @BindView(R.id.mUserImage)
     CircleImageView mUserImage;
+
+    @BindView(R.id.mToolBar)
+    Toolbar mToolBar;
+    @BindView(R.id.ChatRec)
+    RecyclerView ChatRec;
+    @BindView(R.id.mEditForMessage)
+    EditText mEditForMessage;
+    @BindView(R.id.mSend)
+    ImageButton mSend;
+    @BindView(R.id.SendLayOut)
+    LinearLayout SendLayOut;
+    @BindView(R.id.mParent)
+    RelativeLayout mParent;
     private RecyclerView.Adapter mMediaAdapter;
     int PICK_IMAGE_INTENT = 1;
     ArrayList<String> mediaUriList = new ArrayList<>();
@@ -154,6 +158,36 @@ public class ChatActivity extends AppCompatActivity {
 
         Instviews();
         initializeMedia();
+
+        if (mShardPrefrances.IsDark()) {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.background));
+            SendLayOut.setBackground(getResources().getDrawable(R.drawable.edit_photo_button_light));
+
+            mToolBar.setBackground(getResources().getDrawable(R.drawable.bar_home_light));
+
+
+            mName.setTextColor(getResources().getColor(R.color.white));
+
+            mStatus.setTextColor(getResources().getColor(R.color.white));
+
+
+        } else {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.black));
+            SendLayOut.setBackground(getResources().getDrawable(R.drawable.edit_photo_button));
+
+            mToolBar.setBackground(getResources().getDrawable(R.drawable.edit_photo_button));
+
+
+            mName.setTextColor(getResources().getColor(R.color.white));
+
+            mStatus.setTextColor(getResources().getColor(R.color.white));
+
+
+        }
     }
 
     private void Instviews() {

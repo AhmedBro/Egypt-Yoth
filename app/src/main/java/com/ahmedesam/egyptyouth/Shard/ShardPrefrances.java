@@ -9,6 +9,7 @@ import com.ahmedesam.egyptyouth.Ui.Activities.LogIn;
 import java.util.HashMap;
 
 public class ShardPrefrances {
+
     private SharedPreferences mSharedPreferences;
     private SharedPreferences.Editor mEditor;
     private Context mContext;
@@ -27,7 +28,8 @@ public class ShardPrefrances {
     public static final String KEY_BIRTH_DATE = "BirthDate";
     public static final String KEY_DESCRIPTION = "Description";
     public static final String KEY_Address= "Address";
-    public static final String KEY_INSERT= "insert";
+    private static final String KEY_INSERT ="Insert" ;
+    public static final String KEY_Theme = "Light";
 
 
     /**
@@ -62,6 +64,10 @@ public class ShardPrefrances {
 
     public void EditImage(String Image) {
         mEditor.putString(KEY_IMAGE, Image);
+        mEditor.commit();
+    }
+    public void EditTheme(Boolean Theme) {
+        mEditor.putBoolean(KEY_Theme, Theme);
         mEditor.commit();
     }
     public void EditAge(String mBirthDate) {
@@ -140,4 +146,10 @@ public class ShardPrefrances {
     public boolean isInsert() {
         return mSharedPreferences.getBoolean(KEY_INSERT, false);
     }
+    public boolean IsDark() {
+        return mSharedPreferences.getBoolean(KEY_Theme, false);
+    }
+
+
+
 }

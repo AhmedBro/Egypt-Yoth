@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".Ui.fragments.UserProfileFragment">
+    tools:context=".Ui.fragments.UserProfileFragment"
+    android:id="@+id/mParent"
+    >
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -109,7 +111,7 @@
                             android:textSize="15sp" />
 
                         <TextView
-
+android:id="@+id/mYear"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="3dp"

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,6 +50,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.holder> {
     static Boolean PlayVideo = true;
     ShardPrefrances mShardPrefrances;
 
+
     private ReadMoreOption readMoreOption;
 
     public PostsAdapter(Boolean playVideo) {
@@ -82,7 +84,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.holder> {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        Log.e("Iddddddddddd",document.getData().get("Id")+"");
+
                         if (document.getData().get("Id").toString().equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
                             holder.likeButton.setChecked(true);
                             break;
@@ -94,15 +96,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.holder> {
         });
 
 
-        Log.e("Immage", mItems.get(position).getmUserImage());
+
         holder.mUserName.setText(mItems.get(position).getmUserName());
 
-       if (Integer.parseInt(mItems.get(position).getmLikeNumber())<0){
-           holder.mLikeNumber.setText("0" + " " + "Likes");
-       }
-       else {
-           holder.mLikeNumber.setText(mItems.get(position).getmLikeNumber() + " " + "Likes");
-       }
+        if (Integer.parseInt(mItems.get(position).getmLikeNumber()) < 0) {
+            holder.mLikeNumber.setText("0" + " " + "Likes");
+        } else {
+            holder.mLikeNumber.setText(mItems.get(position).getmLikeNumber() + " " + "Likes");
+        }
         Glide.with(mContext).load(mItems.get(position).getmUserImage()).into(holder.mUserImage);
         readMoreOption.addReadMoreTo(holder.mPostText, mItems.get(position).getmPost());
         if (mItems.get(position).getmImage().isEmpty()) {
@@ -243,11 +244,33 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.holder> {
 
         @BindView(R.id.mLikeNumber)
         TextView mLikeNumber;
+        @BindView(R.id.mParent)
+        ConstraintLayout mParent;
 
         public holder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            if (mShardPrefrances.IsDark()) {
 
+
+                mParent.setBackground(mContext.getResources().getDrawable(R.color.white));
+                mLikeNumber.setTextColor(mContext.getResources().getColor(R.color.black));
+                mUserName.setTextColor(mContext.getResources().getColor(R.color.black));
+                mPostText.setTextColor(mContext.getResources().getColor(R.color.black));
+                mAddComment.setColorFilter(mContext.getResources().getColor(R.color.black));
+                likeButton.setInactiveImage(R.drawable.heart);
+
+            } else {
+
+
+                mParent.setBackground(mContext.getResources().getDrawable(R.color.black));
+                mLikeNumber.setTextColor(mContext.getResources().getColor(R.color.white));
+                mUserName.setTextColor(mContext.getResources().getColor(R.color.white));
+                mPostText.setTextColor(mContext.getResources().getColor(R.color.white));
+                mAddComment.setColorFilter(mContext.getResources().getColor(R.color.white));
+                likeButton.setInactiveImage(R.drawable.white);
+
+            }
         }
 
     }

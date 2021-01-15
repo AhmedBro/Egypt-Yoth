@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,6 +73,10 @@ public class UserInfo extends AppCompatActivity {
     TextView mUserId;
     @BindView(R.id.mChat)
     Button mChat;
+    @BindView(R.id.mParent)
+    ConstraintLayout mParent;
+    @BindView(R.id.mYear)
+    TextView mYear;
     private FirebaseFirestore mDatabase;
     userModel model;
     ImageModel Image;
@@ -87,6 +92,7 @@ public class UserInfo extends AppCompatActivity {
     FirebaseFirestore mDatabaseReference;
     PostsAdapter mPostsAdapter;
     ArrayList<PostModel> mPosts;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +103,7 @@ public class UserInfo extends AppCompatActivity {
         ID = mIntent.getStringExtra("ID");
         mImages = new ArrayList<>();
         mVideos = new ArrayList<>();
-        LinearLayoutManager manager = new LinearLayoutManager(this , RecyclerView.VERTICAL ,false);
+        LinearLayoutManager manager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         mUserPosts.setLayoutManager(manager);
         mShardPrefrances = new ShardPrefrances(this);
         SetData();
@@ -109,6 +115,36 @@ public class UserInfo extends AppCompatActivity {
         LoadPosts();
 
         CheckIfLiked();
+
+        if (mShardPrefrances.IsDark()) {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.white));
+            mChat.setBackground(getResources().getDrawable(R.drawable.edit_photo_button_light));
+            mChat.setTextColor(getResources().getColor(R.color.white));
+            mLike.setBackground(getResources().getDrawable(R.drawable.edit_photo_button_light));
+            mLike.setTextColor(getResources().getColor(R.color.white));
+            mUserAddress.setTextColor(getResources().getColor(R.color.black));
+            mUserAge.setTextColor(getResources().getColor(R.color.black));
+            mUserName.setTextColor(getResources().getColor(R.color.black));
+            mUserSkills.setTextColor(getResources().getColor(R.color.black));
+            mYear.setTextColor(getResources().getColor(R.color.black));
+
+        } else {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.black));
+            mChat.setBackground(getResources().getDrawable(R.drawable.edit_photo_button));
+            mChat.setTextColor(getResources().getColor(R.color.white));
+            mLike.setBackground(getResources().getDrawable(R.drawable.edit_photo_button));
+            mLike.setTextColor(getResources().getColor(R.color.white));
+            mUserAddress.setTextColor(getResources().getColor(R.color.white));
+            mUserAge.setTextColor(getResources().getColor(R.color.white));
+            mUserName.setTextColor(getResources().getColor(R.color.white));
+            mUserSkills.setTextColor(getResources().getColor(R.color.white));
+            mYear.setTextColor(getResources().getColor(R.color.white));
+
+        }
 
     }
 

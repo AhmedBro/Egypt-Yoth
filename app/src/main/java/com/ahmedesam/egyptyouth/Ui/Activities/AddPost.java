@@ -11,11 +11,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.ahmedesam.egyptyouth.Models.ImageModel;
 import com.ahmedesam.egyptyouth.Models.PostModel;
@@ -37,7 +39,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -71,6 +72,10 @@ public class AddPost extends AppCompatActivity {
     ShardPrefrances mShardPrefrances;
     static String UTI = "";
     DatabaseReference databaseReference;
+    @BindView(R.id.bar)
+    RelativeLayout bar;
+    @BindView(R.id.mParent)
+    ConstraintLayout mParent;
     private FirebaseFirestore mDatabase;
     ImageModel Image;
     static String Type = "";
@@ -90,7 +95,37 @@ public class AddPost extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         Image = new ImageModel();
         mPostModel = new PostModel();
-    }
+
+        if (mShardPrefrances.IsDark()) {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.white));
+
+            mUploadImage.setBackground(getResources().getDrawable(R.drawable.edit_photo_button_light));
+            mUploadImage.setTextColor(getResources().getColor(R.color.white));
+            mUploadVideo.setBackground(getResources().getDrawable(R.drawable.edit_photo_button_light));
+            mUploadVideo.setTextColor(getResources().getColor(R.color.white));
+            bar.setBackground(getResources().getDrawable(R.drawable.bar_home_light));
+            mCaption.setTextColor(getResources().getColor(R.color.black));
+            mCaption.setHintTextColor(getResources().getColor(R.color.background));
+
+        } else {
+
+
+            mParent.setBackground(getResources().getDrawable(R.color.black));
+            mCaption.setTextColor(getResources().getColor(R.color.white));
+            mCaption.setHintTextColor(getResources().getColor(R.color.white));
+            mUploadImage.setBackground(getResources().getDrawable(R.drawable.edit_photo_button));
+            mUploadImage.setTextColor(getResources().getColor(R.color.white));
+            mUploadVideo.setBackground(getResources().getDrawable(R.drawable.edit_photo_button));
+            mUploadVideo.setTextColor(getResources().getColor(R.color.white));
+            bar.setBackground(getResources().getDrawable(R.drawable.bar_home));
+
+        }
+
+        }
+
+
 
 
     @OnClick({R.id.mEnd, R.id.mPublish, R.id.mUploadImage, R.id.mUploadVideo})
