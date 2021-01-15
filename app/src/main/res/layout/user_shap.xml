@@ -1,65 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
     <LinearLayout
-        android:gravity="center"
-        android:layout_width="match_parent"
         android:id="@+id/mToolBar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="MissingConstraints"
 
         >
+
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/mUserImage"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/vector"
-            android:id="@+id/mUserImage"
             android:layout_margin="10dp"
-            />
+            android:scaleType="centerCrop"
+            android:src="@drawable/vector" />
 
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_margin="10dp"
-
+            android:gravity="center"
+            android:orientation="vertical"
             >
+
             <TextView
                 android:id="@+id/mName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:textSize="18sp"
                 android:layout_alignParentTop="true"
-                />
+                android:textColor="@color/white"
+                android:textSize="18sp"
+               />
+
             <TextView
                 android:id="@+id/mLasMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#7CE6E6E6"
-                android:text="@string/offline"
-                android:textSize="15sp"
-                android:layout_alignParentBottom="true"
                 android:layout_below="@+id/mName"
-                />
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+
+                android:gravity="center"
+                android:text="@string/offline"
+                android:textColor="#7CE6E6E6"
+                android:textSize="15sp" />
+
             <TextView
+                android:id="@+id/mTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/grey"
                 android:layout_alignParentEnd="true"
-                android:textSize="12sp"
-                android:id="@+id/mTime"/>
+                android:textColor="@color/grey"
+                android:textSize="12sp" />
         </RelativeLayout>
 
 
@@ -68,7 +72,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/colorPrimaryDark"
         android:layout_margin="5dp"
-        />
+        android:background="@color/colorPrimaryDark" />
 </LinearLayout>

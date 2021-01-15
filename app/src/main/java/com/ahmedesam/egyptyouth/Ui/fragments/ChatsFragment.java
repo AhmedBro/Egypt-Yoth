@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,7 +42,7 @@ public class ChatsFragment extends Fragment {
     @BindView(R.id.RecUser)
     RecyclerView mRecyclerView;
     Unbinder mUnbinder;
-    DatabaseReference mDatabaseReference;
+    CollectionReference mDatabaseReference;
     Chats mUserAdapter;
     ArrayList<Contact> mUsers;
     FirebaseAuth mFirebaseAuth;
@@ -55,7 +62,7 @@ public class ChatsFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_chats, container, false);
         mUnbinder = ButterKnife.bind(this, view);
         mShardPrefrances = new ShardPrefrances(getActivity());
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).child("Chats");
+        mDatabaseReference = FirebaseFirestore.getInstance().collection("Users").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).collection("Chats");
         mUsers = new ArrayList<>();
         mUserAdapter = new Chats();
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -66,19 +73,17 @@ public class ChatsFragment extends Fragment {
     }
 
     void LoadUsers() {
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                mUsers.clear();
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
 
-                    Contact imageUploadInfo = postSnapshot.getValue(Contact.class);
+        mDatabaseReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                mUsers.clear();
+                for (QueryDocumentSnapshot postSnapshot :value){
+                    Contact imageUploadInfo = new Contact(String.valueOf(postSnapshot.getData().get("mName")),String.valueOf(postSnapshot.getData().get("mImage")),String.valueOf(postSnapshot.getData().get("mId")),String.valueOf(postSnapshot.getData().get("mLastMessage")),String.valueOf(postSnapshot.getData().get("mTime")));
 
                     mUsers.add(imageUploadInfo);
-
-
                 }
-           try {
+                try {
                Collections.sort(mUsers, new Comparator<Contact>() {
                    @Override
                    public int compare(Contact o1, Contact o2) {
@@ -94,15 +99,46 @@ public class ChatsFragment extends Fragment {
                 mRecyclerView.setAdapter(mUserAdapter);
 
                 progressBar.setVisibility(View.GONE);
-                // Hiding the progress dialog.
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-                // Hiding the progress dialog.
             }
         });
+
+//        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                mUsers.clear();
+//                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+//
+//                    Contact imageUploadInfo = postSnapshot.getValue(Contact.class);
+//
+//                    mUsers.add(imageUploadInfo);
+//
+//
+//                }
+//           try {
+//               Collections.sort(mUsers, new Comparator<Contact>() {
+//                   @Override
+//                   public int compare(Contact o1, Contact o2) {
+//                       return o2.getmTime().compareTo(o1.getmTime());
+//
+//                   }
+//               });
+//           }
+//           catch (Exception ignored){
+//           }
+//                mUserAdapter = new Chats(getActivity(), mUsers);
+//
+//                mRecyclerView.setAdapter(mUserAdapter);
+//
+//                progressBar.setVisibility(View.GONE);
+//                // Hiding the progress dialog.
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//                // Hiding the progress dialog.
+//            }
+//        });
 
     }
 

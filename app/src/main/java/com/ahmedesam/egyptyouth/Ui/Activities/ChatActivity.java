@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -45,8 +46,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -86,8 +95,8 @@ public class ChatActivity extends AppCompatActivity {
     FirebaseAuth mFirebaseAuth;
     public static String mMyId, mHisId;
     EditText mMassage;
-    FirebaseDatabase mFirebaseDatabase;
-    DatabaseReference mDatabaseReference;
+    FirebaseFirestore mFirebaseDatabase;
+    FirebaseFirestore mDatabaseReference;
     @BindView(R.id.mUserImage)
     CircleImageView mUserImage;
     private RecyclerView.Adapter mMediaAdapter;
@@ -167,26 +176,22 @@ public class ChatActivity extends AppCompatActivity {
         Glide.with(this).load(mIntent.getStringExtra("Image")).into(mUserImage);
         //---------------------------------------------------------------------------------------------
         mFirebaseAuth = FirebaseAuth.getInstance();
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference("Users").child(mHisId);
+        mFirebaseDatabase = FirebaseFirestore.getInstance();
 
 
         //----------------------------------------------------------------------------------------------
 
-        mDatabaseReference.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("SetTextI18n")
+        mFirebaseDatabase.collection("Users").document(mHisId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                String Name = "" + value.getData().get("mName");
 
-                String Name = "" + dataSnapshot.child("mName").getValue();
+                String mStatus1 = "" + value.getData().get("mStatus");
 
-                String mStatus1 = "" + dataSnapshot.child("mStatus").getValue();
+                String mTyping = "" + value.getData().get("mTyping");
 
-                String mTyping = "" + dataSnapshot.child("mTyping").getValue();
-
-                Log.e("mStatus", dataSnapshot.child("mTyping").getValue() + "");
                 if (mTyping.equalsIgnoreCase(mMyId)) {
-                    mStatus.setText("Typing....");
+                    mStatus.setText(R.string.typing);
                 } else {
                     if (mStatus1.equalsIgnoreCase("Online")) {
                         mStatus.setText(mStatus1);
@@ -204,13 +209,6 @@ public class ChatActivity extends AppCompatActivity {
                     }
 
                 }
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
         //----------------------------------------------------------------------------------------------
@@ -235,7 +233,7 @@ public class ChatActivity extends AppCompatActivity {
                     MakeChat();
 
                     mMassage.setText("");
-                    sendNoti();
+
 
                 }
             }
@@ -345,47 +343,76 @@ public class ChatActivity extends AppCompatActivity {
 
     private void ReadMessage() {
 
-        DatabaseReference db = FirebaseDatabase.getInstance().getReference().child("Users").child(mMyId).child("Chats").child(mHisId).child("Messages");
-        db.addValueEventListener(new ValueEventListener() {
+        CollectionReference db = FirebaseFirestore.getInstance().collection("Users").document(mMyId).collection("Chats").document(mHisId).collection("Messages");
+        db.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 mChat.clear();
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    ModelChat modelChat = ds.getValue(ModelChat.class);
+                for (QueryDocumentSnapshot doc : value) {
+                    ModelChat modelChat = new ModelChat(String.valueOf(doc.get("mMessage")), String.valueOf(doc.get("mSender")), String.valueOf(doc.get("mReceiver")), String.valueOf(doc.get("mTime")), String.valueOf(doc.get("mMessage")), Boolean.parseBoolean(String.valueOf(doc.get("mIsSeen"))));
 
                     if (modelChat.getmSender().equals(mMyId) && modelChat.getmReceiver().equals(mHisId) ||
                             modelChat.getmSender().equals(mHisId) && modelChat.getmReceiver().equals(mMyId)) {
                         mChat.add(modelChat);
 
                     }
-
-                    Collections.sort(mChat, new Comparator<ModelChat>() {
-                        @Override
-                        public int compare(ModelChat o1, ModelChat o2) {
-                            return o1.getmTime().compareTo(o2.getmTime());
-                        }
-                    });
-
-                    mChatAdapter = new chatAdapter(ChatActivity.this, mChat, mIntent.getStringExtra("Image"));
-                    mRecyclerView.setAdapter(mChatAdapter);
-                    RecyclerView.LayoutManager manager = new LinearLayoutManager(ChatActivity.this, RecyclerView.VERTICAL, false);
-                    manager.scrollToPosition(mChat.size() - 1);
-                    mRecyclerView.setLayoutManager(manager);
-                    mChatAdapter.notifyDataSetChanged();
                 }
-            }
+                Collections.sort(mChat, new Comparator<ModelChat>() {
+                    @Override
+                    public int compare(ModelChat o1, ModelChat o2) {
+                        return o1.getmTime().compareTo(o2.getmTime());
+                    }
+                });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                mChatAdapter = new chatAdapter(ChatActivity.this, mChat, mIntent.getStringExtra("Image"));
+                mRecyclerView.setAdapter(mChatAdapter);
+                RecyclerView.LayoutManager manager = new LinearLayoutManager(ChatActivity.this, RecyclerView.VERTICAL, false);
+                manager.scrollToPosition(mChat.size() - 1);
+                mRecyclerView.setLayoutManager(manager);
+                mChatAdapter.notifyDataSetChanged();
 
             }
         });
+//        db.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                mChat.clear();
+//                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+//                    ModelChat modelChat = ds.getValue(ModelChat.class);
+//
+//                    if (modelChat.getmSender().equals(mMyId) && modelChat.getmReceiver().equals(mHisId) ||
+//                            modelChat.getmSender().equals(mHisId) && modelChat.getmReceiver().equals(mMyId)) {
+//                        mChat.add(modelChat);
+//
+//                    }
+//
+//                    Collections.sort(mChat, new Comparator<ModelChat>() {
+//                        @Override
+//                        public int compare(ModelChat o1, ModelChat o2) {
+//                            return o1.getmTime().compareTo(o2.getmTime());
+//                        }
+//                    });
+//
+//                    mChatAdapter = new chatAdapter(ChatActivity.this, mChat, mIntent.getStringExtra("Image"));
+//                    mRecyclerView.setAdapter(mChatAdapter);
+//                    RecyclerView.LayoutManager manager = new LinearLayoutManager(ChatActivity.this, RecyclerView.VERTICAL, false);
+//                    manager.scrollToPosition(mChat.size() - 1);
+//                    mRecyclerView.setLayoutManager(manager);
+//                    mChatAdapter.notifyDataSetChanged();
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
     private void sendMessage(final String aMessage) {
         mMessageId = FirebaseDatabase.getInstance().getReference().push().getKey();
         String aTime = String.valueOf(System.currentTimeMillis());
-        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        FirebaseFirestore mDatabaseReference = FirebaseFirestore.getInstance();
         HashMap<String, Object> map = new HashMap<>();
         map.put("mSender", mMyId);
         map.put("mReceiver", mHisId);
@@ -394,41 +421,40 @@ public class ChatActivity extends AppCompatActivity {
         map.put("mIsSeen", false);
         map.put("mId", mMessageId);
 
+        mDatabaseReference.collection("Users").document(mMyId).collection("Chats").document(mHisId).collection("Messages").document(mMessageId).set(map);
+        mDatabaseReference.collection("Users").document(mHisId).collection("Chats").document(mMyId).collection("Messages").document(mMessageId).set(map);
+
 
         HashMap<String, Object> map2 = new HashMap<>();
-        mDatabaseReference.child("Users").child(mMyId).child("Chats").child(mHisId).child("Messages").child(mMessageId).setValue(map);
-        mDatabaseReference.child("Users").child(mHisId).child("Chats").child(mMyId).child("Messages").child(mMessageId).setValue(map);
-
 
         map2.put("mTime", aTime);
         map2.put("mLastMessage", aMessage);
-        mDatabaseReference.child("Users").child(mHisId).child("Chats").child(mMyId).updateChildren(map2);
-        mDatabaseReference.child("Users").child(mMyId).child("Chats").child(mHisId).updateChildren(map2);
-        mediaUriList.clear();
-        mMediaAdapter.notifyDataSetChanged();
+        mDatabaseReference.collection("Users").document(mHisId).collection("Chats").document(mMyId).update(map2);
+        mDatabaseReference.collection("Users").document(mMyId).collection("Chats").document(mHisId).update(map2);
 
+        mMediaAdapter.notifyDataSetChanged();
         mediaPlayer = MediaPlayer.create(this, R.raw.send);
         mediaPlayer.start();
     }
 
     private void Checkstatus(String mStatus) {
 
-        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mMyId);
+        DocumentReference mDatabaseReference = FirebaseFirestore.getInstance().collection("Users").document(mMyId);
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("mStatus", mStatus);
-        mDatabaseReference.updateChildren(map);
+        mDatabaseReference.update(map);
 
 
     }
 
     private void CheckTyping(String mTyping) {
 
-        DatabaseReference mDatabaseReference = FirebaseDatabase.getInstance().getReference("Users").child(mMyId);
+        DocumentReference mDatabaseReference = FirebaseFirestore.getInstance().collection("Users").document(mMyId);
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("mTyping", mTyping);
-        mDatabaseReference.updateChildren(map);
+        mDatabaseReference.update(map);
 
     }
 
@@ -466,38 +492,41 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     void MakeChat() {
-        DatabaseReference UserDb = FirebaseDatabase.getInstance().getReference().child("Users").child(mMyId).child("Chats");
-        Query query = UserDb.orderByChild("mId").equalTo(mHisId);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        CollectionReference UserDb = FirebaseFirestore.getInstance().collection("Users").document(mMyId).collection("Chats");
+        Query query = UserDb.whereEqualTo("mId", mHisId);
+        query.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    ChatExist = true;
-
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                for (QueryDocumentSnapshot d : value) {
+                    if (d.getData().get("mId").equals(mHisId)) {
+                        ChatExist = true;
+                    }
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
 
         if (!ChatExist) {
-
+            HashMap<String, Object> map2 = new HashMap();
+            HashMap<String, Object> map3 = new HashMap();
             HashMap<String, Object> map = new HashMap();
             map.put("mImage", mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_IMAGE));
             map.put("mName", mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_FNAME));
             map.put("mId", mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID));
             map.put("mTyping", "");
             map.put("mStatus", "Offline");
-            FirebaseDatabase.getInstance().getReference().child("Users").child(mMyId).child("Chats").child(mHisId).child("mName").setValue(mIntent.getStringExtra("Name"));
-            HashMap<String, Object> map2 = new HashMap();
+            map.put("mTime", "");
+            map.put("mLastMessage", "");
+            FirebaseFirestore.getInstance().collection("Users").document(mMyId).collection("Chats").document(mHisId).update("mName", mIntent.getStringExtra("Name"));
+
             map2.put("mImage", getIntent().getStringExtra("Image"));
             map2.put("mId", mHisId);
             map2.put("mName", getIntent().getStringExtra("Name"));
-            FirebaseDatabase.getInstance().getReference().child("Users").child(mMyId).child("Chats").child(mHisId).updateChildren(map2);
-            FirebaseDatabase.getInstance().getReference().child("Users").child(mHisId).child("Chats").child(mMyId).updateChildren(map);
+            map2.put("mTime", "");
+            map2.put("mLastMessage", "");
+            FirebaseFirestore.getInstance().collection("Users").document(mMyId).collection("Chats").document(mHisId).set(map2);
+            FirebaseFirestore.getInstance().collection("Users").document(mHisId).collection("Chats").document(mMyId).set(map);
+
+
         }
     }
 
@@ -639,12 +668,6 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    void AddNote() {
-        String NoteKey = mDatabaseReference.push().getKey();
-
-        mDatabaseReference.child(NoteKey).setValue(UTI);
-
-    }
 
     void UpToMedia(String Url) {
         Log.e("MediaaaaaToooo", Url);

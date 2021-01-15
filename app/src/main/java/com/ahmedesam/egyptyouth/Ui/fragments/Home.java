@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +23,9 @@ import com.ahmedesam.egyptyouth.Ui.Activities.AddPost;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -83,36 +86,35 @@ public class Home extends Fragment {
 
     private void GetPosts() {
         mPosts = new ArrayList<>();
-        mDatabaseReference.collection("Posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        mDatabaseReference.collection("Posts").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        mPostModel = new PostModel((String.valueOf(document.getData().get("mPost"))),
-                                String.valueOf(document.getData().get("mImage")),
-                                String.valueOf(document.getData().get("mLikeNumber")),
-                                String.valueOf(document.getData().get("mPostID")),
-                                String.valueOf(document.getData().get("mUserId")),
-                                String.valueOf(document.getData().get("mVideo")),
-                                String.valueOf(document.getData().get("mUserName")),
-                                String.valueOf(document.getData().get("mUserImage")));
-                        mPosts.add(mPostModel);
-                    }
-                    Collections.sort(mPosts, new Comparator<PostModel>() {
-                        @Override
-                        public int compare(PostModel o1, PostModel o2) {
-                            return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());
-                        }
-                    });
-                    mPostsAdapter = new PostsAdapter(mPosts, getActivity());
-                    Posts.setAdapter(mPostsAdapter);
-
-                    progressBar.setVisibility(View.GONE);
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                mPosts.clear();
+                for (QueryDocumentSnapshot document : value) {
+                    mPostModel = new PostModel((String.valueOf(document.getData().get("mPost"))),
+                            String.valueOf(document.getData().get("mImage")),
+                            String.valueOf(document.getData().get("mLikeNumber")),
+                            String.valueOf(document.getData().get("mPostID")),
+                            String.valueOf(document.getData().get("mUserId")),
+                            String.valueOf(document.getData().get("mVideo")),
+                            String.valueOf(document.getData().get("mUserName")),
+                            String.valueOf(document.getData().get("mUserImage")));
+                    mPosts.add(mPostModel);
                 }
+                Collections.sort(mPosts, new Comparator<PostModel>() {
+                    @Override
+                    public int compare(PostModel o1, PostModel o2) {
+                        return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());
+                    }
+                });
+                mPostsAdapter = new PostsAdapter(mPosts, getActivity());
+                Posts.setAdapter(mPostsAdapter);
+
+                progressBar.setVisibility(View.GONE);
             }
+
         });
     }
-
 
     @OnClick(R.id.UserImage)
     public void onViewClicked() {

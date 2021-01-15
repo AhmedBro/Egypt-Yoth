@@ -1,7 +1,7 @@
 package com.ahmedesam.egyptyouth.Models;
 
 public class ModelChat {
-    String mMessage , mSender, mReceiver,mTime , mLastMessage , mId;
+    String mMessage, mSender, mReceiver, mTime, mLastMessage, mId;
     Boolean mIsSeen;
 
 
@@ -16,10 +16,18 @@ public class ModelChat {
     public ModelChat() {
     }
 
+    public ModelChat(String mMessage, String mSender, String mReceiver, String mTime, String mLastMessage, boolean mIsSeen) {
+        this.mMessage = mMessage;
+        this.mSender = mSender;
+        this.mReceiver = mReceiver;
+        this.mTime = mTime;
+        this.mIsSeen = mIsSeen;
+        this.mLastMessage = mLastMessage;
+    }
+
     public String getmLastMessage() {
         return mLastMessage;
     }
-
 
 
     public String getmMessage() {

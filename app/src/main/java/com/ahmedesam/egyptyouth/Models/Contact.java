@@ -1,16 +1,25 @@
 package com.ahmedesam.egyptyouth.Models;
 
 public class Contact {
-    String mPhone, mName, mImage, mId , mLastMessage , mTime;
+    String  mName, mImage, mId , mLastMessage , mTime;
 
     public Contact(String mPhone, String id, String mName, String mImage) {
-        this.mPhone = mPhone;
+
         this.mName = mName;
         this.mImage = mImage;
         mId = id;
     }
 
     public Contact() {
+    }
+
+    public Contact( String mName, String mImage, String mId, String mLastMessage, String mTime) {
+
+        this.mName = mName;
+        this.mImage = mImage;
+        this.mId = mId;
+        this.mLastMessage = mLastMessage;
+        this.mTime = mTime;
     }
 
     public String getmId() {
@@ -25,9 +34,6 @@ public class Contact {
         return mTime;
     }
 
-    public String getmPhone() {
-        return mPhone;
-    }
 
     public String getmName() {
         return mName;

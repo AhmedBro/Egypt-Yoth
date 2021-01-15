@@ -65,5 +65,6 @@
     <string name="add_Comment">you added comment</string>
     <string name="type_keyword">Type Here</string>
     <string name="Search">Search</string>
+    <string name="typing">Typing....</string>
 
 </resources>
