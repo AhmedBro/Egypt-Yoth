@@ -221,7 +221,9 @@ public class UserProfileFragment extends Fragment {
                             String.valueOf(document.getData().get("mUserId")),
                             String.valueOf(document.getData().get("mVideo")),
                             String.valueOf(document.getData().get("mUserName")),
-                            String.valueOf(document.getData().get("mUserImage")));
+                            String.valueOf(document.getData().get("mUserImage")),
+                            String.valueOf(document.getData().get("mCommentsNumber"))
+                    );
 
                     if (String.valueOf(document.getData().get("mUserId")).equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
                         mPosts.add(mPostModel);
@@ -234,13 +236,12 @@ public class UserProfileFragment extends Fragment {
                         return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());
                     }
                 });
-             try {
-                 mPostsAdapter = new PostsAdapter(mPosts, getContext());
-                 mUserPosts.setAdapter(mPostsAdapter);
-             }
-             catch (Exception e){
+                try {
+                    mPostsAdapter = new PostsAdapter(mPosts, getContext());
+                    mUserPosts.setAdapter(mPostsAdapter);
+                } catch (Exception e) {
 
-             }
+                }
 
 
             }
@@ -249,58 +250,50 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void LoadUserImages() {
-        mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).collection("Images").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).collection("Images").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 Map<String, String> map = new HashMap<>();
-                if (task.isSuccessful()) {
-                    mImages.clone();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        map = (Map<String, String>) document.getData().get("Image");
 
-                        Image = new ImageModel(map.get("url"), map.get("id"));
+                mImages.clone();
+                for (QueryDocumentSnapshot document : value) {
+                    map = (Map<String, String>) document.getData().get("Image");
+
+                    Image = new ImageModel(map.get("url"), map.get("id") , map.get("mUserId"));
 
 
-                        mImages.add(Image);
-                    }
-                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-                    Images.setLayoutManager(manager);
-                    mImageAdapter = new ImageAdapter(mImages, getActivity());
-                    Images.setAdapter(mImageAdapter);
-                } else {
-                    Log.e("Faild To Load Images", Objects.requireNonNull(task.getException().getMessage()));
+                    mImages.add(Image);
                 }
+                RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
+                Images.setLayoutManager(manager);
+                mImageAdapter = new ImageAdapter(mImages, getActivity());
+                Images.setAdapter(mImageAdapter);
             }
         });
-
-
     }
 
     //----------------------------------------------------------------------------------------------
     private void LoadUserVideos() {
-        mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).collection("Videos").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID)).collection("Videos").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 Map<String, String> map = new HashMap<>();
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        map = (Map<String, String>) document.getData().get("Video");
+                mVideos.clear();
+                for (QueryDocumentSnapshot document : value) {
+                    map = (Map<String, String>) document.getData().get("Video");
 
-                        Image = new ImageModel(map.get("url"), map.get("id"));
+                    Image = new ImageModel(map.get("url"), map.get("id") , map.get("mUserId"));
 
 
-                        mVideos.add(Image);
-                    }
-                    RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-                    Videos.setLayoutManager(manager);
-                    mVideoUserAdapter = new VideoUserAdapter(mVideos, getActivity());
-                    Videos.setAdapter(mVideoUserAdapter);
-                } else {
-                    Log.e("Faild To Load Videos", task.getException().getMessage());
+                    mVideos.add(Image);
                 }
+                RecyclerView.LayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
+                Videos.setLayoutManager(manager);
+                mVideoUserAdapter = new VideoUserAdapter(mVideos, getActivity(), "MyInfo");
+                Videos.setAdapter(mVideoUserAdapter);
+
             }
         });
-
 
     }
 
@@ -608,9 +601,9 @@ public class UserProfileFragment extends Fragment {
         HashMap<String, Object> Map = new HashMap<>();
 
         String id = databaseReference.push().getKey();
-        Image = new ImageModel(UTI, id);
+        Image = new ImageModel(UTI, id , mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID));
         Map.put("Image", Image);
-        mDatabase.collection("Users").document(Objects.requireNonNull(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID))).collection("Images").add(Map);
+        mDatabase.collection("Users").document(Objects.requireNonNull(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID))).collection("Images").document(id).set(Map);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -619,9 +612,9 @@ public class UserProfileFragment extends Fragment {
         HashMap<String, Object> Map = new HashMap<>();
 
         String id = databaseReference.push().getKey();
-        Image = new ImageModel(UTI, id);
+        Image = new ImageModel(UTI, id , mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID));
         Map.put("Video", Image);
-        mDatabase.collection("Users").document(Objects.requireNonNull(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID))).collection("Videos").add(Map);
+        mDatabase.collection("Users").document(Objects.requireNonNull(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID))).collection("Videos").document(id).set(Map);
     }
 
     //----------------------------------------------------------------------------------------------

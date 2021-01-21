@@ -26,7 +26,7 @@ import java.util.ArrayList;
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.holder> {
     ArrayList<ImageModel> mItems;
     Context mContext;
-    ShardPrefrances mShardPrefrances;
+
 
     public ImageAdapter() {
     }
@@ -55,7 +55,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.holder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShowFullImages mShowFullImages = new ShowFullImages(mItems.get(position).getUrl());
+                ShowFullImages mShowFullImages = new ShowFullImages(mItems.get(position).getUrl() , mItems.get(position).getmUserId(),mItems.get(position).getId());
                 Intent mIntent = new Intent(mContext , ShowFullImages.class);
                 mContext.startActivity(mIntent);
             }

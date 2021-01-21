@@ -58,10 +58,10 @@ public class HomeActivity extends AppCompatActivity {
 
    try {
        if (mShardPrefrances.IsDark()) {
-           navView.setBackground(getResources().getDrawable(R.color.colorPrimaryLight));
+           navView.setBackground(getResources().getDrawable(R.drawable.bar_home_light));
 
        } else {
-           navView.setBackground(getResources().getDrawable(R.color.colorPrimary));
+           navView.setBackground(getResources().getDrawable(R.drawable.menu_dark));
        }
    }
    catch (Exception e){

@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,7 +28,9 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -150,11 +153,12 @@ public class UserInfo extends AppCompatActivity {
 
     private void LoadPosts() {
         mPosts = new ArrayList<>();
-        mDatabaseReference.collection("Users").document(ID).collection("Posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        mDatabaseReference.collection("Posts").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                {
+                    for (QueryDocumentSnapshot document : value) {
                         mPostModel = new PostModel((String.valueOf(document.getData().get("mPost"))),
                                 String.valueOf(document.getData().get("mImage")),
                                 String.valueOf(document.getData().get("mLikeNumber")),
@@ -162,8 +166,12 @@ public class UserInfo extends AppCompatActivity {
                                 String.valueOf(document.getData().get("mUserId")),
                                 String.valueOf(document.getData().get("mVideo")),
                                 String.valueOf(document.getData().get("mUserName")),
-                                String.valueOf(document.getData().get("mUserImage")));
-                        mPosts.add(mPostModel);
+                                String.valueOf(document.getData().get("mUserImage")),
+                                String.valueOf(document.getData().get("mCommentsNumber"))
+                                );
+                        if ( String.valueOf(document.getData().get("mUserId")).equals(ID)) {
+                            mPosts.add(mPostModel);
+                        }
                     }
                     Collections.sort(mPosts, new Comparator<PostModel>() {
                         @Override
@@ -240,7 +248,7 @@ public class UserInfo extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         map = (Map<String, String>) document.getData().get("Image");
 
-                        Image = new ImageModel(map.get("url"), map.get("id"));
+                        Image = new ImageModel(map.get("url"), map.get("id"),map.get("mUserId"));
 
 
                         mImages.add(Image);
@@ -260,6 +268,7 @@ public class UserInfo extends AppCompatActivity {
 
     //----------------------------------------------------------------------------------------------
     private void LoadUserVideos() {
+
         mDatabase.collection("Users").document(ID).collection("Videos").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -268,14 +277,14 @@ public class UserInfo extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         map = (Map<String, String>) document.getData().get("Video");
 
-                        Image = new ImageModel(map.get("url"), map.get("id"));
+                        Image = new ImageModel(map.get("url"), map.get("id"),map.get("mUserId"));
 
 
                         mVideos.add(Image);
                     }
                     RecyclerView.LayoutManager manager = new LinearLayoutManager(UserInfo.this, RecyclerView.HORIZONTAL, false);
                     Videos.setLayoutManager(manager);
-                    mVideoUserAdapter = new VideoUserAdapter(mVideos, UserInfo.this);
+                    mVideoUserAdapter = new VideoUserAdapter(mVideos, UserInfo.this,"HisInfo");
                     Videos.setAdapter(mVideoUserAdapter);
                 } else {
                     Log.e("Faild To Load Videos", task.getException().getMessage());

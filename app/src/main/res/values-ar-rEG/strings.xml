@@ -59,4 +59,6 @@
     <string name="add_Comment">تم اضافه التغليق</string>
     <string name="Search">Search</string>
     <string name="typing">Typing....</string>
+    <string name="Delete">Delete</string>
+    <string name="Share">Share</string>
 </resources>

@@ -28,6 +28,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,11 +78,15 @@ public class SearchFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mPlayers.clear();
                 SearchWithEnglishPostion(s);
-                SearchWithArabicPostion(s);
+
                 SearchWithId(s);
                 SearchWithName(s);
                 searchWithEmail(s);
+                Set<userModel> set = new HashSet<>(mPlayers);
+                mPlayers.clear();
+                mPlayers.addAll(set);
             }
 
             @Override
@@ -116,6 +122,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         model = new userModel(document.getData().get("mName").toString(), document.getData().get("mId").toString(), document.getData().get("mMail").toString(), document.getData().get("mImage").toString(), document.getData().get("mDescription").toString(), document.getData().get("mLikeNumber").toString());
                         if (model.getmId().equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
@@ -143,6 +150,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         model = new userModel(document.getData().get("mName").toString(), document.getData().get("mId").toString(), document.getData().get("mMail").toString(), document.getData().get("mImage").toString(), document.getData().get("mDescription").toString(), document.getData().get("mLikeNumber").toString());
                         if (model.getmId().equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
@@ -171,6 +179,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         model = new userModel(document.getData().get("mName").toString(), document.getData().get("mId").toString(), document.getData().get("mMail").toString(), document.getData().get("mImage").toString(), document.getData().get("mDescription").toString(), document.getData().get("mLikeNumber").toString());
                         if (model.getmId().equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
@@ -193,32 +202,6 @@ public class SearchFragment extends Fragment {
 
     }
 
-    private void SearchWithArabicPostion(CharSequence s) {
-        mDatabaseReference.collection("Users").whereEqualTo("mDescription", String.valueOf(s).toUpperCase().trim()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @SuppressLint("LongLogTag")
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        model = new userModel(document.getData().get("mName").toString(), document.getData().get("mId").toString(), document.getData().get("mMail").toString(), document.getData().get("mImage").toString(), document.getData().get("mDescription").toString(), document.getData().get("mLikeNumber").toString());
-                        if (model.getmId().equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
-                            continue;
-                        }
-
-                        mPlayers.add(model);
-                    }
-                    mPlayersAdapter = new PlayersAdapter(mPlayers, getActivity());
-                    mSearchEResult.setAdapter(mPlayersAdapter);
-
-                } else {
-                    Log.e("Error getting documents: ", task.getException()
-                            + "");
-                }
-
-            }
-
-        });
-    }
 
     private void SearchWithEnglishPostion(CharSequence s) {
         mDatabaseReference.collection("Users").whereEqualTo("mDescription", String.valueOf(s).toUpperCase().trim()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -226,7 +209,9 @@ public class SearchFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
+
                     for (QueryDocumentSnapshot document : task.getResult()) {
+
                         model = new userModel(document.getData().get("mName").toString(), document.getData().get("mId").toString(), document.getData().get("mMail").toString(), document.getData().get("mImage").toString(), document.getData().get("mDescription").toString(), document.getData().get("mLikeNumber").toString());
                         if (model.getmId().equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
                             continue;

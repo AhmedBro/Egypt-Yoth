@@ -386,7 +386,7 @@ public class AddPost extends AppCompatActivity {
 
     void PostWithImage(String Uri) {
         String id = databaseReference.push().getKey();
-        mPostModel = new PostModel(mCaption.getText().toString(), Uri, "0", id, mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID), "", mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_FNAME), mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_IMAGE));
+        mPostModel = new PostModel(mCaption.getText().toString(), Uri, "0", id, mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID), "", mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_FNAME), mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_IMAGE),"0");
 
         mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID)).collection("Posts").document(id).set(mPostModel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -414,7 +414,7 @@ public class AddPost extends AppCompatActivity {
 
     void PostWithVideo(String Uri) {
         String id = databaseReference.push().getKey();
-        mPostModel = new PostModel(mCaption.getText().toString(), "", "0", id, mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID), Uri, mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_FNAME), mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_IMAGE));
+        mPostModel = new PostModel(mCaption.getText().toString(), "", "0", id, mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID), Uri, mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_FNAME), mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_IMAGE),"0");
 
         mDatabase.collection("Users").document(mShardPrefrances.getUserDetails().get(ShardPrefrances.KEY_ID)).collection("Posts").document(id).set(mPostModel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

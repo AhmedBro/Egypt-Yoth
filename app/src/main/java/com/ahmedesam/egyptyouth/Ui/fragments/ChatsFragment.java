@@ -81,6 +81,7 @@ public class ChatsFragment extends Fragment {
             mToolBar.setBackground(getResources().getDrawable(R.drawable.bar_home_light));
 
 
+            progressBar.setBackground(getResources().getDrawable(R.color.colorPrimaryLight));
 
 
 

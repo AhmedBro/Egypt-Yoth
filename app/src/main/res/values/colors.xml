@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#248000</color>
-    <color name="colorPrimaryLight">#07B300</color>
-    <color name="colorPrimaryDark">#1B5E20</color>
-    <color name="colorAccent">#33691E</color>
+    <color name="colorPrimary">#009800</color>
+    <color name="colorPrimaryLight">#008A00</color>
+    <color name="colorPrimaryDark">#007700</color>
+    <color name="colorAccent">#1C8C1C</color>
     <color name="com_facebook_button_background_color">#3B5998</color>
     <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="grey">#f2f2f2</color>
     <color name="background">#717171</color>
+    <color name="light">#21E100</color>
 </resources>

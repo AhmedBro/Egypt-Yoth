@@ -105,6 +105,7 @@ public class Home extends Fragment {
             mParent.setBackground(getResources().getDrawable(R.color.white));
             mSeprator.setBackground(getResources().getDrawable(R.color.black));
             bar.setBackground(getResources().getDrawable(R.drawable.bar_home_light));
+            progressBar.setBackground(getResources().getDrawable(R.color.colorPrimaryLight));
         } else {
             switcher.setChecked(true, true);
 
@@ -146,7 +147,9 @@ public class Home extends Fragment {
                             String.valueOf(document.getData().get("mUserId")),
                             String.valueOf(document.getData().get("mVideo")),
                             String.valueOf(document.getData().get("mUserName")),
-                            String.valueOf(document.getData().get("mUserImage")));
+                            String.valueOf(document.getData().get("mUserImage")),
+                            String.valueOf(document.getData().get("mCommentsNumber"))
+                            );
                     mPosts.add(mPostModel);
                 }
                 Collections.sort(mPosts, new Comparator<PostModel>() {
