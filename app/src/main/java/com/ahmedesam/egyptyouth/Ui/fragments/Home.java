@@ -2,6 +2,7 @@ package com.ahmedesam.egyptyouth.Ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.ahmedesam.egyptyouth.Models.userModel;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.ahmedesam.egyptyouth.Ui.Activities.AddPost;
+import com.ahmedesam.egyptyouth.Ui.Activities.HomeActivity;
 import com.bitvale.switcher.SwitcherC;
 import com.bitvale.switcher.SwitcherX;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -130,6 +132,22 @@ public class Home extends Fragment {
                 return null;
             }
         });
+
+
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    Intent mIntent = new Intent(getContext(), HomeActivity.class);
+                    startActivity(mIntent);
+                    return true;
+                }
+                return false;
+            }
+        });
+
         return view;
     }
 
@@ -149,7 +167,7 @@ public class Home extends Fragment {
                             String.valueOf(document.getData().get("mUserName")),
                             String.valueOf(document.getData().get("mUserImage")),
                             String.valueOf(document.getData().get("mCommentsNumber"))
-                            );
+                    );
                     mPosts.add(mPostModel);
                 }
                 Collections.sort(mPosts, new Comparator<PostModel>() {
@@ -158,12 +176,12 @@ public class Home extends Fragment {
                         return o2.getmLikeNumber().compareTo(o1.getmLikeNumber());
                     }
                 });
-               try {
-                   mPostsAdapter = new PostsAdapter(mPosts, getContext());
-                   Posts.setAdapter(mPostsAdapter);
-               }catch (Exception E){
+                try {
+                    mPostsAdapter = new PostsAdapter(mPosts, getContext());
+                    Posts.setAdapter(mPostsAdapter);
+                } catch (Exception E) {
 
-               }
+                }
 
                 progressBar.setVisibility(View.GONE);
             }

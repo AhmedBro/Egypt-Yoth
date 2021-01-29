@@ -56,17 +56,16 @@ public class HomeActivity extends AppCompatActivity {
 
         mShardPrefrances = new ShardPrefrances(this);
 
-   try {
-       if (mShardPrefrances.IsDark()) {
-           navView.setBackground(getResources().getDrawable(R.drawable.bar_home_light));
+        try {
+            if (mShardPrefrances.IsDark()) {
+                navView.setBackground(getResources().getDrawable(R.drawable.bar_home_light));
 
-       } else {
-           navView.setBackground(getResources().getDrawable(R.drawable.menu_dark));
-       }
-   }
-   catch (Exception e){
+            } else {
+                navView.setBackground(getResources().getDrawable(R.drawable.menu_dark));
+            }
+        } catch (Exception e) {
 
-   }
+        }
 
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -126,6 +125,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        LoadFragment(new Home());
 
     }
 

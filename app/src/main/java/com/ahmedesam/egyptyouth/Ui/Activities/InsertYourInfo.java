@@ -144,8 +144,9 @@ public class InsertYourInfo extends AppCompatActivity {
                 Toast.makeText(InsertYourInfo.this, "Your Profile Is Updated", Toast.LENGTH_SHORT).show();
                 Intent mIntent = new Intent(InsertYourInfo.this, HomeActivity.class);
                 startActivity(mIntent);
+               InsertYourInfo.this.finish();
                 progressBar.setVisibility(View.GONE);
-                finish();
+
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
