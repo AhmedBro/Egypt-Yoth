@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.ahmedesam.egyptyouth.Models.Contact;
+import com.ahmedesam.egyptyouth.Models.mChats;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.ahmedesam.egyptyouth.Ui.Activities.ChatActivity;
@@ -26,13 +26,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Chats extends RecyclerView.Adapter<Chats.adapter> {
     Context mContext;
-    ArrayList<Contact> mUsersModels;
+    ArrayList<mChats> mUsersModels;
     ShardPrefrances mShardPrefrances;
 
     public Chats() {
     }
 
-    public Chats(Context mContext, ArrayList<Contact> mUsersModels) {
+    public Chats(Context mContext, ArrayList<mChats> mUsersModels) {
         this.mContext = mContext;
         this.mUsersModels = mUsersModels;
         mShardPrefrances = new ShardPrefrances(mContext);

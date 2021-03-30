@@ -20,7 +20,7 @@
     <string name="save">حفظ</string>
     <string name="Enter_Your_Description">Enter Your Description</string>
     <string name="enter_your_age">ادخل عمرك</string>
-    <string name="enter_your_address">ادخل عنوانك</string>
+    <string name="enter_your_address">ادخل رقم هاتفك</string>
     <string name="years">سنه</string>
     <string name="upload_your_videos">ارفع فديوهاتك</string>
     <string name="upload_your_images">ارفع صورك</string>
@@ -52,13 +52,15 @@
     <string name="DMF">الارتكاز الدفاعي</string>
     <string name="CMF">لاعب الدائره</string>
     <string name="SS">صانع العاب</string>
-    <string name="AMF">مهاجم الاوسط</string>
-    <string name="RMF">RWF</string>
-    <string name="LWF">LWF</string>
-    <string name="CF">CF</string>
-    <string name="add_Comment">تم اضافه التغليق</string>
+    <string name="AMF">وسط مهاجم</string>
+    <string name="RMF">جناح ايمن</string>
+    <string name="LWF">جناح ايسر</string>
+    <string name="CF">مهاجم</string>
+    <string name="add_Comment">تم اضافه التعليق</string>
     <string name="Search">Search</string>
     <string name="typing">Typing....</string>
     <string name="Delete">Delete</string>
     <string name="Share">Share</string>
+    <string name="Exit">هل تريد الخروج ؟</string>
+    <string name="Leave">خروج</string>
 </resources>

@@ -78,6 +78,7 @@ public class EditInformationFragment extends BottomSheetDialogFragment {
     StorageReference storageReference;
     FirebaseStorage storage;
     userModel model;
+
     static String UTI = "";
     private final int PICK_IMAGE_REQUEST = 22;
     static String mDescription;
@@ -164,7 +165,7 @@ public class EditInformationFragment extends BottomSheetDialogFragment {
             Map.put("mName", mUserName.getText().toString());
             Map.put("mAge", mUserAge.getText().toString());
             Map.put("mDescription", mDescription);
-            Map.put("mAddress", mUserAddress.getText().toString());
+            Map.put("mPhone", mUserAddress.getText().toString());
             mShardPrefrances.EditAge(mUserAge.getText().toString());
             mShardPrefrances.EditAddress(mUserAddress.getText().toString());
             mShardPrefrances.EditDescription(mDescription);

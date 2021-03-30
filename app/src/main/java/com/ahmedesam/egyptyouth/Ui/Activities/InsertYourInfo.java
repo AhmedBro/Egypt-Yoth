@@ -132,7 +132,7 @@ public class InsertYourInfo extends AppCompatActivity {
         Map.put("mName", aName.toUpperCase());
         Map.put("mAge", aAge.toUpperCase());
         Map.put("mDescription", aDescription.toUpperCase());
-        Map.put("mAddress", aAddress.toUpperCase());
+        Map.put("mPhone", aAddress.toUpperCase());
         mShardPrefrances.EditAge(aAge);
         mShardPrefrances.EditAddress(aAddress);
         mShardPrefrances.EditDescription(aDescription);

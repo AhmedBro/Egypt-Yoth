@@ -4,14 +4,14 @@ apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.ahmedesam.egyptyouth"
         minSdkVersion 19
-        targetSdkVersion 29
-        versionCode 3
+        targetSdkVersion 30
+        versionCode 7
         versionName "1.0"
         multiDexEnabled true
         ndk {
@@ -41,9 +41,6 @@ android {
         }
         debug {
         }
-    }
-    buildFeatures {
-        dataBinding true
     }
 }
 
@@ -105,17 +102,15 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
 
 
-
-
-    compile 'com.makeramen:roundedimageview:2.3.0'
+    implementation 'com.makeramen:roundedimageview:2.3.0'
 //    implementation 'com.github.denzcoskun:ImageSlideshow:0.1.0'
 //    implementation 'com.github.HamidrezaAmz:MagicalExoPlayer:1.0.16'
-    compile 'fm.jiecao:jiecaovideoplayer:5.7'
+    implementation 'fm.jiecao:jiecaovideoplayer:5.7'
     implementation 'com.devbrackets.android:exomedia:4.3.0'
-    compile 'com.github.varunest:sparkbutton:1.0.6'
+    implementation 'com.github.varunest:sparkbutton:1.0.6'
     implementation 'com.github.devendroid:ReadMoreOption:1.0.2'
-    compile 'com.brouding:android-doubletaplikeview:0.2.0'
-    compile 'com.allattentionhere:autoplayvideos:0.2.0'
+    implementation 'com.brouding:android-doubletaplikeview:0.2.0'
+    implementation 'com.allattentionhere:autoplayvideos:0.2.0'
     implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 
 
@@ -123,8 +118,5 @@ dependencies {
 
     implementation 'com.bitvale:switcher:1.1.1'
 
-    compile 'com.zsoltsafrany:needle:1.0.0'
+    implementation 'com.zsoltsafrany:needle:1.0.0'
 }
-
-
-

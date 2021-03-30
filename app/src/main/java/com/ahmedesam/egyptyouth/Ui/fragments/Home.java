@@ -140,8 +140,8 @@ public class Home extends Fragment {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
-                    Intent mIntent = new Intent(getContext(), HomeActivity.class);
-                    startActivity(mIntent);
+                    Exit mExit = new Exit();
+                    mExit.show(getFragmentManager(), "");
                     return true;
                 }
                 return false;
@@ -207,11 +207,15 @@ public class Home extends Fragment {
                     for (QueryDocumentSnapshot document : task.getResult()) {
 
 
-                        model = new userModel(document.getData().get("mName").toString(), document.getData().get("mId").toString(), document.getData().get("mMail").toString(), document.getData().get("mImage").toString(), document.getData().get("mDescription").toString(), document.getData().get("mLikeNumber").toString());
-                        if (model.getmId().equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
-                            continue;
+                        try {
+                            model = new userModel(document.getData().get("mName").toString(), document.getData().get("mId").toString(), document.getData().get("mMail").toString(), document.getData().get("mImage").toString(), document.getData().get("mDescription").toString(), document.getData().get("mLikeNumber").toString());
+                            if (model.getmId().equals(mShardPrefrances.getUserDetails().get(mShardPrefrances.KEY_ID))) {
+                                continue;
+                            }
+                            mPlayers.add(model);
+                        } catch (Exception e) {
+
                         }
-                        mPlayers.add(model);
 
 
                     }

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ahmedesam.egyptyouth.Adapters.Chats;
-import com.ahmedesam.egyptyouth.Models.Contact;
+import com.ahmedesam.egyptyouth.Models.mChats;
 import com.ahmedesam.egyptyouth.R;
 import com.ahmedesam.egyptyouth.Shard.ShardPrefrances;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,7 +41,7 @@ public class ChatsFragment extends Fragment {
     Unbinder mUnbinder;
     CollectionReference mDatabaseReference;
     Chats mUserAdapter;
-    ArrayList<Contact> mUsers;
+    ArrayList<mChats> mUsers;
     FirebaseAuth mFirebaseAuth;
     ShardPrefrances mShardPrefrances;
     @BindView(R.id.progressBar)
@@ -109,14 +109,14 @@ public class ChatsFragment extends Fragment {
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 mUsers.clear();
                 for (QueryDocumentSnapshot postSnapshot : value) {
-                    Contact imageUploadInfo = new Contact(String.valueOf(postSnapshot.getData().get("mName")), String.valueOf(postSnapshot.getData().get("mImage")), String.valueOf(postSnapshot.getData().get("mId")), String.valueOf(postSnapshot.getData().get("mLastMessage")), String.valueOf(postSnapshot.getData().get("mTime")));
+                    mChats imageUploadInfo = new mChats(String.valueOf(postSnapshot.getData().get("mName")), String.valueOf(postSnapshot.getData().get("mImage")), String.valueOf(postSnapshot.getData().get("mId")), String.valueOf(postSnapshot.getData().get("mLastMessage")), String.valueOf(postSnapshot.getData().get("mTime")));
 
                     mUsers.add(imageUploadInfo);
                 }
                 try {
-                    Collections.sort(mUsers, new Comparator<Contact>() {
+                    Collections.sort(mUsers, new Comparator<mChats>() {
                         @Override
-                        public int compare(Contact o1, Contact o2) {
+                        public int compare(mChats o1, mChats o2) {
                             return o2.getmTime().compareTo(o1.getmTime());
 
                         }
@@ -142,16 +142,16 @@ public class ChatsFragment extends Fragment {
 //                mUsers.clear();
 //                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
 //
-//                    Contact imageUploadInfo = postSnapshot.getValue(Contact.class);
+//                    mChats imageUploadInfo = postSnapshot.getValue(mChats.class);
 //
 //                    mUsers.add(imageUploadInfo);
 //
 //
 //                }
 //           try {
-//               Collections.sort(mUsers, new Comparator<Contact>() {
+//               Collections.sort(mUsers, new Comparator<mChats>() {
 //                   @Override
-//                   public int compare(Contact o1, Contact o2) {
+//                   public int compare(mChats o1, mChats o2) {
 //                       return o2.getmTime().compareTo(o1.getmTime());
 //
 //                   }

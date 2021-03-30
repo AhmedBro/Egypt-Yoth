@@ -54,8 +54,8 @@ public class UserInfo extends AppCompatActivity {
     TextView mUserName;
     @BindView(R.id.mUserAge)
     TextView mUserAge;
-    @BindView(R.id.mUserAddress)
-    TextView mUserAddress;
+//    @BindView(R.id.mUserAddress)
+//    TextView mUserAddress;
     @BindView(R.id.mUserSkills)
     TextView mUserSkills;
 
@@ -127,7 +127,7 @@ public class UserInfo extends AppCompatActivity {
             mChat.setTextColor(getResources().getColor(R.color.white));
             mLike.setBackground(getResources().getDrawable(R.drawable.edit_photo_button_light));
             mLike.setTextColor(getResources().getColor(R.color.white));
-            mUserAddress.setTextColor(getResources().getColor(R.color.black));
+//            mUserAddress.setTextColor(getResources().getColor(R.color.black));
             mUserAge.setTextColor(getResources().getColor(R.color.black));
             mUserName.setTextColor(getResources().getColor(R.color.black));
             mUserSkills.setTextColor(getResources().getColor(R.color.black));
@@ -141,7 +141,7 @@ public class UserInfo extends AppCompatActivity {
             mChat.setTextColor(getResources().getColor(R.color.white));
             mLike.setBackground(getResources().getDrawable(R.drawable.edit_photo_button));
             mLike.setTextColor(getResources().getColor(R.color.white));
-            mUserAddress.setTextColor(getResources().getColor(R.color.white));
+//            mUserAddress.setTextColor(getResources().getColor(R.color.white));
             mUserAge.setTextColor(getResources().getColor(R.color.white));
             mUserName.setTextColor(getResources().getColor(R.color.white));
             mUserSkills.setTextColor(getResources().getColor(R.color.white));
@@ -168,8 +168,8 @@ public class UserInfo extends AppCompatActivity {
                                 String.valueOf(document.getData().get("mUserName")),
                                 String.valueOf(document.getData().get("mUserImage")),
                                 String.valueOf(document.getData().get("mCommentsNumber"))
-                                );
-                        if ( String.valueOf(document.getData().get("mUserId")).equals(ID)) {
+                        );
+                        if (String.valueOf(document.getData().get("mUserId")).equals(ID)) {
                             mPosts.add(mPostModel);
                         }
                     }
@@ -223,10 +223,10 @@ public class UserInfo extends AppCompatActivity {
                 mName = model.getmName();
                 mImage = model.getmImage();
                 mUserAge.setText(model.getmAge());
-                mUserAddress.setText(model.getmAddress());
+//                mUserAddress.setText(model.getmAddress());
                 mUserSkills.setText(model.getmDescription());
                 Glide.with(UserInfo.this).load(model.getmImage()).into(UserImage);
-                mUserId.setText(model.getmId());
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -248,7 +248,7 @@ public class UserInfo extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         map = (Map<String, String>) document.getData().get("Image");
 
-                        Image = new ImageModel(map.get("url"), map.get("id"),map.get("mUserId"));
+                        Image = new ImageModel(map.get("url"), map.get("id"), map.get("mUserId"));
 
 
                         mImages.add(Image);
@@ -277,14 +277,14 @@ public class UserInfo extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         map = (Map<String, String>) document.getData().get("Video");
 
-                        Image = new ImageModel(map.get("url"), map.get("id"),map.get("mUserId"));
+                        Image = new ImageModel(map.get("url"), map.get("id"), map.get("mUserId"));
 
 
                         mVideos.add(Image);
                     }
                     RecyclerView.LayoutManager manager = new LinearLayoutManager(UserInfo.this, RecyclerView.HORIZONTAL, false);
                     Videos.setLayoutManager(manager);
-                    mVideoUserAdapter = new VideoUserAdapter(mVideos, UserInfo.this,"HisInfo");
+                    mVideoUserAdapter = new VideoUserAdapter(mVideos, UserInfo.this, "HisInfo");
                     Videos.setAdapter(mVideoUserAdapter);
                 } else {
                     Log.e("Faild To Load Videos", task.getException().getMessage());
@@ -309,7 +309,7 @@ public class UserInfo extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            LikeNumber = Integer.parseInt((String) task.getResult().getData().get("mLikeNumber"));
+                            LikeNumber = Integer.parseInt((String) Objects.requireNonNull(task.getResult().getData().get("mLikeNumber")));
                         }
                     }
                 });
@@ -328,12 +328,12 @@ public class UserInfo extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            LikeNumber = Integer.parseInt((String) task.getResult().getData().get("mLikeNumber"));
+                            LikeNumber = Integer.parseInt((String) Objects.requireNonNull(task.getResult().getData().get("mLikeNumber")));
                         }
                     }
                 });
 
-                map2.put("mLikeNumber", String.valueOf(LikeNumber = 1));
+                map2.put("mLikeNumber", String.valueOf(LikeNumber - 1));
                 mDatabase.collection("Users").document(ID).update(map2);
                 mLike.setVisibility(View.VISIBLE);
                 mDisLike.setVisibility(View.GONE);

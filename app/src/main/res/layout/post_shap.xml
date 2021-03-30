@@ -20,6 +20,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
@@ -45,17 +46,17 @@
 
 
             </LinearLayout>
+
             <ImageView
                 android:id="@+id/mChoose"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="5dp"
-                android:src="@drawable/chosse"
-                android:layout_centerInParent="true"
-                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp"
-                />
+                android:src="@drawable/chosse" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -68,7 +69,6 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-
                 app:riv_corner_radius="3dp"
 
                 />

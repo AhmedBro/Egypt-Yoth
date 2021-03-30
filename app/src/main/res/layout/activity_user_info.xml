@@ -105,29 +105,30 @@
                             android:id="@+id/mUserAge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="15"
+                            android:padding="3dp"
                             android:textColor="@color/white"
                             android:textSize="15sp" />
 
                         <TextView
+
                             android:id="@+id/mYear"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="3dp"
+                            android:padding="3dp"
                             android:text="@string/years"
                             android:textColor="@color/white"
                             android:textSize="15sp" />
                     </LinearLayout>
 
 
-                    <TextView
-                        android:id="@+id/mUserAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
+<!--                    <TextView-->
+<!--                        android:id="@+id/mUserAddress"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginBottom="10dp"-->
+<!--                        android:gravity="center"-->
+<!--                        android:textColor="@color/white"-->
+<!--                        android:textSize="15sp" />-->
 
                     <TextView
                         android:id="@+id/mUserSkills"

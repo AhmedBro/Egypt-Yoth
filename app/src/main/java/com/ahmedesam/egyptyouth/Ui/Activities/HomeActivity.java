@@ -1,19 +1,15 @@
 package com.ahmedesam.egyptyouth.Ui.Activities;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.os.AsyncTask;
-import android.os.Build;
+
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import android.widget.LinearLayout;
+
+
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -25,17 +21,7 @@ import com.ahmedesam.egyptyouth.Ui.fragments.Home;
 import com.ahmedesam.egyptyouth.Ui.fragments.PlayersFragment;
 import com.ahmedesam.egyptyouth.Ui.fragments.SearchFragment;
 import com.ahmedesam.egyptyouth.Ui.fragments.UserProfileFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.onesignal.OneSignal;
-
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Scanner;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -122,12 +108,6 @@ public class HomeActivity extends AppCompatActivity {
         return false;
     };
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        LoadFragment(new Home());
 
     }
 
-
-}

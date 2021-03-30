@@ -19,7 +19,7 @@
     <string name="save">save</string>
     <string name="Enter_Your_Description">Enter Your Description</string>
     <string name="enter_your_age">enter Your Age</string>
-    <string name="enter_your_address">enter Your Address</string>
+    <string name="enter_your_address">enter Your Phone</string>
     <string name="years">Years</string>
     <string name="upload_your_videos">Upload Your Videos</string>
     <string name="upload_your_images">Upload your Images</string>
@@ -63,10 +63,12 @@
     <!-- [START fcm_default_icon_string] -->
     <string name="default_notification_channel_name" translatable="false">Weather</string>
     <string name="add_Comment">you added comment</string>
-    <string name="type_keyword">Type Here</string>
+    <string name="type_keyword" translatable="false">Type Here</string>
     <string name="Search">Search</string>
     <string name="typing">Typing....</string>
     <string name="Delete">Delete</string>
     <string name="Share">Share</string>
+    <string name="Exit">Are You want To Leave?</string>
+    <string name="Leave">Exit</string>
 
 </resources>
